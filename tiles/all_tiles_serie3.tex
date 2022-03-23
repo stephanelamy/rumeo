@@ -1,0 +1,62 @@
+\documentclass[tikz]{standalone}
+
+\usetikzlibrary{positioning, backgrounds,fadings}
+\tikzset{background rectangle/.style={fill=white}}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amssymb}
+
+\begin{tikzfadingfrompicture}[name=fadingC]
+\node[circle,line width=0pt,fill=black!5,draw=black!10,minimum size = 27] at (0,0){};
+\end{tikzfadingfrompicture}
+
+\newcommand{\scale}{4.85}
+
+\begin{tikzfadingfrompicture}[name=fadingJ]
+\node[white] {\scalebox{\scale}{\textbf{\maltese}}};
+\end{tikzfadingfrompicture}
+
+\foreach \x in {1,2,...,9} {
+\begin{tikzfadingfrompicture}[name=fading\x]
+\node[white] {\scalebox{\scale}{\sffamily\textbf{\x}}};
+\end{tikzfadingfrompicture}
+}
+
+\foreach \x in {0,1,2,3} {
+\begin{tikzfadingfrompicture}[name=fading1\x]
+\node[white] {\scalebox{\scale}{\sffamily\textbf{1\hspace{-.36mm}\x}}};
+\end{tikzfadingfrompicture}
+}
+
+% \scalebox{5}{\textbf{\textcolor{#2}{\textls[-110]{#1}}}} 
+
+\newcommand{\tile}[2]{
+    \begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+    \filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+    \fill[path fading=fading#1, ball color=#2, shading angle=195] (1,2.1) circle[radius=1];
+%     \node at (1,2.1) {\scalebox{5}{\textbf{\textcolor{#2}{\textls[-110]{#1}}}}  };
+%     \node[circle,line width=2pt,fill=olive!22,draw=olive!27,minimum size = 28] at (1,.75){};
+\fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
+    \end{tikzpicture} 
+}
+
+\colorlet{myred}{red!85!black}
+\definecolor{myblue}{HTML}{BA55D3}
+% \colorlet{myblue}{blue!60!green}
+\definecolor{myyellow}{HTML}{FFD700}
+\colorlet{mygreen}{green!90!black}
+\colorlet{myblack}{black}
+\definecolor{extra}{HTML}{FFA500}
+
+\begin{document}
+
+\tile{J}{extra}
+\tile{J}{myred}
+
+\foreach \i in {1,2,...,13}{
+\foreach \col in {myred, extra, blue, myblack}{
+\tile{\i}{\col}
+}
+}
+
+\end{document}

@@ -1,0 +1,36 @@
+\documentclass[tikz]{standalone}
+
+\usetikzlibrary{positioning, backgrounds}
+\tikzset{background rectangle/.style={fill=pink}}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amssymb}
+
+\newcommand{\tile}[2]{
+    \begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+    \filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+    \node at (1,2.1) {
+        \fontsize{54}{60}\selectfont \textbf{\textcolor{#2}{\textls[-110]{#1}}} 
+        };
+    \node[circle,line width=2pt,fill=olive!22,draw=olive!27,minimum size = 28] at (1,.75){};
+    \end{tikzpicture}
+}
+
+\colorlet{myred}{red!85!black}
+\colorlet{myblue}{blue!85!black}
+\colorlet{mygreen}{green!75!black}
+\colorlet{myblack}{black!80!white}
+
+\begin{document}
+\sffamily
+
+\tile{\maltese}{myred}
+\tile{\maltese}{myblue}
+
+\foreach \i in {1,2,...,13}{
+\foreach \col in {myred, myblue, mygreen, myblack}{
+\tile{\i}{\col}
+}
+}
+
+\end{document}

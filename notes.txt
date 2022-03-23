@@ -1,0 +1,7 @@
+192.168.1.36 (mon ip) donc remplace
+http://127.0.0.1:5500/index.html  par
+http://192.168.1.36:5500/index.html 
+ou alors active sur ton propre ordi en utilisant le premier link
+
+incompatible a mac: / doit etre remplacer par des \ dans les requete de fichier (comme par exemple les image)
+
