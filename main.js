@@ -7,7 +7,7 @@ function setup() {//fonction special qui s'active une fois au debut
 
 function draw() {//fonction special qui s'active 60 fois par second(ou moins si le programme est trop lourd)
   background(100);
-  // rect (200,200,100,100);
+  rect (200,200,100,100);
   game.draw();
 }
 
