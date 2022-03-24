@@ -1,5 +1,5 @@
 class Grid{
-  console.log("im here");
+  //console.log("im here");
   constructor(r, c, tileArray){
       this.rows = r; // number of rows
       this.cols = c; // number of columns
