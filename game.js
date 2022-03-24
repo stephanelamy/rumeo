@@ -156,3 +156,5 @@ return hand.length > 2 && this.isPresequence(hand);
 function isCombination(hand) {
   return isSerie(hand) || isSequence(hand);
 }
+
+// test git
