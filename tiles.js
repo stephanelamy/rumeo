@@ -6,7 +6,7 @@ class Tile{
     this.y = 0;
     this.row = 0; // 1-n
     this.col = 0; // calcul
-    this.position = 0;// 0 deck 1-n hand -1 playingfield
+    this.grid = this;
     this.size = 0;//his width    height=width/2*3
     this.image = loadImage("tiles/png/tile_"+number+"_"+color+".png");//original image
     this.moving = false;

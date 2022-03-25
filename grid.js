@@ -69,15 +69,15 @@ class Grid{
   }
 
   putTile(n, r, c){
-    this.place[r][c] = n;
-    const [x, y] = this.findCoor(r,c);
     let tile = this.tile[n];
+    tile.grid = this;
+    this.tile[n].grid.place[r][c] = n;
+    const [x, y] = this.findCoor(r,c);
     tile.row = r;
     tile.col = c;
     tile.x = x;
     tile.y = y;
     tile.moving = false;
-    tile.position = this.name;
   }
 
   addTile(n){
@@ -160,7 +160,60 @@ class Grid{
     }
   }
 
+  findTileID(grid){//find 
+    for(let row=0; row<grid.rows; row++){
+      for(let col=0; col<grid.cols; col++){
+        let [x, y] = grid.findCoor(row,col);
+        if(overlap(x, y, grid.size, grid.size*3/2, mouseX, mouseY)){
+          return grid.place[row][col];
+        }
+      }
+    }
+    return 'none';
+  }
+  
+    //the swap plan
+
+    //1 see on what tile were overlaping(and where)
+    //2 if empty replace
+    //3 look if empty further out in the row(right or left) if so replace
+    //4 otherwise take the last tile on the row(right) and move it down one col 3
+    //5 lastly if no space on the board extend then replace
+    //
   swap(n){//swap tile[n] with the tile it was droped on tile(t)(if posible)
+    let rn = this.tile[n].row; 
+    let cn = this.tile[n].col; 
+    let [xn, yn] = this.tile[n].center();
+
+    //find info on t
+    //we don't know where t is at all so we must test both our rack and table
+    let t = 'none';
+    t = this.findTileID(game.rack[game.ourID]);//first check the rack
+    if(t = 'none'){
+      t = this.findTileID(game.table);//first check the rack
+    }
+    if(t != 'none'){
+      let rt = this.tile[t].row; 
+      let ct = this.tile[t].col; 
+      let [xt, yt] = this.tile[t].center();
+    }
+
+    //now we replace
+
+    if (t == 'none'){
+      this.putTile(n,rn,cn); // retour à la place initial
+    }else
+    if (t == 'empty'){
+      this.tile[n].grid.place[rn][cn] = "empty"; // place initiale devient vide
+      this.putTile(n,rt,ct); // place a remplacer prend la tuile n
+    } else {
+      // ca ce complique
+    }
+  }
+
+  check
+
+  oldSwap(n){//drop a tile(n) where our mouse is(t) and if there is a tile there we move it
     let rn = this.tile[n].row; 
     let cn = this.tile[n].col; 
     // top left corner:
@@ -186,7 +239,7 @@ class Grid{
     } else {
       this.putTile(t,rn,cn); // place initiale prend la tuile t
     }
-}
+  }
 
   findCoor(r,c){//to know coordinate of 'empty' tile
     let x = this.cornerX() + c*this.size + this.margin.left;

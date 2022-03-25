@@ -63,14 +63,15 @@ class Game{
       if(overlap(rackToTest.cornerX(),rackToTest.cornerY(),rackToTest.width(),rackToTest.height(),...this.tile[n].center())){
         this.table.swap(n);
       }else{
-        switch(this.tile[n].position){//put the tile back where it came from
-          case -1:
-            this.table.putTile(n,this.tile[n].row,this.tile[n].col);
-            break;
-          default:
-            this.rack[this.tile[n].position-1].putTile(n,this.tile[n].row,this.tile[n].col);
-            break;
-        }
+        this.tile[n].grid.putTile(n,this.tile[n].row,this.tile[n].col);
+        // switch(this.tile[n].grid){//put the tile back where it came from
+        //   case -1:
+        //     this.table.putTile(n,this.tile[n].row,this.tile[n].col);
+        //     break;
+        //   default:
+        //     this.rack[this.tile[n].grid-1].putTile(n,this.tile[n].row,this.tile[n].col);
+        //     break;
+        // }
       }
       this.tile[n].moving = false;
     }
