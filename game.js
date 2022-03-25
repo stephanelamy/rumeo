@@ -1,5 +1,3 @@
-// test 
-
 class Game{
   constructor(nbPlayers){
       this.tile = []; 
