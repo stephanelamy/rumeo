@@ -1,13 +1,7 @@
 class Tile{
   constructor(color,number) {
-      this.color = color;//1-4, ('J' pour joker)
-      this.number = number;//1-13 ('J' pour joker)
-  }
-}
-
-class drawnTile extends Tile{
-  constructor(color,number) {
-    super(color,number);
+    this.color = color;//1-4, ('J' pour joker)
+    this.number = number;//1-13 ('J' pour joker)
     this.x = 0;
     this.y = 0;
     this.row = 0; // 1-n
@@ -40,7 +34,7 @@ class drawnTile extends Tile{
     return [this.x, this.y, this.size, this.size*3/2];
   }
 
-  drawTileManualy(){
+  drawManualy(){
     //manual drawing
     let w = size;
     let h = size/2*3;

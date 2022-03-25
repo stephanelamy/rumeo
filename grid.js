@@ -11,7 +11,7 @@ class Grid{
         this.place.push(row);
       }
       this.tile = tileArray; // pas besoin de passer game en entier, on a juste besoin des tuiles
-      this.size = drawnTile.computeSize(this.cols);//width of a tile
+      this.size = Tile.computeSize(this.cols);//width of a tile
       this.margin = { "row": this.size * -0.3, // vertical space between rows 
                       "top": this.size * 0.1, 
                       "bottom": this.size * 0.1, 
@@ -33,10 +33,15 @@ class Grid{
   }
 
   height(){
-    return this.rows*(this.size*3/2+this.margin.row) + this.margin.row + this.margin.top + this.margin.bottom;
+    return this.rows*(this.size*3/2+this.margin.row) - this.margin.row + this.margin.top + this.margin.bottom;
   }
 
-  isThereTile(n){//find if tile n is in this grid // bizarre ?
+  rectangle(){
+    return [this.cornerX(), this.cornerY(), this.width(), this.height()];
+  }
+
+  //find if tile n is in this grid // bizarre ?
+  isThereTile(n){
     for(let r = 0; r < this.rows; r++){
       for(let c = 0; c < this.cols; c++){
         if(this.place[r][c]  == n){
@@ -47,6 +52,7 @@ class Grid{
     return false;
   }
 
+  //find the first empty space
   findEmptySpot(){
     for(let r = 0; r < this.rows; r++){
       for(let c = 0; c < this.cols; c++){
@@ -74,12 +80,16 @@ class Grid{
     tile.position = this.name;
   }
 
-  addTile(n){//find the first empty space
+  addTile(n){
+    if (this.isFull()){
+      this.extend(2);
+    }
     let [r,c] = this.findEmptySpot();
     this.putTile(n,r,c);
   }
 
-  extend(n){ // add n columns to the grid
+  // add n columns to the grid
+  extend(n){ 
     this.cols += n;
     for(const row of this.place){
       while (row.length < this.cols) {
@@ -95,16 +105,30 @@ class Grid{
   }
 
   drawBackground(){
-    const rackW = this.cols*this.size + this.margin.left + this.margin.right;//to compute
-    const rackH = this.rows*(this.size*3/2+this.margin.row) - this.margin.row 
-      + this.margin.top + this.margin.bottom;
     push();//draw rack background
     fill(...this.color);
-    rect(this.cornerX(),this.cornerY(),rackW,rackH);
+    rect(...this.rectangle());
     pop();
   }
 
   draw(){     
+    this.drawBackground();
+    for(let row=0; row<this.rows; row++){
+      for(let col=0; col<this.cols; col++){
+        const t = this.place[row][col];//identity of the tile in question
+  
+        //draw all tiles on the rack, skiping moving ones
+        if(t != 'empty'){  
+          const tile = this.tile[t];//tile in question
+          if(!tile.moving){
+            tile.draw();
+          }
+        }
+      }
+    }
+  }
+
+  drawOLD(){ // moving tiles should be drawn by game, no by grid     
     this.drawBackground();
 
     let movingTile = 'None';

@@ -16,8 +16,6 @@ class Game{
       this.ourID = 0;
       this.moving = [];//list of moving tiles
       this.pickStartingTiles();
-      // for testing purpose:
-      // this.rack[this.ourID].extend(2);
   }
 
   pickOneTile(noPlayer){
@@ -31,7 +29,7 @@ class Game{
         i++;
     }
     this.deck.delete(chosenNo);//
-    this.tile[chosenNo].size = drawnTile.computeSize(this.rack[noPlayer].cols);
+    this.tile[chosenNo].size = Tile.computeSize(this.rack[noPlayer].cols);
     this.rack[noPlayer].addTile(chosenNo);
     }
 
@@ -48,7 +46,7 @@ class Game{
     for (let copie = 1; copie <= 2; copie++){
       for (let c = 1; c <= 4; c++){
         for (let n = 1; n <= 13 ; n++){
-          this.tile.push(new drawnTile(c, n));
+          this.tile.push(new Tile(c, n));
         }
       }
     }
@@ -79,26 +77,22 @@ class Game{
     this.moving = [];
   }
 
-  checkMoving(){//move the tile
-    for(let i = 0; i < this.tile.length; i++){
-      if(this.tile[i].moving){
-        this.tile[i].x = mouseX; 
-        this.tile[i].y = mouseY;
-      }
+  checkMoving(){//update and draw moving tiles
+    for (const no of game.moving){
+      this.tile[no].x = mouseX; 
+      this.tile[no].y = mouseY;
+      this.tile[no].draw()
     }
   }
 
   checkDeck(){//check if we clicked on the deck
-    if (overlap(...this.deckCoor(),mouseX,mouseY)){
-      return true;
-    }
-    return false;
+    return overlap(...this.deckCoor(),mouseX,mouseY);
   }
 
   deckCoor(){//deck coor are stocked here in case we want to change them :P
     let rack = this.rack[this.ourID]//proportinal to be in between the rack and the right side
-    let deckWidth = drawnTile.computeSize(10);
-    let deckHight = drawnTile.computeSize(10)*3/2;
+    let deckWidth = Tile.computeSize(10);
+    let deckHight = Tile.computeSize(10)*3/2;
     let deckX = (width + rack.cornerX() + rack.width() - deckWidth)/2;
     let deckY = rack.cornerY();
     return [deckX,deckY,deckWidth,deckHight];
@@ -111,10 +105,10 @@ class Game{
   }
 
   draw(){
-    this.checkMoving();
     this.drawDeck();
     this.table.draw();
     this.rack[this.ourID].draw();
+    this.checkMoving();
   }
 }
   
