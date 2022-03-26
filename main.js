@@ -28,6 +28,7 @@ function mousePressed(){//fonction speciale qui s'active quand on click
 
   //check if we press on sort777
   if(game.checkSort777()){
+    console.log('here');
     game.rack[game.ourID].sort777();
   }
 }

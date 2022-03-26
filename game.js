@@ -109,7 +109,7 @@ class Game{
   }
 
   sort777Rectangle(){
-    return [this.deckX(), this.deckY(), this.deckSize(), this.deckSize()*3/2];
+    return [this.deckX(), this.deckY777(), this.deckSize(), this.deckSize()*3/2];
   }
 
   deckX(){

@@ -232,10 +232,10 @@ class RackGrid extends Grid{
 
   sort777(){
     console.log('start sorting');
-    auxArray = [];
+    let auxArray = [];
     for(let row=0; row<this.rows; row++){
       for(let col=0; col<this.cols; col++){
-        n = this.place[row][col];
+        const n = this.place[row][col];
         if (n != 'empty'){
           auxArray.push(this.tile[n]);
         }
@@ -246,8 +246,8 @@ class RackGrid extends Grid{
     for(let row=0; row<this.rows; row++){
       for(let col=0; col<this.cols; col++){
         if (auxArray.length > 0){
-          tile = auxArray.pop();
-          this.place[row][col] = tile.no;
+          const tile = auxArray.pop();
+          this.putTile(tile.no,row,col);
         }
       }
     }
