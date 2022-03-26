@@ -74,7 +74,7 @@ class Grid{
 
   putTile(n, r, c){
     let tile = this.tile[n];
-    tile.size = Tile.computeSize(this.cols);
+    tile.setSize(this.cols);
     tile.grid = this;
     this.tile[n].grid.place[r][c] = n;
     const [x, y] = this.findCoor(r,c);

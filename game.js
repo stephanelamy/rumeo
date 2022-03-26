@@ -16,6 +16,7 @@ class Game{
       this.ourID = 0;
       this.moving = [];//list of moving tiles
       this.pickStartingTiles();
+      this.deckImage = loadImage("tiles/png/tile_deck.png");
   }
 
   pickOneTile(noPlayer){
@@ -86,7 +87,7 @@ class Game{
   }
 
   checkDeck(){//check if we clicked on the deck
-    return overlap(...this.deckCoor(),mouseX,mouseY);
+    return overlap(...this.deckRectangle(),mouseX,mouseY);
   }
 
   deckCoor(){//deck coor are stocked here in case we want to change them :P
@@ -98,10 +99,29 @@ class Game{
     return [deckX,deckY,deckWidth,deckHight];
   }
 
+  deckSize(){
+    return Tile.computeSize(10);
+  }
+
+  deckRectangle(){
+    return [this.deckX(), this.deckY(), this.deckSize(), this.deckSize()*3/2];
+  }
+
+  deckX(){
+    return width - this.deckSize()*1.2;
+  }
+
+  deckY(){
+    return height - this.deckSize()*(3/2)*1.2;
+  }
+
   drawDeck(){
-    push();
-    rect(...this.deckCoor());
-    pop();
+    // push();
+    // rect(...this.deckCoor());
+    // pop();
+    const size = Tile.computeSize(10);
+    this.deckImage.resize(size, size*3/2);
+    image(this.deckImage, this.deckX(), this.deckY());
   }
 
   draw(){
