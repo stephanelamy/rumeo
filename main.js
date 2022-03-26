@@ -28,8 +28,12 @@ function mousePressed(){//fonction speciale qui s'active quand on click
 
   //check if we press on sort777
   if(game.checkSort777()){
-    console.log('here');
-    game.rack[game.ourID].sort777();
+    game.rack[game.ourID].sort(compareTiles777);
+  }
+
+  //check if we press on sort777
+  if(game.checkSort678()){
+    game.rack[game.ourID].sort(compareTiles678);
   }
 }
 

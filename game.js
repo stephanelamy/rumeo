@@ -91,6 +91,10 @@ class Game{
     return overlap(...this.sort777Rectangle(),mouseX,mouseY);
   }
 
+  checkSort678(){//check if we clicked on sort777
+    return overlap(...this.sort678Rectangle(),mouseX,mouseY);
+  }
+
   deckCoor(){//deck coor are stocked here in case we want to change them :P
     let rack = this.rack[this.ourID]//proportinal to be in between the rack and the right side
     let deckWidth = Tile.computeSize(10);
@@ -112,6 +116,10 @@ class Game{
     return [this.deckX(), this.deckY777(), this.deckSize(), this.deckSize()*3/2];
   }
 
+  sort678Rectangle(){
+    return [this.deckX(), this.deckY678(), this.deckSize(), this.deckSize()*3/2];
+  }
+
   deckX(){
     return width - this.deckSize()*1.2;
   }
@@ -122,6 +130,10 @@ class Game{
 
   deckY777(){
     return this.deckY() + this.deckSize()*(3/2)*1.1;
+  }
+
+  deckY678(){
+    return this.deckY() + 2*this.deckSize()*(3/2)*1.1;
   }
 
   drawDeck(){

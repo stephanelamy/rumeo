@@ -230,8 +230,7 @@ class RackGrid extends Grid{
     }
   }
 
-  sort777(){
-    console.log('start sorting');
+  sort(sortFunction){
     let auxArray = [];
     for(let row=0; row<this.rows; row++){
       for(let col=0; col<this.cols; col++){
@@ -241,7 +240,7 @@ class RackGrid extends Grid{
         }
       }
     }
-    auxArray.sort(compareTiles777);
+    auxArray.sort(sortFunction);
     this.reset();
     for(let row=0; row<this.rows; row++){
       for(let col=0; col<this.cols; col++){
@@ -251,7 +250,6 @@ class RackGrid extends Grid{
         }
       }
     }
-    console.log('end sorting');
   }
 
 }

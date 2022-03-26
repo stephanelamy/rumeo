@@ -27,3 +27,7 @@ function rectOverlap(x,y,w,h,x2,y2,w2,h2){
 function compareTiles777(a, b) {
   return 4*b.number + b.color - (4*a.number + a.color);
 }
+
+function compareTiles678(a, b) {
+  return 13*b.color + b.number - (13*a.color + a.number);
+}
