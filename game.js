@@ -113,7 +113,16 @@ class Game{
     image(this.deckImage, this.deckX(), this.deckY());
   }
 
+  textStatus(){
+    let [isCompletable, isValid] = this.table.parse();
+    let message = 'Completable: ' + isCompletable + '  Valid: ' + isValid;
+    textSize(32);
+    textAlign("center");
+    text(message, width/2, 30);
+  }
+
   draw(){
+    this.textStatus();
     this.drawDeck();
     this.table.draw();
     this.rack[this.ourID].draw();

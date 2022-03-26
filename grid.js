@@ -181,9 +181,7 @@ class Grid{
       this.tile[n].grid.putTile(n,rn,cn);
     }else if (t == 'empty'){//si on peut juste remplacer
       this.tile[n].grid.place[rn][cn] = 'empty';
-      console.log('empty?', this.tile[n].grid.place);
       this.putTile(n,rt,ct);
-      console.log('empty?', this.tile[n].grid.place);
     } else {
       if(this.isFull()){
         this.extend(1);
@@ -213,24 +211,6 @@ class RackGrid extends Grid{
   cornerY(){
     return height - this.rows*(this.size*3/2+ this.margin('row')) +  this.margin('row') 
       -  this.margin('top') -  this.margin('bottom');
-  }
-
-}
-
-class TableGrid extends Grid{
-  constructor(rows,cols,tileArray,name){
-    super(rows,cols,tileArray);
-    this.name = name;//to know that this is the table    (-1)
-    this.color = [0,100,0];
-    this.marginCoeff.row =   0.3;
-  } 
-
-  cornerX(){
-    return width/2 - this.cols*this.size/2 -  this.margin('right') -  this.margin('left');
-  }
-
-  cornerY(){
-    return 0;
   }
 
 }
