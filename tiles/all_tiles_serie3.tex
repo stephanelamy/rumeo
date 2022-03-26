@@ -3,14 +3,18 @@
 \usetikzlibrary{positioning, backgrounds,fadings}
 \tikzset{background rectangle/.style={fill=white}}
 \usepackage{lmodern}
-\usepackage{microtype}
-\usepackage{amssymb}
+\usepackage{microtype} % for \textls[amount]{text} to reduce spacing between digits
+\usepackage{amssymb} % for \maltese character for jokers
 
 \begin{tikzfadingfrompicture}[name=fadingC]
 \node[circle,line width=0pt,fill=black!5,draw=black!10,minimum size = 27] at (0,0){};
 \end{tikzfadingfrompicture}
 
 \newcommand{\scale}{4.85}
+
+\begin{tikzfadingfrompicture}[name=fadingD]
+    \node[white] {\scalebox{\scale}{\textbf{?}}};
+    \end{tikzfadingfrompicture}
 
 \begin{tikzfadingfrompicture}[name=fadingJ]
 \node[white] {\scalebox{\scale}{\textbf{\maltese}}};
@@ -49,6 +53,8 @@
 \definecolor{extra}{HTML}{FFA500}
 
 \begin{document}
+
+\tile{D}{myblack}
 
 \tile{J}{extra}
 \tile{J}{myred}
