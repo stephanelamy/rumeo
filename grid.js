@@ -222,4 +222,36 @@ class RackGrid extends Grid{
       -  this.margin('top') -  this.margin('bottom');
   }
 
+  reset(){
+    for(let row=0; row<this.rows; row++){
+      for(let col=0; col<this.cols; col++){
+        this.place[row][col] = 'empty';
+      }
+    }
+  }
+
+  sort777(){
+    console.log('start sorting');
+    auxArray = [];
+    for(let row=0; row<this.rows; row++){
+      for(let col=0; col<this.cols; col++){
+        n = this.place[row][col];
+        if (n != 'empty'){
+          auxArray.push(this.tile[n]);
+        }
+      }
+    }
+    auxArray.sort(compareTiles777);
+    this.reset();
+    for(let row=0; row<this.rows; row++){
+      for(let col=0; col<this.cols; col++){
+        if (auxArray.length > 0){
+          tile = auxArray.pop();
+          this.place[row][col] = tile.no;
+        }
+      }
+    }
+    console.log('end sorting');
+  }
+
 }

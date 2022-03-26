@@ -46,13 +46,17 @@ class Game{
   }
   
   createTiles(){
-    //cree les tuiles
+    // cree les tuiles
     for (let copie = 1; copie <= 2; copie++){
       for (let c = 1; c <= 4; c++){
         for (let n = 1; n <= 13 ; n++){
           this.tile.push(new Tile(c, n));
         }
       }
+    }
+    // chaque tuile connait son numero
+    for (let i = 0; i < this.tile.length; i++){
+      this.tile[i].no = i;
     }
   }
 
@@ -83,6 +87,10 @@ class Game{
     return overlap(...this.deckRectangle(),mouseX,mouseY);
   }
 
+  checkSort777(){//check if we clicked on sort777
+    return overlap(...this.sort777Rectangle(),mouseX,mouseY);
+  }
+
   deckCoor(){//deck coor are stocked here in case we want to change them :P
     let rack = this.rack[this.ourID]//proportinal to be in between the rack and the right side
     let deckWidth = Tile.computeSize(10);
@@ -100,12 +108,20 @@ class Game{
     return [this.deckX(), this.deckY(), this.deckSize(), this.deckSize()*3/2];
   }
 
+  sort777Rectangle(){
+    return [this.deckX(), this.deckY(), this.deckSize(), this.deckSize()*3/2];
+  }
+
   deckX(){
     return width - this.deckSize()*1.2;
   }
 
   deckY(){
     return height - 3*(this.deckSize()*(3/2)*1.1);
+  }
+
+  deckY777(){
+    return this.deckY() + this.deckSize()*(3/2)*1.1;
   }
 
   drawDeck(){
@@ -116,7 +132,7 @@ class Game{
     this.deckImage.resize(size, size*3/2);
     image(this.deckImage, this.deckX(), this.deckY());
     this.image777.resize(size, size*3/2);
-    image(this.image777, this.deckX(), this.deckY() + this.deckSize()*(3/2)*1.1);
+    image(this.image777, this.deckX(), this.deckY777());
     this.image678.resize(size, size*3/2);
     image(this.image678, this.deckX(), this.deckY() + 2*this.deckSize()*(3/2)*1.1 );
 

@@ -10,6 +10,7 @@ class Tile{
     this.size = 0;//his width    height=width/2*3
     this.image = loadImage(this.fileName()); // original image
     this.moving = false;
+    this.no = 'none'; // index in game.tile[]
   }
 
   static computeSize(nbColumns) {

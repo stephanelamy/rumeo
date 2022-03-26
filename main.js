@@ -25,6 +25,11 @@ function mousePressed(){//fonction speciale qui s'active quand on click
   if(game.checkDeck()){
     game.pickOneTile(game.ourID);
   }
+
+  //check if we press on sort777
+  if(game.checkSort777()){
+    game.rack[game.ourID].sort777();
+  }
 }
 
 function mouseReleased(){//fonction speciale qui s'active quand on relache
