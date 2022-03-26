@@ -12,12 +12,16 @@ class Grid{
       }
       this.tile = tileArray; // pas besoin de passer game en entier, on a juste besoin des tuiles
       this.size = Tile.computeSize(this.cols);//width of a tile
-      this.margin = { "row": this.size * -0.3, // vertical space between rows 
-                      "top": this.size * 0.1, 
-                      "bottom": this.size * 0.1, 
-                      "left": this.size * 0.1, 
-                      "right": this.size * 0.1 };
+      this.marginCoeff = { "row":  -0.3, // vertical space between rows 
+                      "top":  0.1, 
+                      "bottom":  0.1, 
+                      "left":  0.1, 
+                      "right":  0.1 };
       this.color = [0,0,0];
+  }
+
+  margin(name){
+    return this.marginCoeff[name] * this.size;
   }
 
   cornerX(){
@@ -29,11 +33,11 @@ class Grid{
   }
 
   width(){
-    return this.cols*this.size + this.margin.right + this.margin.left;
+    return this.cols*this.size +  this.margin('right') +  this.margin('left');
   }
 
   height(){
-    return this.rows*(this.size*3/2+this.margin.row) - this.margin.row + this.margin.top + this.margin.bottom;
+    return this.rows*(this.size*3/2+ this.margin('row')) -  this.margin('row') +  this.margin('top') +  this.margin('bottom');
   }
 
   rectangle(){
@@ -269,8 +273,8 @@ class Grid{
   }
 
   findCoor(r,c){//to know coordinate of 'empty' tile
-    let x = this.cornerX() + c*this.size + this.margin.left;
-    let y = this.cornerY() + r*(this.size*3/2+this.margin.row) +this.margin.top;
+    let x = this.cornerX() + c*this.size +  this.margin('left');
+    let y = this.cornerY() + r*(this.size*3/2+ this.margin('row')) + this.margin('top');
     return [x,y];
   }
 }
@@ -280,16 +284,16 @@ class RackGrid extends Grid{
     super(rows,cols,tileArray);
     this.name = name;//to know whos player gride this is    (1-4)
     this.color = [139,69,19];
-    this.margin.row =  this.size * -0.3;
+    this.marginCoeff.row =   -0.3;
   } 
 
   cornerX(){
-    return width/2 - this.cols*this.size/2 - this.margin.right - this.margin.left;
+    return width/2 - this.cols*this.size/2 -  this.margin('right') -  this.margin('left');
   }
 
   cornerY(){
-    return height - this.rows*(this.size*3/2+this.margin.row) + this.margin.row 
-      - this.margin.top - this.margin.bottom;
+    return height - this.rows*(this.size*3/2+ this.margin('row')) +  this.margin('row') 
+      -  this.margin('top') -  this.margin('bottom');
   }
 
 }
@@ -299,11 +303,11 @@ class TableGrid extends Grid{
     super(rows,cols,tileArray);
     this.name = name;//to know that this is the table    (-1)
     this.color = [0,100,0];
-    this.margin.row =  this.size * 0.3;
+    this.marginCoeff.row =   0.3;
   } 
 
   cornerX(){
-    return width/2 - this.cols*this.size/2 - this.margin.right - this.margin.left;
+    return width/2 - this.cols*this.size/2 -  this.margin('right') -  this.margin('left');
   }
 
   cornerY(){
