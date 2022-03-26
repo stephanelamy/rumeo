@@ -5,3 +5,6 @@
 *.pdf
 *.sh
 
+tests/
+tiles/OLD/
+
