@@ -7,7 +7,7 @@ class Game{
         this.deck.add(i);
       }
       this.rack = []; // array of RackGrid    set goes from 1-n  with 'empty' and n = maximum tiles to be shown(default 20)
-      this.table = new TableGrid(4,10, this.tile,-1);
+      this.table = new TableGrid(4,16, this.tile,-1);
       this.nbPlayers = nbPlayers;
       for (let i = 0; i < nbPlayers; i++){
           this.rack[i] = new RackGrid(2,10, this.tile,i+1); 
@@ -101,7 +101,7 @@ class Game{
   }
 
   deckY(){
-    return height - this.deckSize()*(3/2)*1.2;
+    return height*3/4 - this.deckSize()*(3/2);
   }
 
   drawDeck(){

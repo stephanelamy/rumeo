@@ -44,6 +44,12 @@ class Grid{
     return [this.cornerX(), this.cornerY(), this.width(), this.height()];
   }
 
+  findCoor(r,c){//to know coordinate of 'empty' tile
+    let x = this.cornerX() + c*this.size +  this.margin('left');
+    let y = this.cornerY() + r*(this.size*3/2+ this.margin('row')) + this.margin('top');
+    return [x,y];
+  }
+
   //find if tile n is in this grid // bizarre ?
   isThereTile(n){
     for(let r = 0; r < this.rows; r++){
@@ -136,50 +142,6 @@ class Grid{
     }
   }
 
-  drawOLD(){ // moving tiles should be drawn by game, no by grid     
-    this.drawBackground();
-
-    let movingTile = 'None';
-    for(let row=0; row<this.place.length; row++){
-      for(let col=0; col<this.place[row].length; col++){
-
-        const t = this.place[row][col];//identity of the tile in question
-  
-        //draw all tiles on the rack
-        if(t != 'empty'){  
-          const tile = this.tile[t];//tile in question
-          if(tile.moving){
-            movingTile = tile;
-          }else{
-            tile.draw();
-          }
-        }
-      }
-
-      //draw the tile that is moving
-      if(movingTile != 'None'){
-        let Twidth = movingTile.size;
-        let Theight = movingTile.size*3/2;
-        //tiles
-        movingTile.image.resize(Twidth,Theight);
-        image(movingTile.image,movingTile.x,movingTile.y);//resize and draw the image into a rect
-      }
-
-    }
-  }
-
-  findSelectedTileOLD(grid){//find Tile
-    for(let row=0; row<grid.rows; row++){
-      for(let col=0; col<grid.cols; col++){
-        let [x, y] = grid.findCoor(row,col);
-        if(overlap(x, y, grid.size, grid.size*3/2, mouseX + grid.size/2, mouseY + grid.size*3/4)){
-          return [row,col];
-        }
-      }
-    }
-    return 'none';
-  }
-
   findSelectedTile(){ //find tile under mouse
     for(let row=0; row<this.rows; row++){
       for(let col=0; col<this.cols; col++){
@@ -233,12 +195,6 @@ class Grid{
       let [emptyR,emptyC] = this.findEmptySpot();
       this.putTile(t,emptyR,emptyC);
     }
-  }
-
-  findCoor(r,c){//to know coordinate of 'empty' tile
-    let x = this.cornerX() + c*this.size +  this.margin('left');
-    let y = this.cornerY() + r*(this.size*3/2+ this.margin('row')) + this.margin('top');
-    return [x,y];
   }
 }
 
