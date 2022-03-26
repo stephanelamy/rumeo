@@ -168,11 +168,23 @@ class Grid{
     }
   }
 
-  findSelectedTile(grid){//find Tile
+  findSelectedTileOLD(grid){//find Tile
     for(let row=0; row<grid.rows; row++){
       for(let col=0; col<grid.cols; col++){
         let [x, y] = grid.findCoor(row,col);
         if(overlap(x, y, grid.size, grid.size*3/2, mouseX + grid.size/2, mouseY + grid.size*3/4)){
+          return [row,col];
+        }
+      }
+    }
+    return 'none';
+  }
+
+  findSelectedTile(){ //find tile under mouse
+    for(let row=0; row<this.rows; row++){
+      for(let col=0; col<this.cols; col++){
+        let [x, y] = this.findCoor(row,col);
+        if(overlap(x, y, this.size, this.size*3/2, mouseX + this.size/2, mouseY + this.size*3/4)){
           return [row,col];
         }
       }
@@ -192,83 +204,34 @@ class Grid{
 
     let rn = this.tile[n].row; 
     let cn = this.tile[n].col; 
-    let [xn, yn] = this.tile[n].center();
 
-    //find info on t
+    //info on t
     let rt;
     let ct;
-    let xt,yt;
     let t = 'none';
-    let gridt;
 
-    //we don't know where t is at all so we must test both our rack and table
-    if(this.findSelectedTile(game.rack[game.ourID]) != 'none'){
-      [rt,ct] = this.findSelectedTile(game.rack[game.ourID]);
-      gridt = game.rack[game.ourID];
-      t = gridt.place[rt][ct];
-    }else if(this.findSelectedTile(game.table) != 'none'){
-      [rt,ct] = this.findSelectedTile(game.table);
-      gridt = game.table; 
-      t = gridt.place[rt][ct];
-    }
-    
-    //set variables depending on what we know
-    if(t != 'none'){
-      if(t != 'empty'){
-        [xt, yt] = this.tile[t].center();
-      }else{
-        console.log(t,rt,ct);
-        [xt, yt] = this.findCoor(rt,ct);
-        xt += Tile.computeSize(gridt.row)/2;
-        yt += Tile.computeSize(gridt.row)*3/4;
-      }
+    if(this.findSelectedTile() != 'none'){
+      [rt,ct] = this.findSelectedTile();
+      t = this.place[rt][ct];
     }
 
-    //now we replace
-
-    if (t == 'none'){//si on est ni sur le rack ni sur la table
+    if (t == 'none'){//si on n'est pas au dessus d'un case 
       this.tile[n].grid.putTile(n,rn,cn);
-    }else if (t == 'empty'){//si on peux just remplacer
-      gridt.putTile(n,rt,ct);
+    }else if (t == 'empty'){//si on peut juste remplacer
       this.tile[n].grid.place[rn][cn] = 'empty';
+      console.log('empty?', this.tile[n].grid.place);
+      this.putTile(n,rt,ct);
+      console.log('empty?', this.tile[n].grid.place);
     } else {
-      if(gridt.isFull()){
-        gridt.extend(1);
+      if(this.isFull()){
+        this.extend(1);
       }
       this.tile[n].grid.place[rn][cn] = 'empty';
-      gridt.place[rt][ct] = 'empty';
+      this.place[rt][ct] = 'empty';
 
-      this.tile[n].grid.putTile(n,rt,ct);
-      let [emptyR,emptyC] = gridt.findEmptySpot();
-      gridt.putTile(t,emptyR,emptyC);
-    }
-  }
-
-  oldSwap(n){//drop a tile(n) where our mouse is(t) and if there is a tile there we move it
-    let rn = this.tile[n].row; 
-    let cn = this.tile[n].col; 
-    // top left corner:
-    let [xn, yn] = this.tile[n].center();
-    let t = 'none';
-    loop:
-    for(let row=0; row<this.rows; row++){
-      for(let col=0; col<this.cols; col++){
-        //find where we are on the rack
-        let [x, y] = this.findCoor(row,col);
-        // WE ONLY LOOK WHERE IS THE CENTER OF THE TILE 
-        if(overlap(x, y, this.size, this.size*3/2, xn, yn)){
-          t = this.place[row][col]; //value of the tile to replace
-          this.putTile(n,row,col);
-          break loop;
-        }
-      }
-    }
-    if (t == 'none'){
-      this.putTile(n,rn,cn); // retour à la place initiale
-    } else if (t == 'empty'){
-      this.place[rn][cn] = "empty"; // place initiale devient vide
-    } else {
-      this.putTile(t,rn,cn); // place initiale prend la tuile t
+      this.putTile(n,rt,ct);
+      let [emptyR,emptyC] = this.findEmptySpot();
+      this.putTile(t,emptyR,emptyC);
     }
   }
 

@@ -55,23 +55,12 @@ class Game{
   drop(){//drop and/or swap n with wherever it is
     for(let i = this.moving.length-1;i>=0;i--){//go throught the list backwards so that if we delete a variable we don't cal 2 times
       let n = this.moving[i];
-      let rackToTest = this.rack[this.ourID];
-      if(overlap(rackToTest.cornerX(),rackToTest.cornerY(),rackToTest.width(),rackToTest.height(),...this.tile[n].center())){
+      if(overlap(...this.rack[this.ourID].rectangle(),...this.tile[n].center())){
         this.rack[this.ourID].swap(n);
-      }else
-      rackToTest = this.table; 
-      if(overlap(rackToTest.cornerX(),rackToTest.cornerY(),rackToTest.width(),rackToTest.height(),...this.tile[n].center())){
+      }else if(overlap(...this.table.rectangle(),...this.tile[n].center())){
         this.table.swap(n);
       }else{
         this.tile[n].grid.putTile(n,this.tile[n].row,this.tile[n].col);
-        // switch(this.tile[n].grid){//put the tile back where it came from
-        //   case -1:
-        //     this.table.putTile(n,this.tile[n].row,this.tile[n].col);
-        //     break;
-        //   default:
-        //     this.rack[this.tile[n].grid-1].putTile(n,this.tile[n].row,this.tile[n].col);
-        //     break;
-        // }
       }
       this.tile[n].moving = false;
     }
