@@ -1,8 +1,8 @@
 #!/bin/bash
 
-convert -density 250 -crop '99%x99%+1+1' -transparent white -fuzz 2% all_tiles_serie3.pdf[0] png/tile_deck.png
-convert -density 250 -crop '99%x99%+1+1' -transparent white -fuzz 2% all_tiles_serie3.pdf[1] png/tile_J_1.png
-convert -density 250 -crop '99%x99%+1+1' -transparent white -fuzz 2% all_tiles_serie3.pdf[2] png/tile_J_2.png
+convert -quality 100 -density 250 -crop '99%x99%+1+1' -transparent white -fuzz 2% all_tiles_serie3.pdf[0] png/tile_deck.png
+convert -quality 100 -density 250 -crop '99%x99%+1+1' -transparent white -fuzz 2% all_tiles_serie3.pdf[1] png/tile_J_1.png
+convert -quality 100 -density 250 -crop '99%x99%+1+1' -transparent white -fuzz 2% all_tiles_serie3.pdf[2] png/tile_J_2.png
 
 for ((number=1; number<=13; number++))
 do
