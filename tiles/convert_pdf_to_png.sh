@@ -1,6 +1,8 @@
 #!/bin/bash
 
-convertoptions = "-quality 100 -density 250 -crop '99%x99%+1+1' -transparent white -fuzz 2%" 
+convertoptions="-quality 100 -density 250 -crop 99%x99%+1+1 -transparent white -fuzz 2%" 
+
+echo "converting with options $convertoptions..."
 
 convert $convertoptions all_tiles.pdf[0] png/tile_777.png
 convert $convertoptions all_tiles.pdf[1] png/tile_678.png
@@ -20,3 +22,4 @@ do
   done
 done
 
+echo "done."

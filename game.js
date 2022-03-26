@@ -105,7 +105,7 @@ class Game{
   }
 
   deckY(){
-    return height*3/4 - this.deckSize()*(3/2);
+    return height - 3*(this.deckSize()*(3/2)*1.1);
   }
 
   drawDeck(){
@@ -116,9 +116,9 @@ class Game{
     this.deckImage.resize(size, size*3/2);
     image(this.deckImage, this.deckX(), this.deckY());
     this.image777.resize(size, size*3/2);
-    image(this.image777, this.deckX(), this.deckY() + this.deckSize()*(3/2) + 10);
+    image(this.image777, this.deckX(), this.deckY() + this.deckSize()*(3/2)*1.1);
     this.image678.resize(size, size*3/2);
-    image(this.image678, this.deckX(), this.deckY() + 2* (this.deckSize()*(3/2) + 10) );
+    image(this.image678, this.deckX(), this.deckY() + 2*this.deckSize()*(3/2)*1.1 );
 
   }
 
