@@ -16,9 +16,14 @@ class Game{
       this.moving = [];//list of moving tiles
       this.pickStartingTiles();
       this.deckImage = loadImage("tiles/png/tile_deck.png");
+      this.image777 = loadImage("tiles/png/tile_777.png");
+      this.image678 = loadImage("tiles/png/tile_678.png");
   }
 
   pickOneTile(noPlayer){
+    if (this.deck.size == 0){
+      return 'empty deck';
+    }
     const index = randomInteger(1, this.deck.size); 
     let i = 1;
     let chosenNo;
@@ -110,6 +115,11 @@ class Game{
     const size = Tile.computeSize(10);
     this.deckImage.resize(size, size*3/2);
     image(this.deckImage, this.deckX(), this.deckY());
+    this.image777.resize(size, size*3/2);
+    image(this.image777, this.deckX(), this.deckY() + this.deckSize()*(3/2) + 10);
+    this.image678.resize(size, size*3/2);
+    image(this.image678, this.deckX(), this.deckY() + 2* (this.deckSize()*(3/2) + 10) );
+
   }
 
   textStatus(){

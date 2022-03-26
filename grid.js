@@ -101,7 +101,13 @@ class Grid{
 
   // add n columns to the grid
   extend(n){ 
-    this.cols += n;
+    if ( (this.cols == 26 && this.rows == 3) ||
+         (this.cols == 22 && this.rows == 2) ) {
+      this.rows += 1;
+      this.place.push([]);
+    } else {
+      this.cols += n;
+    }
     this.size = Tile.computeSize(this.cols);
     for(const row of this.place){
       while (row.length < this.cols) {
@@ -163,6 +169,7 @@ class Grid{
     //5 lastly if no space on the board extend then replace
     //
   swap(n){//swap tile[n] with the tile it was droped on tile(t)(if posible)
+    // SHOULD change the name of this function, it does'n swap anymore...
 
     let rn = this.tile[n].row; 
     let cn = this.tile[n].col; 
@@ -190,8 +197,11 @@ class Grid{
       this.place[rt][ct] = 'empty';
 
       this.putTile(n,rt,ct);
-      let [emptyR,emptyC] = this.findEmptySpot();
-      this.putTile(t,emptyR,emptyC);
+      // ATTENTION AU CAS n == t !!!
+      if (t != n){
+        let [emptyR,emptyC] = this.findEmptySpot();
+        this.putTile(t,emptyR,emptyC);
+      }
     }
   }
 }

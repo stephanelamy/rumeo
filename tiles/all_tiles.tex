@@ -13,8 +13,12 @@
 \newcommand{\scale}{4.85}
 
 \begin{tikzfadingfrompicture}[name=fadingD]
-    \node[white] {\scalebox{\scale}{\textbf{?}}};
-    \end{tikzfadingfrompicture}
+\node[white] {\scalebox{\scale}{\textbf{+}}};
+\end{tikzfadingfrompicture}
+
+\begin{tikzfadingfrompicture}[name=fading777]
+\node[white] {\scalebox{2.5}{\textbf{777}}};
+\end{tikzfadingfrompicture}
 
 \begin{tikzfadingfrompicture}[name=fadingJ]
 \node[white] {\scalebox{\scale}{\textbf{\maltese}}};
@@ -38,9 +42,7 @@
     \begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
     \filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
     \fill[path fading=fading#1, ball color=#2, shading angle=195] (1,2.1) circle[radius=1];
-%     \node at (1,2.1) {\scalebox{5}{\textbf{\textcolor{#2}{\textls[-110]{#1}}}}  };
-%     \node[circle,line width=2pt,fill=olive!22,draw=olive!27,minimum size = 28] at (1,.75){};
-\fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
+    \fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
     \end{tikzpicture} 
 }
 
@@ -53,6 +55,18 @@
 \definecolor{extra}{HTML}{FFA500}
 
 \begin{document}
+
+\begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+\filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\node at (1,2.1) {\scalebox{3}{\textbf{\textls[-80]{\textcolor{myblack}{7}\textcolor{extra}{7}\textcolor{myred}{7}}}}  };
+\fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
+\end{tikzpicture} 
+
+\begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+\filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\node at (1,2.1) {\scalebox{3}{\textbf{\textls[-80]{\textcolor{blue}{678}}}}  };
+\fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
+\end{tikzpicture} 
 
 \tile{D}{myblack}
 
