@@ -8,8 +8,7 @@ class Tile{
     this.col = 0; // calcul
     this.grid = this;
     this.size = 0;//his width    height=width/2*3
-    this.imageOriginal = loadImage(this.fileName());//original image
-    this.image = loadImage("tiles/png/tile_"+number+"_"+color+".png");
+    this.image = loadImage(this.fileName()); // original image
     this.moving = false;
   }
 
@@ -24,13 +23,10 @@ class Tile{
 
   setSize(cols){
     this.size = Tile.computeSize(cols);
-    this.image = loadImage(this.fileName());
-    // this.image = this.imageOriginal.get(); dont'understand why this doesn't work
   }
   
   draw() {
-    this.image.resize(this.size, this.size*3/2);
-    image(this.image, this.x, this.y);
+    image(this.image, this.x, this.y, this.size, this.size*3/2);
   }
 
   center() {
