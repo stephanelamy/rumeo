@@ -197,11 +197,10 @@ class Grid{
 }
 
 class RackGrid extends Grid{
-  constructor(rows,cols,tileArray,name){
+  constructor(rows,cols,tileArray){
     super(rows,cols,tileArray);
-    this.name = name;//to know whos player gride this is    (1-4)
     this.color = [139,69,19];
-    this.marginCoeff.row =   -0.3;
+    this.marginCoeff.row = -0.3;
   } 
 
   cornerX(){
