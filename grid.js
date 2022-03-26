@@ -70,6 +70,7 @@ class Grid{
 
   putTile(n, r, c){
     let tile = this.tile[n];
+    tile.size = Tile.computeSize(this.cols);
     tile.grid = this;
     this.tile[n].grid.place[r][c] = n;
     const [x, y] = this.findCoor(r,c);
@@ -91,6 +92,7 @@ class Grid{
   // add n columns to the grid
   extend(n){ 
     this.cols += n;
+    this.size = Tile.computeSize(this.cols);
     for(const row of this.place){
       while (row.length < this.cols) {
         row.push('empty');
@@ -98,8 +100,10 @@ class Grid{
     }
     for(let r = 0; r < this.rows; r++){
       for(let c = 0; c < this.cols; c++){
-        let tile = this.tile[this.place[r][c]];
-        console.log(tile);
+        const n = this.place[r][c];
+        if (n != 'empty'){
+          this.putTile(n, r, c);
+        }
       }
     }
   }

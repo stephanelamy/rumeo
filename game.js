@@ -28,8 +28,7 @@ class Game{
         }
         i++;
     }
-    this.deck.delete(chosenNo);//
-    this.tile[chosenNo].size = Tile.computeSize(this.rack[noPlayer].cols);
+    this.deck.delete(chosenNo);
     this.rack[noPlayer].addTile(chosenNo);
     }
 
