@@ -10,14 +10,14 @@ class Grid{
   Grid(int rD, int cD, ArrayList<Tile> tileArray){
       rows = rD; // number of rows
       cols = cD; // number of columns
-      place = new int[rows][cols]; // used as place[row,column]
+      place = new int[rows][cols]; // used as place[row][column]
       for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
            place[i][j] = -1 ;
         }
       }
       tile = tileArray; // pas besoin de passer game en entier, on a juste besoin des tuiles
-      size = tile.get(0).computeSize(cols);//width of a tile
+      size = computeSize(cols); //width of a tile
       /*marginCoeff = { "row":  -0.3, // vertical space between rows 
                       "top":  0.1, 
                       "bottom":  0.1, 
@@ -47,15 +47,15 @@ class Grid{
     return int(rows*(size*3/2+ margin("row")) -  margin("row") +  margin("top") +  margin("bottom"));
   }
 
-  IntList rectangle(){
-    IntList data = new IntList();data.append(cornerX());data.append(cornerY());data.append(width());data.append(height());
+  int[] rectangle(){
+    int[] data = {cornerX(), cornerY(), width(), height()};
     return data;
   }
 
-  IntList findCoor(int r,int c){//to know coordinate of -1 tile
+  int[] findCoor(int r,int c){//to know coordinate of -1 tile
     int x = int(cornerX() + c*size +  margin("left"));
     int y = int(cornerY() + r*(size*3/2+ margin("row")) + margin("top"));
-    IntList data = new IntList();data.append(x);data.append(y);data.append(width());data.append(height());
+    int[] data = {x, y, width(), height()};
     return data;
   }
 
@@ -72,31 +72,31 @@ class Grid{
   }
 
   //find the first empty space
-  IntList findEmptySpot(){
+  int[] findEmptySpot(){
     for(int r = 0; r < rows; r++){
       for(int c = 0; c < cols; c++){
         if(place[r][c]  == -1){
-          IntList data = new IntList();data.append(r);data.append(c);
+          int[] data = {r, c};
           return data;
         }
       }
     }
-    IntList data = new IntList();data.append(-1);
+    int[] data = {-1};
     return data;
   }
 
   boolean isFull() {
-    return findEmptySpot().get(0) == -1;
+    return findEmptySpot()[0] == -1;
   }
 
   void putTile(int n, int r, int c){
+    place[r][c] = n;
     tile.get(n).setSize(cols);
     tile.get(n).grid = this;
-    tile.get(n).grid.place[r][c] = n;
     tile.get(n).row = r;
     tile.get(n).col = c;
-    tile.get(n).x = findCoor(r,c).get(0);
-    tile.get(n).y = findCoor(r,c).get(1);
+    tile.get(n).x = findCoor(r,c)[0];
+    tile.get(n).y = findCoor(r,c)[1];
     tile.get(n).moving = false;
   }
 
@@ -104,7 +104,7 @@ class Grid{
     if (isFull()){
       extend(2);
     }
-    putTile(n,findEmptySpot().get(0),findEmptySpot().get(1));
+    putTile(n,findEmptySpot()[0],findEmptySpot()[1]);
   }
 
   // add n columns to the grid
@@ -115,7 +115,7 @@ class Grid{
     } else {
       cols += n;
     }
-    size = tile.get(0).computeSize(cols);
+    size = computeSize(cols);
     for(int row = 0;row < place.length;row++){
       while (place[row].length < cols) {
         place[row][cols] = -1;
@@ -131,12 +131,10 @@ class Grid{
     }
   }
 
-  
-
   void drawBackground(){
     push();//draw rack background
     fill(thiscolor);
-    rect(rectangle().get(0),rectangle().get(1),rectangle().get(2),rectangle().get(3));
+    rect(cornerX(), cornerY(), width(), height());
     pop();
   }
 
@@ -159,7 +157,7 @@ class Grid{
   IntList findSelectedTile(){ //find tile under mouse
     for(int row=0; row<rows; row++){
       for(int col=0; col<cols; col++){
-        if(overlap(int(findCoor(row,col).get(0)), int(findCoor(row,col).get(1)), int(size), int(size*3/2), int(mouseX + size/2), int(mouseY + size*3/4))){
+        if(overlap(int(findCoor(row,col)[0]), int(findCoor(row,col)[1]), int(size), int(size*3/2), int(mouseX + size/2), int(mouseY + size*3/4))){
           IntList data = new IntList();data.append(row);data.append(col);
           return data;
         }
@@ -207,7 +205,7 @@ class Grid{
       putTile(n,rt,ct);
       // ATTENTION AU CAS n == t !!!
       if (t != n){
-        putTile(t,findEmptySpot().get(0),findEmptySpot().get(1));
+        putTile(t,findEmptySpot()[0],findEmptySpot()[1]);
       }
     }
   }

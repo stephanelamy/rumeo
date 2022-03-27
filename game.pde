@@ -11,11 +11,9 @@ class Game{
   PImage image678;
   
   Game(int nbPlayersD){
-      println("in constructor");
       tile = new ArrayList<Tile>();
       createTiles();//cree toutes les tuiles avec des images JOKERS A AJOUTER PLUS TARD
       deck = new IntList();
-      println("constructor", tile);
       for (int i=0; i<tile.size(); i++){
         deck.append(i);
       }
@@ -28,7 +26,7 @@ class Game{
       ourID = 0;
       moving = new IntList();//list of moving tiles
       pickStartingTiles();
-      deckImage = loadImage("tiles/png/tile_deck.png");
+      deckImage = loadImage("data/png/tile_deck.png"); // folder data or tiles seems to work as good ?
       image777 = loadImage("tiles/png/tile_777.png");
       image678 = loadImage("tiles/png/tile_678.png");
   }
@@ -37,16 +35,9 @@ class Game{
     if (deck.size() == 0){
       return;
     }
-    int index = (int)randomInteger(1, deck.size()); 
-    int i = 1;
-    int chosenNo = 0;
-    for(int no = 0;no < deck.size();no++){
-        if (i == index){
-            chosenNo = deck.get(no);
-        }
-        i++;
-    }
-    deck.remove(chosenNo);
+    int index = randomInteger(0, deck.size()-1); 
+    int chosenNo = deck.get(index);
+    deck.removeValue(chosenNo);
     rack.get(noPlayer).addTile(chosenNo);
     }
 
@@ -63,7 +54,6 @@ class Game{
     for (int copie = 1; copie <= 2; copie++){
       for (int c = 1; c <= 4; c++){
         for (int n = 1; n <= 13 ; n++){
-          println(tile);
           tile.add(new Tile(c, n));
         }
       }
@@ -73,9 +63,9 @@ class Game{
   void drop(){//drop and/or swap n with wherever it is
     for(int i = moving.size()-1;i>=0;i--){//go throught the list backwards so that if we delete a variable we don't cal 2 times
       int n = moving.get(i);
-      if(overlap(rack.get(ourID).rectangle().get(0),rack.get(ourID).rectangle().get(1),rack.get(ourID).rectangle().get(2),rack.get(ourID).rectangle().get(3),tile.get(n).center().get(0),tile.get(n).center().get(1))){
+      if(overlap(rack.get(ourID).rectangle()[0],rack.get(ourID).rectangle()[1],rack.get(ourID).rectangle()[2],rack.get(ourID).rectangle()[3],tile.get(n).center().get(0),tile.get(n).center().get(1))){
         rack.get(ourID).swap(n);
-      }else if(overlap(rack.get(ourID).rectangle().get(0),rack.get(ourID).rectangle().get(1),rack.get(ourID).rectangle().get(2),rack.get(ourID).rectangle().get(3),tile.get(n).center().get(0),tile.get(n).center().get(1))){
+      }else if(overlap(rack.get(ourID).rectangle()[0],rack.get(ourID).rectangle()[1],rack.get(ourID).rectangle()[2],rack.get(ourID).rectangle()[3],tile.get(n).center().get(0),tile.get(n).center().get(1))){
         table.swap(n);
       }else{
         tile.get(n).grid.putTile(n,tile.get(n).row,tile.get(n).col);
@@ -94,12 +84,12 @@ class Game{
   }
 
   boolean checkDeck(){//check if we clicked on the deck
-    return overlap(deckRectangle().get(0),deckRectangle().get(1),deckRectangle().get(2),deckRectangle().get(3),mouseX,mouseY);
+    return overlap(deckRectangle()[0],deckRectangle()[1],deckRectangle()[2],deckRectangle()[3],mouseX,mouseY);
   }
 
   FloatList deckCoor(){//deck coor are stocked here in case we want to change them :P
-    float deckWidth = tile.get(0).computeSize(10);
-    float deckHight = tile.get(0).computeSize(10)*3/2;
+    float deckWidth = computeSize(10);
+    float deckHight = computeSize(10)*3/2;
     float deckX = (width + rack.get(ourID).cornerX() + rack.get(ourID).width() - deckWidth)/2;
     float deckY = float(rack.get(ourID).cornerY());
     FloatList coor = new FloatList();coor.append(deckX);coor.append(deckY);coor.append(deckWidth);coor.append(deckHight);
@@ -107,11 +97,11 @@ class Game{
   }
 
   int deckSize(){
-    return int(tile.get(0).computeSize(10));
+    return computeSize(10);
   }
 
-  IntList deckRectangle(){
-    IntList coor = new IntList();coor.append(deckX());coor.append(deckY());coor.append(deckSize());coor.append(deckSize()*3/2);
+  int[] deckRectangle(){
+    int[] coor = {deckX(), deckY(), deckSize(), deckSize()*3/2};
     return coor;
   }
 
@@ -120,21 +110,14 @@ class Game{
   }
 
   int deckY(){
-    return int(height*3/4 - deckSize()*(3/2));
+    return int(height - 4*deckSize()*(3/2)*1.1);
   }
 
   void drawDeck(){
-    // push();
-    // rect(...deckCoor());
-    // pop();
-    float size = tile.get(0).computeSize(10);
-    deckImage.resize(int(size), int(size*3/2));
-    image(deckImage, deckX(), deckY());
-    image777.resize(int(size), int(size*3/2));
-    image(image777, deckX(), deckY() + deckSize()*(3/2) + 10);
-    image678.resize(int(size), int(size*3/2));
-    image(image678, deckX(), deckY() + 2* (deckSize()*(3/2) + 10) );
-
+    int size = deckSize();
+    image(deckImage, deckX(), deckY(), size, size*3/2 );
+    image(image777, deckX(), deckY() + size*(3/2)*1.1, size, size*3/2);
+    image(image678, deckX(), deckY() + 2* size*(3/2)*1.1, size, size*3/2 );
   }
 
   void textStatus(){

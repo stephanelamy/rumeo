@@ -5,24 +5,19 @@ class Tile{
   int row,col;
   Grid grid;
   float size;
-  PImage image;
+  PImage imagePNG;
   boolean moving;
   
   Tile(int colorD, int numberD) {
-    thiscolor = colorD;//1-4, ('J' pour joker)
-    number = numberD;//1-13 ('J' pour joker)
+    thiscolor = colorD;//1-4, (0 pour joker)
+    number = numberD;//1-13 (0 pour joker)
     x = 0;
     y = 0;
     row = 0; // 1-n
     col = 0; // calcul
-    size = 0;//his width    height=width/2*3
-    image = loadImage(fileName()); // original image
+    size = 0;//his width    height=width*3/2
+    imagePNG = loadImage(fileName()); // original image
     moving = false;
-  }
-
-  float computeSize(int nbColumns) {
-    return Math.min( 0.8* width / (Math.max(16, nbColumns)),
-                     0.85*height / 6 * 2/3 );
   }
 
   String fileName(){
@@ -30,11 +25,11 @@ class Tile{
   }
 
   void setSize(int cols){
-    //size = Tile.computeSize(cols);
+    size = computeSize(cols);
   }
   
   void draw() {
-    image(image, x, y, size, size*3/2);
+    image(imagePNG, x, y, size, size*3/2);
   }
 
   IntList center() {

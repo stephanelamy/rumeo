@@ -2,18 +2,15 @@ Game game;
 
 void setup() {//fonction special qui s'active une fois au debut
   fullScreen();
-  println("in setup");
-  game = new Game(1);
+  game = new Game(1); // create a game with 1 player
 }
 
 void draw() {//fonction special qui s'active 60 fois par second(ou moins si le programme est trop lourd)
   background(100);
-  println("in draw");
   game.draw();
 }
 
 void mousePressed(){//fonction speciale qui s'active quand on click
-  println(game);
 
   //check if we select a tile
   for(int i=0; i < game.tile.size(); i++){
@@ -30,5 +27,6 @@ void mousePressed(){//fonction speciale qui s'active quand on click
 }
 
 void mouseReleased(){//fonction speciale qui s'active quand on relache
-  game.drop();
+  println("released");
+  //game.drop();
 }
