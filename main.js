@@ -1,11 +1,11 @@
 let game;
 
-function setup() {//fonction special qui s'active une fois au debut
+function setup() {//fonction speciale qui s'active une fois au debut
   createCanvas(windowWidth, windowHeight);
   game = new Game(1);
 }
 
-function draw() {//fonction special qui s'active 60 fois par second(ou moins si le programme est trop lourd)
+function draw() {//fonction speciale qui s'active 60 fois par seconde (ou moins si le programme est trop lourd)
   background(100);
   game.draw();
 }
@@ -31,7 +31,7 @@ function mousePressed(){//fonction speciale qui s'active quand on click
     game.rack[game.ourID].sort(compareTiles777);
   }
 
-  //check if we press on sort777
+  //check if we press on sort678
   if(game.checkSort678()){
     game.rack[game.ourID].sort(compareTiles678);
   }
