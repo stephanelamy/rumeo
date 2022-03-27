@@ -2,11 +2,13 @@ Game game;
 
 void setup() {//fonction special qui s'active une fois au debut
   fullScreen();
+  println("in setup");
   game = new Game(1);
 }
 
 void draw() {//fonction special qui s'active 60 fois par second(ou moins si le programme est trop lourd)
   background(100);
+  println("in draw");
   game.draw();
 }
 

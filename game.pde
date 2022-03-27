@@ -11,9 +11,11 @@ class Game{
   PImage image678;
   
   Game(int nbPlayersD){
+      println("in constructor");
+      tile = new ArrayList<Tile>();
       createTiles();//cree toutes les tuiles avec des images JOKERS A AJOUTER PLUS TARD
       deck = new IntList();
-      tile = new ArrayList<Tile>();
+      println("constructor", tile);
       for (int i=0; i<tile.size(); i++){
         deck.append(i);
       }
@@ -61,6 +63,7 @@ class Game{
     for (int copie = 1; copie <= 2; copie++){
       for (int c = 1; c <= 4; c++){
         for (int n = 1; n <= 13 ; n++){
+          println(tile);
           tile.add(new Tile(c, n));
         }
       }
