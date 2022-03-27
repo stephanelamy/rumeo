@@ -1,0 +1,10 @@
+*.jpg
+*.aux
+*.log
+*.dvi
+*.pdf
+*.sh
+
+tests/
+tiles/OLD/
+
