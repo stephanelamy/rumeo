@@ -15,6 +15,7 @@ class TableGrid extends Grid{
 
   // For the moment I don't consider jokers
   // hand is an array of tile numbers
+  // might be better to put these functions in Grid, since also useful for the rack
   
   parse(){
     let isCompletable = true;

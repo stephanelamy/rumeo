@@ -1,7 +1,7 @@
 class Grid{
-  constructor(r, c, tileArray){
-      this.rows = r; // number of rows
-      this.cols = c; // number of columns
+  constructor(rows, cols, tileArray){
+      this.rows = rows; // number of rows
+      this.cols = cols; // number of columns
       this.place = []; // used as this.place[row,column]
       for(let i = 0; i < this.rows; i++){
         let row = [];
