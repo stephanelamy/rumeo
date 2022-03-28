@@ -21,5 +21,5 @@ boolean overlap2(int[] box, int[] point){
 }
 
 int computeSize(int nbColumns) {
-  return (int)Math.min( 0.8* width / (Math.max(16, nbColumns)), 0.85*height / 6 * 2/3 );
+  return int(Math.min( 0.8* width / (Math.max(16, nbColumns)), 0.85*height / 6 * 2/3 ));
 }

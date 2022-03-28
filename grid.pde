@@ -1,9 +1,11 @@
 import java.util.HashMap; // import the HashMap class
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.ArrayList;
 
 class Grid{
-  int rows,cols;
-  int r,c;
-  int[][] place;
+  int rows, cols;
+  ArrayList<ArrayList<Integer>> place = new ArrayList<>();
   ArrayList<Tile> tile;
   int size;
   color thiscolor;
@@ -11,12 +13,13 @@ class Grid{
   
   Grid(int rD, int cD, ArrayList<Tile> tileArray){
       rows = rD; // number of rows
-      cols = cD; // number of columns
-      place = new int[rows][cols]; // used as place[row][column]
+      cols = cD; // number of columns 
       for(int i = 0; i < rows; i++){
+        ArrayList<Integer> row = new ArrayList<>(); 
         for(int j = 0; j < cols; j++){
-           place[i][j] = -1 ;
+          row.add(-1);
         }
+        place.add(row);
       }
       tile = tileArray; // pas besoin de passer game en entier, on a juste besoin des tuiles
       size = computeSize(cols); //width of a tile
@@ -64,7 +67,7 @@ class Grid{
   boolean isThereTile(int n){
     for(int r = 0; r < rows; r++){
       for(int c = 0; c < cols; c++){
-        if(place[r][c]  == n){
+        if(place.get(r).get(c) == n){
           return true;
         }
       }
@@ -76,7 +79,7 @@ class Grid{
   int[] findEmptySpot(){
     for(int r = 0; r < rows; r++){
       for(int c = 0; c < cols; c++){
-        if(place[r][c]  == -1){
+        if(place.get(r).get(c)  == -1){
           int[] data = {r, c};
           return data;
         }
@@ -91,7 +94,7 @@ class Grid{
   }
 
   void putTile(int n, int r, int c){
-    place[r][c] = n;
+    place.get(r).set(c, n);
     tile.get(n).setSize(cols);
     tile.get(n).grid = this;
     tile.get(n).row = r;
@@ -103,28 +106,32 @@ class Grid{
 
   void addTile(int n){
     if (isFull()){
-      extend(2);
+      extend();
     }
-    putTile(n,findEmptySpot()[0],findEmptySpot()[1]);
+    int[] empty = findEmptySpot();
+    putTile(n, empty[0], empty[1]);
   }
 
   // add n columns to the grid
-  void extend(int n){ 
+  void extend(){    
     if ( (cols == 26 && rows == 3) ||
          (cols == 22 && rows == 2) ) {
-      rows += n;
+      rows += 1;
+      place.add(new ArrayList<Integer>());
     } else {
-      cols += n;
+      cols += 2;
     }
     size = computeSize(cols);
-    for(int row = 0;row < place.length;row++){
-      while (place[row].length < cols) {
-        place[row][cols] = -1;
+    
+    for(int row = 0; row < rows; row++){
+      while (place.get(row).size() < cols) {
+        place.get(row).add(-1);
       }
     }
+    
     for(int r = 0; r < rows; r++){
       for(int c = 0; c < cols; c++){
-        int N = place[r][c];
+        int N = place.get(r).get(c);
         if (N != -1){
           putTile(N, r, c);
         }
@@ -143,7 +150,7 @@ class Grid{
     drawBackground();
     for(int row=0; row<rows; row++){
       for(int col=0; col<cols; col++){
-        int t = place[row][col];//identity of the tile in question
+        int t = place.get(row).get(col);//identity of the tile in question
   
         //draw all tiles on the rack, skiping moving ones
         if(t != -1){  
@@ -192,20 +199,20 @@ class Grid{
     if(findt[0] != -2){
       rt = findt[0];
       ct = findt[1];
-      t = place[rt][ct];
+      t = place.get(rt).get(ct);
     }
     
     if (t == -2){//si on n'est pas au dessus d'une case 
       tile.get(n).grid.putTile(n,rn,cn);
     }else if (t == -1){//si on peut juste remplacer
-      tile.get(n).grid.place[rn][cn] = -1;
+      tile.get(n).grid.place.get(rn).set(cn, -1);
       putTile(n,rt,ct);
     } else {
       if(isFull()){
-        extend(1);
+        extend();
       }
-      tile.get(n).grid.place[rn][cn] = -1;
-      place[rt][ct] = -1;
+      tile.get(n).grid.place.get(rn).set(cn, -1);
+      place.get(rt).set(ct, -1);
 
       putTile(n,rt,ct);
       // ATTENTION AU CAS n == t !!!
@@ -231,4 +238,40 @@ class RackGrid extends Grid{
     return int(height - rows*(size*3/2+ margin("row")) +  margin("row") 
       -  margin("top") -  margin("bottom"));
   }
+
+  void reset(){
+    for(int row=0; row<rows; row++){
+      for(int col=0; col<cols; col++){
+        place.get(row).set(col, -1);
+      }
+    }
+  }
+
+  void sort(String sortOption){
+    LinkedList<Tile> aux = new LinkedList<>(); 
+    for(int row=0; row < rows; row++){
+      for(int col=0; col < cols; col++){
+        int n = place.get(row).get(col);
+        if (n != -1){
+          aux.add(tile.get(n));
+        }
+      }
+    }
+    if (sortOption == "777") {
+      Collections.sort(aux, Comparator.comparing(Tile::sort777));
+    }
+    if (sortOption == "678") {
+      Collections.sort(aux, Comparator.comparing(Tile::sort678));
+    }
+    reset();
+    for(int row = 0; row < rows; row++){
+      for(int col = 0; col < cols; col++){
+        if (aux.size() > 0){
+          Tile tile = aux.pollFirst();
+          putTile(tile.no, row, col);
+        }
+      }
+    }
+  }
+
 }

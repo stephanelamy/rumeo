@@ -25,14 +25,14 @@ class TableGrid extends Grid{
     for (int row=0; row < rows; row++){
       IntList currentHand = new IntList();
       for (int col=0; col < cols; col++){
-        if (place[row][col] == -1 || col == cols - 1){
+        if (place.get(row).get(col) == -1 || col == cols - 1){
           if (currentHand.size() > 0){
             isCompletable = isCompletable && isPreCombination(currentHand);
             isValid = isValid && isCombination(currentHand);
             currentHand.clear();
           }
         } else {
-          currentHand.push(place[row][col]);
+          currentHand.push(place.get(row).get(col));
         }
       }
     }

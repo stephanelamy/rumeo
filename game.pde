@@ -9,6 +9,7 @@ class Game{
   PImage deckImage;
   PImage image777;
   PImage image678;
+  int deckSize;
   
   Game(int nbPlayersD){
       tile = new ArrayList<Tile>();
@@ -29,6 +30,7 @@ class Game{
       deckImage = loadImage("data/png/tile_deck.png"); // folder data or tiles seems to work as good ?
       image777 = loadImage("tiles/png/tile_777.png");
       image678 = loadImage("tiles/png/tile_678.png");
+      deckSize = computeSize(10);
   }
 
   void pickOneTile(int noPlayer){
@@ -57,6 +59,10 @@ class Game{
           tile.add(new Tile(c, n));
         }
       }
+    }
+    // chaque tuile connait son numero
+    for (int i = 0; i < tile.size(); i++){
+      tile.get(i).no = i;
     }
   }
 
@@ -87,6 +93,16 @@ class Game{
     int[] point = {mouseX,mouseY};
     return overlap2(deckRectangle(), point);
   }
+  
+  boolean checkSort777(){//check if we clicked on sort777
+    int[] point = {mouseX,mouseY};
+    return overlap2(sort777Rectangle(), point);
+  }
+  
+   boolean checkSort678(){//check if we clicked on sort678
+    int[] point = {mouseX,mouseY};
+    return overlap2(sort678Rectangle(), point);
+  }
 
   int[] deckCoor(){//deck coor are stocked here in case we want to change them :P
     int deckWidth = computeSize(10);
@@ -97,28 +113,41 @@ class Game{
     return coor;
   }
 
-  int deckSize(){
-    return computeSize(10);
-  }
-
   int[] deckRectangle(){
-    int[] coor = {deckX(), deckY(), deckSize(), deckSize()*3/2};
+    int[] coor = {deckX(), deckY(), deckSize, deckSize*3/2};
+    return coor;
+  }
+  
+  int[] sort777Rectangle(){
+    int[] coor = {deckX(), deckY777(), deckSize, deckSize*3/2};
+    return coor;
+  }
+  
+   int[] sort678Rectangle(){
+    int[] coor = {deckX(), deckY678(), deckSize, deckSize*3/2};
     return coor;
   }
 
   int deckX(){
-    return int(width - deckSize()*1.2);
+    return int(width - deckSize*1.2);
   }
 
   int deckY(){
-    return int(height - 4*deckSize()*(3/2)*1.1);
+    return int(height - 3*deckSize*1.5*1.1);
+  }
+  
+  int deckY777(){
+    return int(deckY() + deckSize*1.5*1.1);
+  }
+  
+  int deckY678(){
+    return int(deckY() + 2*deckSize*1.5*1.1);
   }
 
   void drawDeck(){
-    int size = deckSize();
-    image(deckImage, deckX(), deckY(), size, size*3/2 );
-    image(image777, deckX(), deckY() + size*(3/2)*1.1, size, size*3/2);
-    image(image678, deckX(), deckY() + 2* size*(3/2)*1.1, size, size*3/2 );
+    image(deckImage, deckX(), deckY(), deckSize, deckSize*3/2 );
+    image(image777, deckX(), deckY777(), deckSize, deckSize*3/2);
+    image(image678, deckX(), deckY678(), deckSize, deckSize*3/2 );
   }
 
   void textStatus(){

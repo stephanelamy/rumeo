@@ -7,6 +7,7 @@ class Tile{
   int size;
   PImage imagePNG;
   boolean moving;
+  int no; // for sorting purpose
   
   Tile(int colorD, int numberD) {
     thiscolor = colorD;//1-4, (0 pour joker)
@@ -18,6 +19,7 @@ class Tile{
     size = 0;//his width    height=width*3/2
     imagePNG = loadImage(fileName()); // original image
     moving = false;
+    no = -1;
   }
 
   String fileName(){
@@ -40,6 +42,14 @@ class Tile{
   int[] rectangle() {
     int[] data = {x, y, size, size*3/2};
     return data;
+  }
+
+  int sort777() {
+    return 4*number + thiscolor;
+  }
+  
+  int sort678() {
+    return number + 13*thiscolor;
   }
 
   void drawManualy(){

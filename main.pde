@@ -1,10 +1,10 @@
 Game game;
-boolean isServer = true;
-boolean isClient = false;
+boolean isServer = false;
+boolean isClient = true;
 String IPServer = "127.0.0.1";
 
 
-void setup() {//fonction special qui s'active une fois au debut
+void setup() {//fonction speciale qui s'active une fois au debut
   fullScreen();
   game = new Game(1); // create a game with 1 player
   if(isServer){
@@ -15,8 +15,8 @@ void setup() {//fonction special qui s'active une fois au debut
   }
 }
 
-void draw() {//fonction special qui s'active 60 fois par second(ou moins si le programme est trop lourd)
-  //background(100);
+void draw() {//fonction speciale qui s'active 60 fois par second(ou moins si le programme est trop lourd)
+  background(100);
   game.draw();
   if(isServer){
     connectServer();
@@ -27,8 +27,7 @@ void draw() {//fonction special qui s'active 60 fois par second(ou moins si le p
 }
 
 void mousePressed(){//fonction speciale qui s'active quand on click
-  println("pressed");
-
+  
   //check if we select a tile
   for(int i=0; i < game.tile.size(); i++){
     if(overlap(game.tile.get(i).rectangle()[0],game.tile.get(i).rectangle()[1],
@@ -42,9 +41,19 @@ void mousePressed(){//fonction speciale qui s'active quand on click
   if(game.checkDeck()){
     game.pickOneTile(game.ourID);
   }
+  
+  //check if we press on sort777
+  if(game.checkSort777()){
+    game.rack.get(game.ourID).sort("777");
+  }
+  
+  //check if we press on sort678
+  if(game.checkSort678()){
+    game.rack.get(game.ourID).sort("678");
+  }
+  
 }
 
 void mouseReleased(){//fonction speciale qui s'active quand on relache
-  println("released");
   game.drop();
 }
