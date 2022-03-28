@@ -1,4 +1,6 @@
 /*
+test
+
 game    in    void isPreSerie(IntList hand)
 grid    in    constructor   in   marginCoeff        //related issues    void margin(name)  and Rackgrid.marginCoeff
 grid    in    void extend(n)
