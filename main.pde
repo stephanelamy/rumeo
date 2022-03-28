@@ -1,13 +1,28 @@
 Game game;
+boolean isServer = false;
+boolean isClient = false;
+
 
 void setup() {//fonction special qui s'active une fois au debut
   fullScreen();
   game = new Game(1); // create a game with 1 player
+  if(isServer){
+    setupServer();
+  }
+  if(isClient){
+    setupClient();
+  }
 }
 
 void draw() {//fonction special qui s'active 60 fois par second(ou moins si le programme est trop lourd)
-  background(100);
+  //background(100);
   game.draw();
+  if(isServer){
+    connectServer();
+  }
+  if(isClient){
+    connectClient();
+  }
 }
 
 void mousePressed(){//fonction speciale qui s'active quand on click
