@@ -59,9 +59,6 @@ void connectServer(){
 ///////////////////////////////////////////////////////CLIENT///////////////////////////////////////////////////////
 
  void setupClient(String IP){
-   size(450, 255);
-   background(204);
-   stroke(0);
    // Connect to the server's IP address and port
    //c = new Client(this, "127.0.0.1", 12345); // Replace with your server's IP and port
    c = new Client(this, IP, 12345); // Replace with your server's IP and port
