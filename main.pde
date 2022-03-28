@@ -11,10 +11,12 @@ void draw() {//fonction special qui s'active 60 fois par second(ou moins si le p
 }
 
 void mousePressed(){//fonction speciale qui s'active quand on click
+  println("pressed");
 
   //check if we select a tile
   for(int i=0; i < game.tile.size(); i++){
-    if(overlap(game.tile.get(i).rectangle().get(0),game.tile.get(i).rectangle().get(1),game.tile.get(i).rectangle().get(2),game.tile.get(i).rectangle().get(3), mouseX, mouseY)){
+    if(overlap(game.tile.get(i).rectangle()[0],game.tile.get(i).rectangle()[1],
+      game.tile.get(i).rectangle()[2],game.tile.get(i).rectangle()[3], mouseX, mouseY)){
       game.tile.get(i).moving = true;
       game.moving.push(i);
     }
@@ -28,5 +30,5 @@ void mousePressed(){//fonction speciale qui s'active quand on click
 
 void mouseReleased(){//fonction speciale qui s'active quand on relache
   println("released");
-  //game.drop();
+  game.drop();
 }

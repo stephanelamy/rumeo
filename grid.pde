@@ -1,11 +1,13 @@
+import java.util.HashMap; // import the HashMap class
+
 class Grid{
   int rows,cols;
   int r,c;
   int[][] place;
   ArrayList<Tile> tile;
-  float size;
+  int size;
   color thiscolor;
-  
+  HashMap<String, Float> marginCoeff = new HashMap<String, Float>();
   
   Grid(int rD, int cD, ArrayList<Tile> tileArray){
       rows = rD; // number of rows
@@ -18,17 +20,16 @@ class Grid{
       }
       tile = tileArray; // pas besoin de passer game en entier, on a juste besoin des tuiles
       size = computeSize(cols); //width of a tile
-      /*marginCoeff = { "row":  -0.3, // vertical space between rows 
-                      "top":  0.1, 
-                      "bottom":  0.1, 
-                      "left":  0.1, 
-                      "right":  0.1 };
-                      */
       thiscolor = color(0,0,0);
+      marginCoeff.put("row",  0.0);
+      marginCoeff.put("top",  0.1);
+      marginCoeff.put("bottom",  0.1);
+      marginCoeff.put("left",  0.1);
+      marginCoeff.put("right",  0.1);
   }
 
   int margin(String name){
-   return 0;
+   return int(size * marginCoeff.get(name));
   }
 
   int cornerX(){
@@ -52,10 +53,10 @@ class Grid{
     return data;
   }
 
-  int[] findCoor(int r,int c){//to know coordinate of -1 tile
-    int x = int(cornerX() + c*size +  margin("left"));
-    int y = int(cornerY() + r*(size*3/2+ margin("row")) + margin("top"));
-    int[] data = {x, y, width(), height()};
+  int[] findCoor(int r,int c){//to know coordinate of a tile
+    int x = cornerX() + c*size +  margin("left");
+    int y = cornerY() + r*(size*3/2+ margin("row")) + margin("top");
+    int[] data = {x, y, size, size*3/2};
     return data;
   }
 
@@ -154,16 +155,17 @@ class Grid{
     }
   }
 
-  IntList findSelectedTile(){ //find tile under mouse
+  int[] findSelectedTile(){ //find tile under mouse
     for(int row=0; row<rows; row++){
       for(int col=0; col<cols; col++){
-        if(overlap(int(findCoor(row,col)[0]), int(findCoor(row,col)[1]), int(size), int(size*3/2), int(mouseX + size/2), int(mouseY + size*3/4))){
-          IntList data = new IntList();data.append(row);data.append(col);
+        int[] point = {mouseX + size/2, mouseY + size*3/4};
+        if(overlap2(findCoor(row,col), point)){
+          int[] data = {row, col};
           return data;
         }
       }
     }
-    IntList data = new IntList();data.append(-2);
+    int[] data = {-2}; // pourquoi pas -1 ?
     return data;
   }
   
@@ -177,7 +179,7 @@ class Grid{
     //
   void swap(int n){//swap tile.get(n) with the tile it was droped on tile(t)(if posible)
     // SHOULD change the name of this function, it does'n swap anymore...
-
+    
     int rn = tile.get(n).row; 
     int cn = tile.get(n).col; 
 
@@ -185,12 +187,15 @@ class Grid{
     int rt = 0;
     int ct = 0;
     int t = -2;//-2 is "none"  -1 is "empty"
-
-    if(findSelectedTile().get(0) != -2){
-      t = place[findSelectedTile().get(0)][findSelectedTile().get(1)];
+    
+    int[] findt = findSelectedTile();
+    if(findt[0] != -2){
+      rt = findt[0];
+      ct = findt[1];
+      t = place[rt][ct];
     }
-
-    if (t == -2){//si on n'est pas au dessus d'un case 
+    
+    if (t == -2){//si on n'est pas au dessus d'une case 
       tile.get(n).grid.putTile(n,rn,cn);
     }else if (t == -1){//si on peut juste remplacer
       tile.get(n).grid.place[rn][cn] = -1;
@@ -215,7 +220,7 @@ class RackGrid extends Grid{
   RackGrid(int rows,int cols,ArrayList<Tile> tileArray){
     super(rows,cols,tileArray);
     thiscolor = color(139,69,19);
-    //marginCoeff.row = -0.3;
+    marginCoeff.put("row", -0.3);
   } 
 
   int cornerX(){
@@ -226,5 +231,4 @@ class RackGrid extends Grid{
     return int(height - rows*(size*3/2+ margin("row")) +  margin("row") 
       -  margin("top") -  margin("bottom"));
   }
-
 }

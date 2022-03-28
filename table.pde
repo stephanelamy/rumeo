@@ -1,8 +1,11 @@
+import java.util.Collections;
+import java.util.*;
+
 class TableGrid extends Grid{
   TableGrid(int rows, int cols,ArrayList<Tile> tileArray){
     super(rows,cols,tileArray);
     thiscolor = color(0,100,0);
-    //marginCoeff.row = 0.3;
+    marginCoeff.put("row", 0.3);
   } 
 
   int cornerX(){
@@ -16,7 +19,7 @@ class TableGrid extends Grid{
   // For the moment I don't consider jokers
   // hand is an array of tile numbers
   
-  StringList parse(){
+  boolean[] parse(){
     boolean isCompletable = true;
     boolean isValid = true;
     for (int row=0; row < rows; row++){
@@ -33,76 +36,52 @@ class TableGrid extends Grid{
         }
       }
     }
-    StringList data = new StringList();data.append(str(isCompletable));data.append(str(isValid));
+    boolean[] data = {isCompletable, isValid};
     return data;
 
   }
 
-  /*
-  void isPreSerie(hand) {
-      //  Tiles with the same number, and distinct colors
-      const colorSet = new Set();
-      const numberSet = new Set();
-      for (const index of hand) {
-      colorSet.add(this.tile[index].color);
-      numberSet.add(this.tile[index].number);
-      }
-      return numberSet.size == 1 && colorSet.size == hand.length;
-  }
+// For the moment I don't consider jokers
+// hand is a list of tile numbers
 
-  void isSerie(hand) {
-    // 3 or 4 tiles with the same number, and distinct colors
-    return hand.length > 2 && this.isPreSerie(hand);
+boolean isPreSerie(IntList hand) {
+  //  Tiles with the same number, and distinct colors
+  List<Integer> colorSet = new ArrayList<Integer>();
+  Set<Integer> numberSet = new HashSet<Integer>();
+  for (int index : hand) {
+    colorSet.add(tile.get(index).thiscolor);
+    numberSet.add(tile.get(index).number);
   }
-  
-  void isPreSequence(hand) {
-    // all same color, with consecutive numbers
-    const colorSet = new Set();
-    const numberArray = [];
-    for (const index of hand) {
-      colorSet.add(this.tile[index].color);
-      numberArray.push(this.tile[index].number);
-    }
-    return colorSet.size == 1 && hand.length == Math.max(...numberArray) - Math.min(...numberArray) + 1;
-  }
-  
-  void isSequence(hand) {
-  //   At least 3 tiles, all same color, with consecutive numbers
-  return hand.length > 2 && this.isPreSequence(hand);
-  }
-  
-  void isPreCombination(hand) {
-    return this.isPreSerie(hand) || this.isPreSequence(hand);
-  }
-
-  void isCombination(hand) {
-    return this.isSerie(hand) || this.isSequence(hand);
-  }
-  */
-  
-  boolean isPreSerie(IntList hand) {
-  
-    return true;
-  }
-  
-  boolean isSerie(IntList hand) {
-    return true;
-  }
-  
-  boolean isPresequence(IntList hand) {
-    return true;
-  }
-  
-  boolean isSequence(IntList hand) {
-  return true;
-  }
-  
-  boolean isPreCombination(IntList hand) {
-    return true;
-  }
-  
-  boolean isCombination(IntList hand){
-    return true;
-  }
+  return numberSet.size() == 1 && colorSet.size() == hand.size();
 }
-  
+
+boolean isSerie(IntList hand) {
+  // 3 or 4 tiles with the same number, and distinct colors
+  return hand.size() > 2 && isPreSerie(hand);
+}
+
+boolean isPresequence(IntList hand) {
+  // all same color, with consecutive numbers
+  Set<Integer> colorSet = new HashSet<Integer>();
+  List<Integer> numberSet = new ArrayList<Integer>();
+  for (int index : hand) {
+    colorSet.add(tile.get(index).thiscolor);
+    numberSet.add(tile.get(index).number);
+  }
+  return colorSet.size() == 1 && hand.size() == Collections.max(numberSet) - Collections.min(numberSet) + 1;
+}
+
+boolean isSequence(IntList hand) {
+  //   At least 3 tiles, all same color, with consecutive numbers
+  return hand.size() > 2 && isPresequence(hand);
+}
+
+boolean isPreCombination(IntList hand){
+  return isPreSerie(hand) || isPresequence(hand);
+}
+
+boolean isCombination(IntList hand){
+  return isSerie(hand) || isSequence(hand);
+}
+
+}

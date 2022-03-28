@@ -4,7 +4,7 @@ class Tile{
   int x,y;
   int row,col;
   Grid grid;
-  float size;
+  int size;
   PImage imagePNG;
   boolean moving;
   
@@ -32,13 +32,13 @@ class Tile{
     image(imagePNG, x, y, size, size*3/2);
   }
 
-  IntList center() {
-    IntList data = new IntList();data.append(int(x + size/2));data.append(int(y + size*3/4));
+  int[] center() {
+    int[] data = {int(x + size/2), int(y + size*3/4)};
     return data;
   }
 
-  IntList rectangle() {
-    IntList data = new IntList();data.append(x);data.append(y);data.append(int(size));data.append(int(size*3/2));
+  int[] rectangle() {
+    int[] data = {x, y, size, size*3/2};
     return data;
   }
 
