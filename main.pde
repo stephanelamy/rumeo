@@ -1,6 +1,7 @@
 Game game;
-boolean isServer = false;
+boolean isServer = true;
 boolean isClient = false;
+String IPServer = "127.0.0.1";
 
 
 void setup() {//fonction special qui s'active une fois au debut
@@ -10,7 +11,7 @@ void setup() {//fonction special qui s'active une fois au debut
     setupServer();
   }
   if(isClient){
-    setupClient();
+    setupClient(IPServer);
   }
 }
 
