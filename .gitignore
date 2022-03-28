@@ -5,6 +5,8 @@
 *.pdf
 *.sh
 
+.vscode/
 tests/
+out/
 tiles/OLD/
 
