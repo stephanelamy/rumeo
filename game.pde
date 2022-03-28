@@ -27,7 +27,7 @@ class Game{
       ourID = 0;
       moving = new IntList();//list of moving tiles
       pickStartingTiles();
-      deckImage = loadImage("data/png/tile_deck.png"); // folder data or tiles seems to work as good ?
+      deckImage = loadImage("tiles/png/tile_deck.png"); // folder data or tiles seems to work as good ?
       image777 = loadImage("tiles/png/tile_777.png");
       image678 = loadImage("tiles/png/tile_678.png");
       deckSize = computeSize(10);
@@ -114,8 +114,7 @@ class Game{
   }
 
   int[] deckRectangle(){
-    int[] coor = {deckX(), deckY(), deckSize, deckSize*3/2};
-    return coor;
+    return (new int[] {deckX(), deckY(), deckSize, deckSize*3/2} );
   }
   
   int[] sort777Rectangle(){

@@ -1,5 +1,5 @@
 class Tile{
-  int thiscolor;
+  int colour;
   int number;
   int x,y;
   int row,col;
@@ -10,20 +10,20 @@ class Tile{
   int no; // for sorting purpose
   
   Tile(int colorD, int numberD) {
-    thiscolor = colorD;//1-4, (0 pour joker)
+    colour = colorD;//1-4, (0 pour joker)
     number = numberD;//1-13 (0 pour joker)
     x = 0;
     y = 0;
     row = 0; // 1-n
     col = 0; // calcul
-    size = 0;//his width    height=width*3/2
+    size = 0;//his width    height=width*1.5
     imagePNG = loadImage(fileName()); // original image
     moving = false;
-    no = -1;
+    no = NONE;
   }
 
   String fileName(){
-    return "tiles/png/tile_"+number+"_"+thiscolor+".png";
+    return "tiles/png/tile_"+number+"_"+colour+".png";
   }
 
   void setSize(int cols){
@@ -45,11 +45,11 @@ class Tile{
   }
 
   int sort777() {
-    return 4*number + thiscolor;
+    return 4*number + colour;
   }
   
   int sort678() {
-    return number + 13*thiscolor;
+    return number + 13*colour;
   }
 
   void drawManualy(){

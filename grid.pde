@@ -1,34 +1,35 @@
-import java.util.HashMap; // import the HashMap class
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.ArrayList;
-
 class Grid{
-  int rows, cols;
-  ArrayList<ArrayList<Integer>> place = new ArrayList<>();
-  ArrayList<Tile> tile;
+  int rows, cols; 
+  int maxrows, maxcols;
+  int[][] place;
+  List<Tile> tile;
   int size;
-  color thiscolor;
+  color colour;
   HashMap<String, Float> marginCoeff = new HashMap<String, Float>();
   
   Grid(int rD, int cD, ArrayList<Tile> tileArray){
-      rows = rD; // number of rows
-      cols = cD; // number of columns 
-      for(int i = 0; i < rows; i++){
-        ArrayList<Integer> row = new ArrayList<>(); 
-        for(int j = 0; j < cols; j++){
-          row.add(-1);
+      rows = rD; // current number of rows
+      cols = cD; // current number of columns 
+      setMaxs();
+      place = new int[maxrows][maxcols];
+      for(int i = 0; i < maxrows; i++){ 
+        for(int j = 0; j < maxcols; j++){
+          place[i][j] = EMPTY;
         }
-        place.add(row);
       }
       tile = tileArray; // pas besoin de passer game en entier, on a juste besoin des tuiles
       size = computeSize(cols); //width of a tile
-      thiscolor = color(0,0,0);
+      colour = color(0,0,0);
       marginCoeff.put("row",  0.0);
       marginCoeff.put("top",  0.1);
       marginCoeff.put("bottom",  0.1);
       marginCoeff.put("left",  0.1);
       marginCoeff.put("right",  0.1);
+  }
+
+  void setMaxs(){
+    maxrows = 4;
+    maxcols = 26;
   }
 
   int margin(String name){
@@ -44,30 +45,28 @@ class Grid{
   }
 
   int width(){
-    return int(cols*size +  margin("right") +  margin("left"));
+    return int(cols * size +  margin("right") +  margin("left"));
   }
 
   int height(){
-    return int(rows*(size*3/2+ margin("row")) -  margin("row") +  margin("top") +  margin("bottom"));
+    return int( rows * ( size*1.5 + margin("row") ) -  margin("row") +  margin("top") +  margin("bottom") );
   }
 
   int[] rectangle(){
-    int[] data = {cornerX(), cornerY(), width(), height()};
-    return data;
+    return ( new int[] {cornerX(), cornerY(), width(), height()} );
   }
 
   int[] findCoor(int r,int c){//to know coordinate of a tile
     int x = cornerX() + c*size +  margin("left");
     int y = cornerY() + r*(size*3/2+ margin("row")) + margin("top");
-    int[] data = {x, y, size, size*3/2};
-    return data;
+    return (new int[]  {x, y, size, size*3/2} );
   }
 
   //find if tile n is in this grid // bizarre ?
   boolean isThereTile(int n){
     for(int r = 0; r < rows; r++){
       for(int c = 0; c < cols; c++){
-        if(place.get(r).get(c) == n){
+        if(place[r][c] == n){
           return true;
         }
       }
@@ -79,22 +78,20 @@ class Grid{
   int[] findEmptySpot(){
     for(int r = 0; r < rows; r++){
       for(int c = 0; c < cols; c++){
-        if(place.get(r).get(c)  == -1){
-          int[] data = {r, c};
-          return data;
+        if(place[r][c]  == EMPTY){
+          return (new int[] {r, c} );
         }
       }
     }
-    int[] data = {-1};
-    return data;
+    return (new int[] {EMPTY});
   }
 
   boolean isFull() {
-    return findEmptySpot()[0] == -1;
+    return findEmptySpot()[0] == EMPTY;
   }
 
   void putTile(int n, int r, int c){
-    place.get(r).set(c, n);
+    place[r][c] = n;
     tile.get(n).setSize(cols);
     tile.get(n).grid = this;
     tile.get(n).row = r;
@@ -112,27 +109,27 @@ class Grid{
     putTile(n, empty[0], empty[1]);
   }
 
-  // add n columns to the grid
+  void resetRow(int r){
+    for (int c = 0; c < cols; c++){
+      place[r][c] = EMPTY;
+    }
+  }
+
+  // extend the grid
   void extend(){    
     if ( (cols == 26 && rows == 3) ||
          (cols == 22 && rows == 2) ) {
+      resetRow(rows);
       rows += 1;
-      place.add(new ArrayList<Integer>());
     } else {
       cols += 2;
     }
     size = computeSize(cols);
     
-    for(int row = 0; row < rows; row++){
-      while (place.get(row).size() < cols) {
-        place.get(row).add(-1);
-      }
-    }
-    
     for(int r = 0; r < rows; r++){
       for(int c = 0; c < cols; c++){
-        int N = place.get(r).get(c);
-        if (N != -1){
+        int N = place[r][c];
+        if (N != EMPTY){
           putTile(N, r, c);
         }
       }
@@ -141,7 +138,7 @@ class Grid{
 
   void drawBackground(){
     push();//draw rack background
-    fill(thiscolor);
+    fill(colour);
     rect(cornerX(), cornerY(), width(), height());
     pop();
   }
@@ -150,10 +147,10 @@ class Grid{
     drawBackground();
     for(int row=0; row<rows; row++){
       for(int col=0; col<cols; col++){
-        int t = place.get(row).get(col);//identity of the tile in question
+        int t = place[row][col];//identity of the tile in question
   
         //draw all tiles on the rack, skiping moving ones
-        if(t != -1){  
+        if(t != EMPTY){  
           if(!tile.get(t).moving){
             tile.get(t).draw();
           }
@@ -167,13 +164,11 @@ class Grid{
       for(int col=0; col<cols; col++){
         int[] point = {mouseX + size/2, mouseY + size*3/4};
         if(overlap2(findCoor(row,col), point)){
-          int[] data = {row, col};
-          return data;
+          return (new int[] {row, col});
         }
       }
     }
-    int[] data = {-2}; // pourquoi pas -1 ?
-    return data;
+    return (new int[] {NONE} );
   }
   
     //the swap plan
@@ -193,26 +188,26 @@ class Grid{
     //info on t
     int rt = 0;
     int ct = 0;
-    int t = -2;//-2 is "none"  -1 is "empty"
+    int t = NONE;
     
     int[] findt = findSelectedTile();
-    if(findt[0] != -2){
+    if(findt[0] != NONE){
       rt = findt[0];
       ct = findt[1];
-      t = place.get(rt).get(ct);
+      t = place[rt][ct];
     }
     
-    if (t == -2){//si on n'est pas au dessus d'une case 
+    if (t == NONE){//si on n'est pas au dessus d'une case 
       tile.get(n).grid.putTile(n,rn,cn);
-    }else if (t == -1){//si on peut juste remplacer
-      tile.get(n).grid.place.get(rn).set(cn, -1);
+    }else if (t == EMPTY){//si on peut juste remplacer
+      tile.get(n).grid.place[rn][cn] = EMPTY;
       putTile(n,rt,ct);
     } else {
       if(isFull()){
         extend();
       }
-      tile.get(n).grid.place.get(rn).set(cn, -1);
-      place.get(rt).set(ct, -1);
+      tile.get(n).grid.place[rn][cn] = EMPTY;
+      place[rt][ct] = EMPTY;
 
       putTile(n,rt,ct);
       // ATTENTION AU CAS n == t !!!
@@ -226,9 +221,14 @@ class Grid{
 class RackGrid extends Grid{
   RackGrid(int rows,int cols,ArrayList<Tile> tileArray){
     super(rows,cols,tileArray);
-    thiscolor = color(139,69,19);
+    colour = color(139,69,19);
     marginCoeff.put("row", -0.3);
   } 
+
+  void setMaxs(){
+    maxrows = 4;
+    maxcols = 26;
+  }
 
   int cornerX(){
     return int(width/2 - cols*size/2 -  margin("right") -  margin("left"));
@@ -242,7 +242,7 @@ class RackGrid extends Grid{
   void reset(){
     for(int row=0; row<rows; row++){
       for(int col=0; col<cols; col++){
-        place.get(row).set(col, -1);
+        place[row][col] = EMPTY;
       }
     }
   }
@@ -251,8 +251,8 @@ class RackGrid extends Grid{
     LinkedList<Tile> aux = new LinkedList<>(); 
     for(int row=0; row < rows; row++){
       for(int col=0; col < cols; col++){
-        int n = place.get(row).get(col);
-        if (n != -1){
+        int n = place[row][col];
+        if (n != EMPTY){
           aux.add(tile.get(n));
         }
       }
