@@ -44,9 +44,9 @@ void mousePressed(){//fonction speciale qui s'active quand on click
   
   //check if we select a tile
   int[] point = {mouseX, mouseY};
-  for(int i=0; i < game.tile.size(); i++){
-    if(overlap2(game.tile.get(i).rectangle(), point)){
-      game.tile.get(i).moving = true;
+  for(int i=0; i < game.tile.length; i++){
+    if(overlap2(game.tile[i].rectangle(), point)){
+      game.tile[i].moving = true;
       game.moving.push(i);
     }
   }

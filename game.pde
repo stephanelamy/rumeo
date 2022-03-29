@@ -1,5 +1,5 @@
 class Game{
-  ArrayList<Tile> tile;  
+  Tile[] tile;  
   IntList deck;
   ArrayList<RackGrid> rack; // array of RackGrid    set goes from 1-n  with ' and n = maximum tiles to be shown(default 20)
   TableGrid table;
@@ -12,10 +12,10 @@ class Game{
   int deckSize;
   
   Game(int nbPlayersD){
-      tile = new ArrayList<Tile>();
+      tile = new Tile[2*4*13];
       createTiles();//cree toutes les tuiles avec des images JOKERS A AJOUTER PLUS TARD
       deck = new IntList();
-      for (int i=0; i<tile.size(); i++){
+      for (int i=0; i<tile.length; i++){
         deck.append(i);
       }
       table = new TableGrid(4,16, tile);
@@ -56,36 +56,34 @@ class Game{
     for (int copie = 1; copie <= 2; copie++){
       for (int c = 1; c <= 4; c++){
         for (int n = 1; n <= 13 ; n++){
-          tile.add(new Tile(c, n));
+          int index = n - 1 + 13 * (c - 1) + 52 * (copie - 1);
+          tile[index] = new Tile(c, n);
+          tile[index].no = index; // chaque tuile connait son numero
         }
       }
-    }
-    // chaque tuile connait son numero
-    for (int i = 0; i < tile.size(); i++){
-      tile.get(i).no = i;
     }
   }
 
   void drop(){//drop and/or swap n with wherever it is    
     for(int n : moving){ 
-      if(overlap2(rack.get(ourID).rectangle(),tile.get(n).center())){
+      if(overlap2(rack.get(ourID).rectangle(),tile[n].center())){
         rack.get(ourID).swap(n);
-      }else if(overlap2(table.rectangle(),tile.get(n).center())){
+      }else if(overlap2(table.rectangle(),tile[n].center())){
         table.swap(n);
       }else{
         println("here");
-        tile.get(n).grid.putTile(n,tile.get(n).row,tile.get(n).col);
+        tile[n].grid.putTile(n,tile[n].row,tile[n].col);
       }
-      tile.get(n).moving = false; // inutile ? putTile le fait deja en principe
+      tile[n].moving = false; // inutile ? putTile le fait deja en principe
     }
     moving.clear();
   }
 
   void checkMoving(){//update and draw moving tiles
-    for(int no : moving){
-      tile.get(no).x = mouseX; 
-      tile.get(no).y = mouseY;
-      tile.get(no).draw();
+    for(int n : moving){
+      tile[n].x = mouseX; 
+      tile[n].y = mouseY;
+      tile[n].draw();
     }
   }
 
@@ -150,8 +148,9 @@ class Game{
   }
 
   void textStatus(){
-    String isCompletable = str(table.parse()[0]);
-    String isValid = str(table.parse()[1]);
+    boolean[] info = table.parse();
+    String isCompletable = str(info[0]);
+    String isValid = str(info[1]);
     String message = "Completable: " + isCompletable + "  Valid: " + isValid;
     textSize(32);
     textAlign(CENTER);
