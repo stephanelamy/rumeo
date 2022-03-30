@@ -15,9 +15,9 @@ class Game{
       this.ourID = 0;
       this.moving = [];//list of moving tiles
       this.pickStartingTiles();
-      this.deckImage = loadImage("tiles/png/tile_deck.png");
-      this.image777 = loadImage("tiles/png/tile_777.png");
-      this.image678 = loadImage("tiles/png/tile_678.png");
+      this.deckImage = loadImage("png/tile_deck.png");
+      this.image777 = loadImage("png/tile_777.png");
+      this.image678 = loadImage("png/tile_678.png");
   }
 
   pickOneTile(noPlayer){

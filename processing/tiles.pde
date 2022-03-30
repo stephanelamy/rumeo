@@ -23,7 +23,7 @@ class Tile{
   }
 
   String fileName(){
-    return "tiles/png/tile_"+number+"_"+colour+".png";
+    return "png/tile_"+number+"_"+colour+".png";
   }
 
   void setSize(int cols){

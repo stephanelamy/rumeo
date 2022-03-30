@@ -27,9 +27,9 @@ class Game{
       ourID = 0;
       moving = new IntList();//list of moving tiles
       pickStartingTiles();
-      deckImage = loadImage("tiles/png/tile_deck.png"); // folder data or tiles seems to work as good ?
-      image777 = loadImage("tiles/png/tile_777.png");
-      image678 = loadImage("tiles/png/tile_678.png");
+      deckImage = loadImage("png/tile_deck.png"); 
+      image777 = loadImage("png/tile_777.png");
+      image678 = loadImage("png/tile_678.png");
       deckSize = computeSize(10);
   }
 

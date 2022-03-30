@@ -19,7 +19,7 @@ class Tile{
   }
 
   fileName(){
-    return "tiles/png/tile_"+this.number+"_"+this.color+".png";
+    return "png/tile_"+this.number+"_"+this.color+".png";
   }
 
   setSize(cols){
