@@ -17,6 +17,7 @@ function mousePressed(){//fonction speciale qui s'active quand on click
   let click = me.mouseWasPressed();
   if (click == "pick_tile"){
     game.pickOneTile(me);
+  }
 }
 
 function mouseReleased(){//fonction speciale qui s'active quand on relache
