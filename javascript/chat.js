@@ -39,8 +39,14 @@ function boutonchat(){
   circle(Xboutonchat+boutonsizechat/2+Xchat,Yboutonchat+boutonsizechat/2+Ychat,boutonsizechat);
 }
 
-function chatscroll(MouseEvent) {//bouge le chat
-  mousewheel += MouseEvent.getCount()*10;//changer la valeur de defaut 10 pour la sensibiliter du mousewheel
+function chatscroll(event) {//bouge le chat
+  console.log(event);
+  if(event.deltaY > 0){//if were moving
+    mousewheel += 10;
+  }else{
+    mousewheel -= 10; 
+  }
+
   if (mousewheel > 0) {
     mousewheel = 0;
   }
@@ -92,21 +98,46 @@ function  clavierchat(){// a mettre dans key pressed
   }
 
   envoi = join(data,"");
-  console.log(envoi);
   if (keyCode == ENTER){
-    if (envoi.length>1) archive.push(ourName +": "+ envoi);
+    if (envoi.length>0) archive.push(ourName +": "+ envoi);
     if(data[0] == "-"){//check for commands
       command(data);
     }
-
     data.splice(0, data.length)//clear the text
     envoi = "";
-
   }
 }
 
-function 
-  command(){//command will have a verity of uses especialy to start, modifie, connect and end games
-  data.splice(1,data.length);
-  console.log("command" ,data)
+function command(){//command will have a verity of uses especialy to start, modifie, connect and end games
+  //take off the "-"
+  let command;
+  data.splice(0,1);
+  command = join(data,"");
+  //list of posible commands
+  switch(command){
+    case "tile":
+      archive.push(game.tile);
+    break;
+
+    case "server":
+      startServer();
+    break;
+
+    case "client":
+      startClient();
+    break; 
+
+    case "send":
+      sendChat(archive);
+    break;
+
+    case "tiles":
+      for(let i = 0;i<game.tile.length;i++){
+        sendTile(game.tile[i],i);
+      }
+    break;
+
+    default:
+      archive.push("this command is unknown");
+  }
 }

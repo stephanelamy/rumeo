@@ -1,46 +1,72 @@
-//not in the code yet
+/*to start server in the chat write;
+-server
+-client
+//to send chat
+-send
+//to send tiles info(still working on it)
+-tiles
+*/
 
 
 /////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
-pubnub = new PubNub({
-  publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
-  subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-  uuid: "testclient"
-})
+let pubnub; //assuming were never reseting
+function startClient(){
+  pubnub = new PubNub({
+    publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
+    subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
+    uuid: "client"
+  })  
+}
 
-let n = 0;
-
-function publishMessage() {
-  n++;
+function sendChat (archive) {//send a message to the server
   var message = {
-      channel : "test",
+      channel : "chat",
       message: {
-          line1: "click " + n.toString(),
-          line2: "extra info"
+          line1: archive,
+          //line2: "extra info"
       }
   }
   pubnub.publish(message, function(status, response) {
-      console.log(status, response);
+      console.log("CLIENT",status, response);
+  })
+}
+
+function sendTile (tile,i) {//send a tile's  location in the list,x,y,r,c
+  var message = {
+      channel : "movement",
+      message: {
+          line1: i,
+          line2: tile.x,
+          line3: tile.y,
+          line4: tile.r,
+          line5: tile.c
+      }
+  }
+  pubnub.publish(message, function(status, response) {
+      console.log("CLIENT",status, response);
   })
 }
 
 /////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
 
-pubnub = new PubNub({
-  publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
-  subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-  uuid: "testserver"
-})
+function startServer(){
+  let pubnubS = undefined; //reset the variable in case it's not the first server
+  pubnubS = new PubNub({
+    publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
+    subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
+    uuid: "server"
+  })
 
-pubnub.addListener({
-message: function(msg) {
-  console.log(msg.message.line1);
-  console.log(msg.message.line2);
-  document.getElementById("demo").innerHTML = msg.message.line1;
+  pubnubS.addListener({
+    message: function(msg) {
+      console.log("SERVER",msg.message.line1);
+      //console.log(msg.message.line2);
+      document.getElementById("demo").innerHTML = msg.message.line1;
+    }
+    })
+    
+    pubnubS.subscribe({
+      channels: ['chat','movement']
+    });
 }
-})
-
-pubnub.subscribe({
-  channels: ['test']
-});
 
