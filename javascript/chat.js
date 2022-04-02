@@ -39,8 +39,14 @@ function boutonchat(){
   circle(Xboutonchat+boutonsizechat/2+Xchat,Yboutonchat+boutonsizechat/2+Ychat,boutonsizechat);
 }
 
-function chatscroll(MouseEvent) {//bouge le chat
-  mousewheel += MouseEvent.getCount()*10;//changer la valeur de defaut 10 pour la sensibiliter du mousewheel
+function chatscroll(event) {//bouge le chat
+  console.log(event);
+  if(event.deltaY > 0){//if were moving
+    mousewheel += 10;
+  }else{
+    mousewheel -= 10; 
+  }
+
   if (mousewheel > 0) {
     mousewheel = 0;
   }
@@ -93,7 +99,7 @@ function  clavierchat(){// a mettre dans key pressed
 
   envoi = join(data,"");
   if (keyCode == ENTER){
-    if (envoi.length>1) archive.push(ourName +": "+ envoi);
+    if (envoi.length>0) archive.push(ourName +": "+ envoi);
     if(data[0] == "-"){//check for commands
       command(data);
     }
@@ -112,6 +118,19 @@ function command(){//command will have a verity of uses especialy to start, modi
     case "tile":
       archive.push(game.tile);
     break;
+
+    case "server":
+      startServer();
+    break;
+
+    case "client":
+      startClient();
+    break; 
+
+    case "send":
+      publishMessage(archive);
+    break;
+
     default:
       archive.push("this command is unknown");
   }
