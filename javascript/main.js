@@ -48,6 +48,6 @@ function keyPressed(){
   clavierchat();
 }
 
-function mouseWheel(MouseEvent) {//bouge le chat
-  chatscroll(MouseEvent);
+function mouseWheel(event) {//bouge le chat
+  chatscroll(event);
 }
