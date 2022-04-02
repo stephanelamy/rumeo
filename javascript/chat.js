@@ -115,5 +115,4 @@ function command(){//command will have a verity of uses especialy to start, modi
     default:
       archive.push("this command is unknown");
   }
-
 }
