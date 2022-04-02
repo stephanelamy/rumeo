@@ -12,7 +12,7 @@ function draw() {//fonction speciale qui s'active 60 fois par seconde (ou moins 
 }
 
 function mousePressed(){//fonction speciale qui s'active quand on click
-  console.log(game);
+  //console.log(game);
 
   //check if we select a tile
   for(let i=0; i < game.tile.length; i++){

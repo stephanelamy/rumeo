@@ -9,12 +9,28 @@ function startClient(){
   })  
 }
 
-function publishMessage(message) {//send a message to the server
+function sendChat (archive) {//send a message to the server
   var message = {
       channel : "chat",
       message: {
-          line1: message,
+          line1: archive,
           //line2: "extra info"
+      }
+  }
+  pubnub.publish(message, function(status, response) {
+      console.log("CLIENT",status, response);
+  })
+}
+
+function sendTile (tile,i) {//send a tile's  location in the list,x,y,r,c
+  var message = {
+      channel : "movement",
+      message: {
+          line1: i,
+          line2: tile.x,
+          line3: tile.y,
+          line4: tile.r,
+          line5: tile.c
       }
   }
   pubnub.publish(message, function(status, response) {
@@ -41,7 +57,7 @@ function startServer(){
     })
     
     pubnubS.subscribe({
-      channels: ['chat']
+      channels: ['chat','movement']
     });
 }
 

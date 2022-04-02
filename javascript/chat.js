@@ -128,7 +128,13 @@ function command(){//command will have a verity of uses especialy to start, modi
     break; 
 
     case "send":
-      publishMessage(archive);
+      sendChat(archive);
+    break;
+
+    case "tiles":
+      for(let i = 0;i<game.tile.length;i++){
+        sendTile(game.tile[i],i);
+      }
     break;
 
     default:
