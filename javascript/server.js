@@ -1,3 +1,12 @@
+/*to start server in the chat write;
+-server
+-client
+//to send chat
+-send
+//to send tiles info(still working on it)
+-tiles
+*/
+
 
 /////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
 let pubnub; //assuming were never reseting
