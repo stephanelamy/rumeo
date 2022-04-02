@@ -14,12 +14,9 @@ function draw() {//fonction speciale qui s'active 60 fois par seconde (ou moins 
 }
 
 function mousePressed(){//fonction speciale qui s'active quand on click
-<<<<<<< HEAD
   let click = me.mouseWasPressed();
   if (click == "pick_tile"){
     game.pickOneTile(me);
-=======
-  //console.log(game);
 
   //check if we select a tile
   for(let i=0; i < game.tile.length; i++){
@@ -44,7 +41,6 @@ function mousePressed(){//fonction speciale qui s'active quand on click
   //check if we press on sort678
   if(game.checkSort678()){
     game.rack[game.ourID].sort(compareTiles678);
->>>>>>> 2e4e2a17f4c101ddaa60a0652098ba2be66d4467
   }
 }
 
@@ -56,12 +52,11 @@ function keyPressed(){
   clavierchat();
 }
 
-<<<<<<< HEAD
 function mouseWheel(MouseEvent) {//bouge le chat
   chatscroll(MouseEvent);
 }
-=======
+
 function mouseWheel(event) {//bouge le chat
   chatscroll(event);
 }
->>>>>>> 2e4e2a17f4c101ddaa60a0652098ba2be66d4467
+
