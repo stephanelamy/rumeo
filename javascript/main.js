@@ -139,7 +139,8 @@ function  clavierchat(){// a mettre dans key pressed
   if (keyCode == BACKSPACE){
     if (data.length>0) data.splice(data.length-1,1);
   }else{
-    if (checkboutonchat){//possible bug ,if so add    key != CODED &&
+    //there is an issue where CODED does not work so for now doing it the hard way    original code:  if (key != CODED && checkboutonchat){
+    if (keyCode != BACKSPACE && keyCode != DELETE && keyCode !=  ENTER && keyCode !=  RETURN && keyCode !=  TAB && keyCode !=  ESCAPE && keyCode !=  SHIFT && keyCode !=  CONTROL && keyCode !=  OPTION && keyCode !=  ALT && keyCode !=  UP_ARROW && keyCode !=  DOWN_ARROW && keyCode !=  LEFT_ARROW && keyCode !=  RIGHT_ARROW && checkboutonchat){
       let charKey = key;
       data.push(charKey);
     }
