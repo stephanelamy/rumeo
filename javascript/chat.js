@@ -104,3 +104,9 @@ function  clavierchat(){// a mettre dans key pressed
 
   }
 }
+
+function 
+  command(){//command will have a verity of uses especialy to start, modifie, connect and end games
+  data.splice(1,data.length);
+  console.log("command" ,data)
+}
