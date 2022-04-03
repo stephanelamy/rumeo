@@ -48,9 +48,8 @@ function sendTile (tile,i) {//send a tile's  location in the list,x,y,r,c
 }
 
 /////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
-
+let pubnubS = undefined; //reset the variable in case it's not the first server
 function startServer(){
-  let pubnubS = undefined; //reset the variable in case it's not the first server
   pubnubS = new PubNub({
     publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
     subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
