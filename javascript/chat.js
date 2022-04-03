@@ -111,26 +111,12 @@ function command(data){//command will have a verity of uses especialy to start, 
     case "tile":
       me.chat.archive.push(game.tile);
     break;
-/*outdated
-    case "server":
-      startServer();
-    break;
 
-    case "client":
-      startClient();
-    break; 
-*/
     case "send":
       me.client.sendChat(me.chat.archive);
     break;
 
-    case "tiles":
-      for(let i = 0;i<me.tile.length;i++){
-        sendTile(me.tile[i],i);
-      }
-    break;
-
     default:
-      archive.push("this command is unknown");
+      me.chat.archive.push("this command is unknown");
   }
 }
