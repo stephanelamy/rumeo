@@ -24,6 +24,10 @@ class Client{
         document.getElementById("demo").innerHTML = msg.message.line1;
       }
     })
+
+    this.pubnub.subscribe({
+      channels: ['chat','orders', 'setup']
+    });  
   }
 
   sendChat (data) {//send a message to the server
@@ -56,6 +60,21 @@ class Client{
     this.pubnub.publish(message, function(status, response) {
         console.log("CLIENT",status, response);
     })
+  }
+
+  pickTile() {
+    var data = {
+      channel : "movement",
+      message: {
+        type : "pick"
+      }
+    }
+    try {
+      const result = this.pubnub.publish(data);
+      console.log('result', result);
+  } catch(error) {
+      console.log('error', error);
+    }
   }
 }
 

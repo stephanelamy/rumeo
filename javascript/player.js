@@ -6,6 +6,7 @@ class Player{
       this.table = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
       this.client = new Client();
+      this.status = "setup"; // "setup" or "playing"
     }
 
     createTiles(){
@@ -27,22 +28,75 @@ class Player{
 class HumanPlayer extends Player{
   constructor() {
       super();
-      this.deckImage = loadImage("png/tile_deck.png");
-      this.image777 = loadImage("png/tile_777.png");
-      this.image678 = loadImage("png/tile_678.png");
+      this.image = {
+        deck : loadImage("png/tile_deck.png"),
+        d777 : loadImage("png/tile_777.png"),
+        d678 : loadImage("png/tile_678.png")
+      };
+      // this.deckImage = loadImage("png/tile_deck.png");
+      // this.image777 = loadImage("png/tile_777.png");
+      // this.image678 = loadImage("png/tile_678.png");
       this.moving = []; // list of moving tiles
+  }
+
+  // Event routines:
+
+  mousePressed(){ 
+    if (this.status == 'playing') {
+      this.mouseWasPressed();
+    }
+  }
+  
+  mouseReleased(){
+    if (this.status == 'playing') {
+      this.drop();
+    }
+  }
+  
+  keyPressed(){
+    if  (this.status == 'setup') {
+      this.setup(); 
+    }
+    if (this.status == 'playing') {
+      this.chat.clavier();
+    }
+  }
+  
+  mouseWheel(event) {
+    if (this.status == 'playing') {
+      this.chat.scroll(event);
+    }
+  }
+  
+  // Setting up :
+
+  setup() {   
+    if (keyCode == ENTER){
+      this.status = 'playing';
+    }
   }
 
   // Drawing routines:
 
   draw(){
-      this.textStatus();
-      this.drawDeck();
-      this.table.draw();
-      this.rack.draw();
-      this.checkMoving();
-      this.chat.draw();
+    background(100);
+    if (this.status == "setup") {
+      this.drawSetUp();
+    } else {
+    this.textStatus();
+    this.drawDeck();
+    this.table.draw();
+    this.rack.draw();
+    this.checkMoving();
+    this.chat.draw();
     }
+  }
+
+  drawSetUp() {
+    textSize(32);
+    textAlign("center");
+    text("setting up a game...", width/2, 30);
+  }
 
   textStatus(){
     let [isCompletable, isValid] = this.table.parse();
@@ -62,25 +116,22 @@ class HumanPlayer extends Player{
 
 
   drawDeck(){
-    image(this.deckImage, this.deckX(), this.deckY(), this.deckWidth(), this.deckHeight());
-    image(this.image777, this.deckX(), this.deckY777(), this.deckWidth(), this.deckHeight());
-    image(this.image678, this.deckX(), this.deckY678(), this.deckWidth(), this.deckHeight());
+    for (const name of ['deck', 'd777', 'd678']) {
+      image(this.image[name], this.deckX(), this.deckY(name), this.deckWidth(), this.deckHeight());
+    }
   }
 
   deckX(){
     return width - this.deckWidth()*1.2;
   }
 
-  deckY(){
-    return height - 3 * this.deckHeight() * 1.1;
-  }
-
-  deckY777(){
-    return this.deckY() + this.deckHeight() * 1.1;
-  }
-
-  deckY678(){
-    return this.deckY() + 2 * this.deckHeight() * 1.1;
+  deckY(name){
+    const coeff = {
+      deck : 3,
+      d777 : 2,
+      d678 : 1    
+    }; 
+    return height - coeff[name] * this.deckHeight() * 1.1;
   }
 
   checkMoving(){//update and draw moving tiles
@@ -94,6 +145,7 @@ class HumanPlayer extends Player{
   // Clicked mouse routines:
   
   mouseWasPressed(){
+    console.log('here');
     //check if we select a tile
     for(let i=0; i < this.tile.length; i++){
       if(overlap(...me.tile[i].rectangle(), mouseX, mouseY)){
@@ -102,47 +154,32 @@ class HumanPlayer extends Player{
       }
     }
 
-    this.chat.bouton(); //to close or open chat
+    this.chat.bouton(); //check if we close or open chat
 
     //check if we press on the deck
-    if(this.checkDeck()){
-      return "pick_tile";
+    if(this.checkDeck('deck')) {
+      this.client.pickTile();
+      // return "pick_tile";
     }
 
     //check if we press on sort777
-    if(this.checkSort777()){
+    if(this.checkDeck('d777')) {
       this.rack.sort(compareTiles777);
     }
 
     //check if we press on sort678
-    if(this.checkSort678()){
+    if(this.checkDeck('d678')) {
         this.rack.sort(compareTiles678);
     }
   }
 
-  checkDeck(){ //check if we clicked on the deck
-    return overlap(...this.deckRectangle(),mouseX, mouseY);
-  }
-  
-  checkSort777(){ //check if we clicked on sort777
-    return overlap(...this.sort777Rectangle(),mouseX, mouseY);
+  checkDeck(name){ //check if we clicked on the deck
+    return overlap(...this.deckRectangle(name),mouseX, mouseY);
   }
 
-  checkSort678(){//check if we clicked on sort777
-    return overlap(...this.sort678Rectangle(),mouseX, mouseY);
+  deckRectangle(name){
+    return [this.deckX(), this.deckY(name), this.deckWidth(), this.deckHeight()];
   }
-
-  deckRectangle(){
-    return [this.deckX(), this.deckY(), this.deckWidth(), this.deckHeight()];
-  }
-
-  sort777Rectangle(){
-    return [this.deckX(), this.deckY777(), this.deckWidth(), this.deckHeight()];
-  }
-
-  sort678Rectangle(){
-    return [this.deckX(), this.deckY678(), this.deckWidth(), this.deckHeight()];
-  }  
 
   // released mouse routine:
 
