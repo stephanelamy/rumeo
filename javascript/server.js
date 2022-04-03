@@ -70,7 +70,12 @@ class Server  {
     this.pubnub.addListener({
       message: function(msg) {
         console.log("SERVER","listening");
-        console.log("SERVER",msg.message.archive);
+        if(msg.channel == 'chat'){
+          console.log("SERVER",msg.message.archive);
+        }
+        if(msg.channel == 'movement'){
+          console.log("SERVER",msg.message);
+        }
        // document.getElementById("demo").innerHTML = msg.message.line1;
       }
     })
