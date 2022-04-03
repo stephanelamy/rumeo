@@ -6,6 +6,7 @@ class Game{
       }
       this.player = playerArray;
       this.pickStartingTiles();
+      this.server = new Server();
   }
 
   pickOneTile(player){

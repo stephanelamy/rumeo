@@ -109,9 +109,9 @@ function command(data){//command will have a verity of uses especialy to start, 
   //list of posible commands
   switch(command){
     case "tile":
-      chat.archive.push(game.tile);
+      me.chat.archive.push(game.tile);
     break;
-
+/*outdated
     case "server":
       startServer();
     break;
@@ -119,9 +119,9 @@ function command(data){//command will have a verity of uses especialy to start, 
     case "client":
       startClient();
     break; 
-
+*/
     case "send":
-      sendChat(chat.archive);
+      me.client.sendChat(me.chat.archive);
     break;
 
     case "tiles":

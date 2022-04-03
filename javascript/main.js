@@ -1,6 +1,5 @@
 let me;
 let game;
-let chat;
 
 function setup() {//fonction speciale qui s'active une fois au debut
   createCanvas(windowWidth, windowHeight);
@@ -12,7 +11,6 @@ function setup() {//fonction speciale qui s'active une fois au debut
 function draw() {//fonction speciale qui s'active 60 fois par seconde (ou moins si le programme est trop lourd)
   background(100);
   me.draw();
-  chat.draw();
 }
 
 function mousePressed(){//fonction speciale qui s'active quand on click
@@ -27,10 +25,10 @@ function mouseReleased(){//fonction speciale qui s'active quand on relache
 }
 
 function keyPressed(){
-  chat.clavier();
+  me.chat.clavier();
 }
 
 function mouseWheel(event) {//bouge le chat
-  chat.scroll(event);
+  me.chat.scroll(event);
 }
 

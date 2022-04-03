@@ -9,65 +9,75 @@
 
 
 /////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
+class Client{
+  constructor(){
+    this.pubnub = new PubNub({
+      publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
+      subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
+      uuid: "client"
+    })  
 
-let pubnub; //assuming were never reseting
-function startClient(){
-  pubnub = new PubNub({
-    publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
-    subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-    uuid: "client"
-  })  
-}
-
-function sendChat (archive) {//send a message to the server
-  var message = {
-      channel : "chat",
-      message: {
-          line1: archive,
-          //line2: "extra info"
+    this.pubnub.addListener({
+      message: function(msg) {
+        console.log("CLIENT","listening");
+        console.log("CLIENT",msg.message.index);
+        document.getElementById("demo").innerHTML = msg.message.line1;
       }
+    })
   }
-  pubnub.publish(message, function(status, response) {
-      console.log("CLIENT",status, response);
-  })
-}
 
-function sendTile (tile,i) {//send a tile's  location in the list,x,y,r,c
-  var message = {
-      channel : "movement",
-      message: {
-          line1: i,
-          line2: tile.x,
-          line3: tile.y,
-          line4: tile.r,
-          line5: tile.c
-      }
+  sendChat (archive) {//send a message to the server
+    var message = {
+        channel : "chat",
+        message: {
+            archive: archive,
+            //line2: "extra info"
+        }
+    }
+    this.pubnub.publish(message, function(status, response) {
+        console.log("CLIENT",status, response);
+    })
   }
-  pubnub.publish(message, function(status, response) {
-      console.log("CLIENT",status, response);
-  })
+
+  sendTile (tile) {//send a tile's  location in the list,x,y,r,c
+    var message = {
+        channel : "movement",
+        message: {
+            index: tile.no,
+            x: tile.x,
+            y: tile.y,
+            row: tile.row,
+            col: tile.col,
+            color: tile.color,
+            number: tile.number
+        }
+    }
+    this.pubnub.publish(message, function(status, response) {
+        console.log("CLIENT",status, response);
+    })
+  }
 }
 
 /////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
-let pubnubS = undefined; //reset the variable in case it's not the first server
-function startServer(){
-  pubnubS = new PubNub({
-    publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
-    subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-    uuid: "server"
-  })
 
-  pubnubS.addListener({
-    message: function(msg) {
-      console.log("SERVER","listening");
-      console.log("SERVER",msg.message.line1);
-      console.log(msg.message.line2);
-      document.getElementById("demo").innerHTML = msg.message.line1;
-    }
+class Server  {
+  constructor(){
+    this.pubnub = new PubNub({
+      publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
+      subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
+      uuid: "server"
     })
-    
-    pubnubS.subscribe({
+    this.pubnub.addListener({
+      message: function(msg) {
+        console.log("SERVER","listening");
+        console.log("SERVER",msg.message.archive);
+       // document.getElementById("demo").innerHTML = msg.message.line1;
+      }
+    })
+    this.pubnub.subscribe({
       channels: ['chat','movement']
-    });
+    });  
+  }
 }
+
 
