@@ -10,14 +10,14 @@ function publishMessage() {
         n++;
         var message = {
             channel : "test",
-            message: {
-                line1: "click " + n.toString(),
-                line2: "extra info"
-            }
+            message: "click " + n.toString()
         }
-        pubnub.publish(message, function(status, response) {
-            console.log(status, response);
-        })
+        try {
+            const result = pubnub.publish(message);
+            console.log('result', result);
+        } catch(error) {
+            console.log('error', error);
+        }
     }
   
 
