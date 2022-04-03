@@ -81,22 +81,28 @@ class Chat{
     if (keyCode == BACKSPACE){
       if (this.data.length>0) this.data.splice(this.data.length-1,1);
     }else{
-    //there is an issue where CODED does not work so for now doing it the hard way    original code:  if (key != CODED && checkboutonchat){
-    if (keyCode != BACKSPACE && keyCode != DELETE && keyCode !=  ENTER && keyCode !=  RETURN && keyCode !=  TAB && keyCode !=  ESCAPE && keyCode !=  SHIFT && keyCode !=  CONTROL && keyCode !=  OPTION && keyCode !=  ALT && keyCode !=  UP_ARROW && keyCode !=  DOWN_ARROW && keyCode !=  LEFT_ARROW && keyCode !=  RIGHT_ARROW && this.checkboutonchat){
-      let charKey = key;
-      this.data.push(charKey);
+      //there is an issue where CODED does not work so for now doing it the hard way    original code:  if (key != CODED && checkboutonchat){
+      if (keyCode != BACKSPACE && keyCode != DELETE && keyCode !=  ENTER && keyCode !=  RETURN && keyCode !=  TAB && keyCode !=  ESCAPE && keyCode !=  SHIFT && keyCode !=  CONTROL && keyCode !=  OPTION && keyCode !=  ALT && keyCode !=  UP_ARROW && keyCode !=  DOWN_ARROW && keyCode !=  LEFT_ARROW && keyCode !=  RIGHT_ARROW && this.checkboutonchat){
+        let charKey = key;
+        this.data.push(charKey);
+      }
     }
-  }
-  this.envoi = join(this.data,"");
+    this.envoi = join(this.data,"");
     if (keyCode == ENTER){
       if (this.envoi.length>0) this.archive.push(this.ourName +": "+ this.envoi);
       if(this.data[0] == "-"){//check for commands
         command(this.data);
+      }else{//if not send to server for others to see
+        me.client.sendChat(this.data);
       }
       this.data.splice(0, this.data.length)//clear the text
       this.envoi = "";
     }
-  }    
+  }
+
+  addArchive(sent){
+    if (this.envoi.length>0) this.archive.push(this.ourName +": "+ sent);
+  }
 }
 
 

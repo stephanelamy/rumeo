@@ -26,7 +26,8 @@ class Client{
     })
   }
 
-  sendChat (archive) {//send a message to the server
+  sendChat (data) {//send a message to the server
+    let archive = join(data,"")
     var message = {
         channel : "chat",
         message: {
@@ -72,6 +73,7 @@ class Server  {
         console.log("SERVER","listening");
         if(msg.channel == 'chat'){
           console.log("SERVER",msg.message.archive);
+          me.chat.addArchive(msg.message.archive);
         }
         if(msg.channel == 'movement'){
           console.log("SERVER",msg.message);
