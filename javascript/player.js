@@ -160,3 +160,20 @@ class HumanPlayer extends Player{
 
     
 }
+
+
+class BotPlayer extends Player{
+  constructor() {
+    super();
+  }
+
+  move() {
+    if (this.rack.isEmpty()) {
+      // pick tile in deck
+    } else {
+      this.rack.sort(compareTiles777());
+      index = this.rack.place[0][0];
+      // put tile index on table
+    }
+  }
+}

@@ -78,6 +78,17 @@ class Grid{
     return this.findEmptySpot() == 'full';
   }
 
+  isEmpty() {
+    for(let r = 0; r < this.rows; r++){
+      for(let c = 0; c < this.cols; c++){
+        if(this.place[r][c]  != 'empty'){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   putTile(n, r, c){
     let tile = this.tile[n];
     tile.setSize(this.cols);
