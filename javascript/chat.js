@@ -1,114 +1,107 @@
-let input,output;
-let data = [];
-let envoi = "";
-let archive = [];
-
-
-
-let mousewheel;
-let textThickness = 30;//modifie le taille du text
-let ecart = 4;// ecart verticale entre les text
-let Xchat = 0, Ychat=0;//les coordonne haut gauche du chat
-let gameXchat, gameYchat;//la hauteur/largeur du chat
-let ourName = "Mrtnt";//nom du joueur
-
-let Xboutonchat, Yboutonchat;//les coordonne haut gauche du bouton pour minimiser
-let boutonsizechat;//hauteur/largeur du bouton
-let checkboutonchat = false;
-;
-
-function chat(){
-  //definire les variable ici
-  Xchat = width/2;//les coordonne haut gauche du chat
-  Ychat=0;//les coordonne haut gauche du chat
-  gameXchat = width/2;//largeur du chat
-  gameYchat = height/2;//hauteur du chat
-  boutonsizechat = width/20;//taille du bouton du chat
-  Xboutonchat = gameXchat - width/40 - boutonsizechat;//calcule la coordonne haut gauch du bouton
-  Yboutonchat = width/40;//j'utilise width et non height pour la beauter
-  //mantenant on affiche
-  if(checkboutonchat){
-    afficherarchive();//affiche tout les vieux message
-    bardechat();//affiche ce qu'on ecrit
-  }
-  boutonchat();//affiche le bouton
-  
-}
-
-function boutonchat(){
-  circle(Xboutonchat+boutonsizechat/2+Xchat,Yboutonchat+boutonsizechat/2+Ychat,boutonsizechat);
-}
-
-function chatscroll(event) {//bouge le chat
-  console.log(event);
-  if(event.deltaY > 0){//if were moving
-    mousewheel += 10;
-  }else{
-    mousewheel -= 10; 
+class Chat{
+  constructor(){
+    this.input,this.output;
+    this.data = [];
+    this.envoi = "";
+    this.archive = [];
+    
+    this.mousewheel;
+    this.textThickness = 30;//modifie le taille du text
+    this.ecart = 4;// ecart verticale entre les text
+    this.Xchat = width/2, this.Ychat = 0;//les coordonne haut gauche du chat
+    this.gameXchat = width/2, this.gameYchat = height/2;//la hauteur/largeur du chat
+    this.ourName = "Mrtnt";//nom du joueur
+    
+    this.boutonsizechat = width/20;//hauteur/largeur du bouton
+    this.Xboutonchat = this.gameXchat - width/40 - this.boutonsizechat, this.Yboutonchat = width/40;//les coordonne haut gauche du bouton pour minimiser  //j'utilise width et non height pour la beauter
+    this.checkboutonchat = false;;
   }
 
-  if (mousewheel > 0) {
-    mousewheel = 0;
+  draw(){
+    if(this.checkboutonchat){
+      this.drawArchive();//affiche tout les vieux message
+      this.bar();//affiche ce qu'on ecrit
+    } 
+    this.drawBouton();//affiche le bouton
   }
-  if (mousewheel < -(gameYchat-(textThickness+ecart)*4)) {
-    mousewheel = -(gameYchat-(textThickness+ecart)*4);
+
+  drawBouton(){
+    circle(this.Xboutonchat+this.boutonsizechat/2+this.Xchat,this.Yboutonchat+this.boutonsizechat/2+this.Ychat,this.boutonsizechat);
   }
-}
 
-function bardechat() {//affiche ce qu'on ecrit 
-  push();
-  textAlign(LEFT, BOTTOM);
-  textSize(textThickness);
-  text(envoi, Xchat+(ecart*2), gameYchat-2);
-  pop();
-}
+  scroll(event) {//bouge le chat
+    console.log(event);
+    if(event.deltaY > 0){//if wheel is moving up
+      this.mousewheel += 10;
+    }else if(event.deltaY < 0){
+      this.mousewheel -= 10; 
+    }
 
-function afficherarchive() {//affiche tout les vieux message 
-  push();
-  fill(200, 200, 200);
-  rect(Xchat+2, Ychat+2, gameXchat-4, gameYchat-4);//backgrond
-  pop();
-  push();
-  translate(0, mousewheel);
-  textAlign(LEFT, BOTTOM);
-  for (let i = 0; i< archive.length; i++) {
-    textSize(textThickness);
-    text(archive[i], Xchat+(ecart*2), Ychat+gameYchat-25+-(archive.length*textThickness+ecart)+(i*textThickness+ecart));
+    if (this.mousewheel > 0) {
+      this.mousewheel = 0;
+    }
+    if (this.mousewheel < -(this.gameYchat-(this.textThickness+this.ecart)*4)) {
+      this.mousewheel = -(this.gameYchat-(this.textThickness+this.ecart)*4);
+    }
   }
-  pop();
-}
 
-function chatbouton(){
-  if(abs((Xchat+Xboutonchat+boutonsizechat/2)-mouseX)< boutonsizechat/2 && abs((Ychat+Yboutonchat+boutonsizechat/2)-mouseY)<boutonsizechat/2){//pour un bouton rond
-  //if(Xboutonchat < mouseX && Xboutonchat + boutonWidthchat > mouseX && Yboutonchat < mouseY && Yboutonchat + boutonHeightchat > mouseY ){//pour un bouton carre
-    checkboutonchat = !checkboutonchat;
+
+
+  bar() {//affiche ce qu'on ecrit 
+    push();
+    textAlign(LEFT, BOTTOM);
+    textSize(this.textThickness);
+    text(this.envoi, this.Xchat+(this.ecart*2), this.gameYchat-2);
+    pop();
   }
-}
-
-function  clavierchat(){// a mettre dans key pressed
-
-  if (keyCode == BACKSPACE){
-    if (data.length>0) data.splice(data.length-1,1);
-  }else{
+    
+  drawArchive() {//affiche tout les vieux message 
+    push();
+    fill(200, 200, 200);
+    rect(this.Xchat+2, this.Ychat+2, this.gameXchat-4, this.gameYchat-4);//backgrond
+    pop();
+    push();
+    translate(0, this.mousewheel);
+    textAlign(LEFT, BOTTOM);
+    for (let i = 0; i< this.archive.length; i++) {
+      textSize(this.textThickness);
+      text(this.archive[i], this.Xchat+(this.ecart*2), this.Ychat+this.gameYchat-25+-(this.archive.length*this.textThickness+this.ecart)+(i*this.textThickness+this.ecart));
+    }
+    pop();
+  }
+    
+  bouton(){
+    if(abs((this.Xchat+this.Xboutonchat+this.boutonsizechat/2)-mouseX)< this.boutonsizechat/2 && abs((this.Ychat+this.Yboutonchat+this.boutonsizechat/2)-mouseY)<this.boutonsizechat/2){//pour un bouton rond
+    //if(Xboutonchat < mouseX && Xboutonchat + boutonWidthchat > mouseX && Yboutonchat < mouseY && Yboutonchat + boutonHeightchat > mouseY ){//pour un bouton carre
+      this.checkboutonchat = !(this.checkboutonchat);
+    }
+  }
+    
+  clavier(){// a mettre dans key pressed
+    if (keyCode == BACKSPACE){
+      if (this.data.length>0) this.data.splice(this.data.length-1,1);
+    }else{
     //there is an issue where CODED does not work so for now doing it the hard way    original code:  if (key != CODED && checkboutonchat){
-    if (keyCode != BACKSPACE && keyCode != DELETE && keyCode !=  ENTER && keyCode !=  RETURN && keyCode !=  TAB && keyCode !=  ESCAPE && keyCode !=  SHIFT && keyCode !=  CONTROL && keyCode !=  OPTION && keyCode !=  ALT && keyCode !=  UP_ARROW && keyCode !=  DOWN_ARROW && keyCode !=  LEFT_ARROW && keyCode !=  RIGHT_ARROW && checkboutonchat){
+    if (keyCode != BACKSPACE && keyCode != DELETE && keyCode !=  ENTER && keyCode !=  RETURN && keyCode !=  TAB && keyCode !=  ESCAPE && keyCode !=  SHIFT && keyCode !=  CONTROL && keyCode !=  OPTION && keyCode !=  ALT && keyCode !=  UP_ARROW && keyCode !=  DOWN_ARROW && keyCode !=  LEFT_ARROW && keyCode !=  RIGHT_ARROW && this.checkboutonchat){
       let charKey = key;
-      data.push(charKey);
+      this.data.push(charKey);
     }
   }
-
-  envoi = join(data,"");
-  if (keyCode == ENTER){
-    if (envoi.length>0) archive.push(ourName +": "+ envoi);
-    if(data[0] == "-"){//check for commands
-      command(data);
+  this.envoi = join(this.data,"");
+    if (keyCode == ENTER){
+      if (this.envoi.length>0) this.archive.push(this.ourName +": "+ this.envoi);
+      if(this.data[0] == "-"){//check for commands
+        command(this.data);
+      }
+      this.data.splice(0, this.data.length)//clear the text
+      this.envoi = "";
     }
-    data.splice(0, data.length)//clear the text
-    envoi = "";
-  }
+  }    
 }
 
-function command(){//command will have a verity of uses especialy to start, modifie, connect and end games
+
+
+function command(data){//command will have a verity of uses especialy to start, modifie, connect and end games
   //take off the "-"
   let command;
   data.splice(0,1);
@@ -116,7 +109,7 @@ function command(){//command will have a verity of uses especialy to start, modi
   //list of posible commands
   switch(command){
     case "tile":
-      archive.push(game.tile);
+      chat.archive.push(game.tile);
     break;
 
     case "server":
@@ -128,12 +121,12 @@ function command(){//command will have a verity of uses especialy to start, modi
     break; 
 
     case "send":
-      sendChat(archive);
+      sendChat(chat.archive);
     break;
 
     case "tiles":
-      for(let i = 0;i<game.tile.length;i++){
-        sendTile(game.tile[i],i);
+      for(let i = 0;i<me.tile.length;i++){
+        sendTile(me.tile[i],i);
       }
     break;
 

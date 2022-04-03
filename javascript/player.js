@@ -99,7 +99,7 @@ class HumanPlayer extends Player{
         }
       }
 
-      chatbouton(); //to close or open chat
+      chat.bouton(); //to close or open chat
 
       //check if we press on the deck
       if(this.checkDeck()){

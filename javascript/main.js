@@ -1,16 +1,18 @@
 let me;
 let game;
+let chat;
 
 function setup() {//fonction speciale qui s'active une fois au debut
   createCanvas(windowWidth, windowHeight);
   me = new HumanPlayer();
   game = new Game([me]);
+  chat = new Chat()//maybe put in game?
 }
 
 function draw() {//fonction speciale qui s'active 60 fois par seconde (ou moins si le programme est trop lourd)
   background(100);
   me.draw();
-  chat();
+  chat.draw();
 }
 
 function mousePressed(){//fonction speciale qui s'active quand on click
@@ -25,14 +27,10 @@ function mouseReleased(){//fonction speciale qui s'active quand on relache
 }
 
 function keyPressed(){
-  clavierchat();
-}
-
-function mouseWheel(MouseEvent) {//bouge le chat
-  chatscroll(MouseEvent);
+  chat.clavier();
 }
 
 function mouseWheel(event) {//bouge le chat
-  chatscroll(event);
+  chat.scroll(event);
 }
 

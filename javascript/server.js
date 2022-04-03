@@ -9,6 +9,7 @@
 
 
 /////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
+
 let pubnub; //assuming were never reseting
 function startClient(){
   pubnub = new PubNub({
@@ -58,8 +59,9 @@ function startServer(){
 
   pubnubS.addListener({
     message: function(msg) {
+      console.log("SERVER","listening");
       console.log("SERVER",msg.message.line1);
-      //console.log(msg.message.line2);
+      console.log(msg.message.line2);
       document.getElementById("demo").innerHTML = msg.message.line1;
     }
     })
