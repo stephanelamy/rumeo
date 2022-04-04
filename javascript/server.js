@@ -14,12 +14,14 @@ class Client{
     this.pubnub = new PubNub({
       publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
       subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-      uuid: "client"
+      uuid: UUID // this constant must be defined in file uuid.js: const UUID = 'name';
     })  
+
+    console.log("CLIENT", "created", UUID);
 
     this.pubnub.addListener({
       message: function(msg) {
-        console.log("CLIENT","listening");
+        console.log("CLIENT", "listening");
         console.log("CLIENT",msg.message.index);
         document.getElementById("demo").innerHTML = msg.message.line1;
       }
