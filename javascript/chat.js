@@ -89,7 +89,7 @@ class Chat{
     }
     this.envoi = join(this.data,"");
     if (keyCode == ENTER){
-      if (this.envoi.length>0) this.archive.push(this.ourName +": "+ this.envoi);
+      // if (this.envoi.length>0) this.archive.push(this.ourName +": "+ this.envoi);
       if(this.data[0] == "-"){//check for commands
         command(this.data);
       }else{//if not send to server for others to see
@@ -101,7 +101,7 @@ class Chat{
   }
 
   addArchive(sent){
-    if (this.envoi.length>0) this.archive.push(this.ourName +": "+ sent);
+    if (sent.length>0) this.archive.push(this.ourName +": "+ sent);
   }
 }
 
