@@ -10,7 +10,7 @@ class Chat{
     this.ecart = 4;// ecart verticale entre les text
     this.Xchat = width/2, this.Ychat = 0;//les coordonne haut gauche du chat
     this.gameXchat = width/2, this.gameYchat = height/2;//la hauteur/largeur du chat
-    this.ourName = "Mrtnt";//nom du joueur
+    this.ourName = UUID;//nom du joueur
     
     this.boutonsizechat = width/20;//hauteur/largeur du bouton
     this.Xboutonchat = this.gameXchat - width/40 - this.boutonsizechat, this.Yboutonchat = width/40;//les coordonne haut gauche du bouton pour minimiser  //j'utilise width et non height pour la beauter
