@@ -26,6 +26,7 @@ class Client{
     this.pubnub.addListener({
       message: (msg) => {
         console.log("CLIENT", "listening from channel", msg.channel, 'text', msg.message.text);
+        
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
             if (this.player.isMaster) {
@@ -50,11 +51,15 @@ class Client{
             }
           }
         }
+
+        if(msg.channel == 'chat') {
+          this.player.chat.addArchive(msg.message.archive);
+        }
       }
     })
 
     this.pubnub.subscribe({
-      channels: ['chat','orders', 'setup']
+      channels: ['chat', 'orders', 'setup']
     });  
 
     this.onConnection();
@@ -127,7 +132,8 @@ class Client{
     // })
   }
 
-  sendTile (tile) {//send a tile's  location in the list,x,y,r,c
+  sendTile (tile) {//send a tile's  location in the list,x,y,r,c 
+    // not clear we need that
     var message = {
         channel : "movement",
         message: {
@@ -167,10 +173,10 @@ class Server  {
     this.pubnub.addListener({
       message: function(msg) {
         console.log("SERVER","listening");
-        if(msg.channel == 'chat'){
-          console.log("SERVER",msg.message.archive);
-          me.chat.addArchive(msg.message.archive);
-        }
+        // if(msg.channel == 'chat'){
+        //   console.log("SERVER",msg.message.archive);
+        //   me.chat.addArchive(msg.message.archive);
+        // }
         if(msg.channel == 'movement'){
           console.log("SERVER",msg.message);
         }
@@ -178,7 +184,7 @@ class Server  {
       }
     })
     this.pubnub.subscribe({
-      channels: ['chat','movement']
+      channels: ['movement']
     });  
   }
 }

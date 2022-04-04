@@ -6,7 +6,7 @@ class Player{
       this.table = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
       this.status = "setup"; // "setup" or "playing"
-      this.client = new Client();
+      this.client = new Client(this);
     }
 
     createTiles(){

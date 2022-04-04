@@ -107,7 +107,7 @@ class Chat{
 
 
 
-function command(data){//command will have a verity of uses especialy to start, modifie, connect and end games
+function command(data){//command will have a variety of uses especially to start, modify, connect and end games
   //take off the "-"
   let command;
   data.splice(0,1);
