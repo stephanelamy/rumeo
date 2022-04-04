@@ -101,7 +101,7 @@ class Client{
   drawSetUpList() {
     textSize(32);
     textAlign("center");
-    text("setting up a game...", width/2, 30);
+    text("setting up a game... Master: " + this.isMaster, width/2, 30);
     textAlign("left");
     for (let i = 0; i < this.setuplist.length; i++) {
       text(this.setuplist[i], 10, 40*(i+3));
