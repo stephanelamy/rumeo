@@ -32,13 +32,13 @@ class Client{
               message = {
                 text: 'confirm',
                 uuid: msg.message.uuid
-              } 
+              };
               this.sendMsg(message, 'setup');
               this.setuplist.push(msg.message.type + ' ' + msg.message.uuid)
               message = {
                 text: 'update',
                 list: this.setuplist
-              } 
+              };
               this.sendMsg(message, 'setup');
               // add player to list and send update message 
             }
@@ -64,7 +64,7 @@ class Client{
     const msg = {
       channel: channel,
       message: message
-    } 
+    };
     try {
       const result = this.pubnub.publish(msg);
       console.log('sending on channel', channel);
@@ -79,7 +79,7 @@ class Client{
       text: 'join',
       uuid: UUID,
       type: 'player'
-    } 
+    };
     this.sendMsg(message, 'setup');
     let sleep = ms => {  
       return new Promise(resolve => setTimeout(resolve, ms));  
@@ -92,7 +92,7 @@ class Client{
         message = {
           text: 'update',
           list: this.setuplist
-        } 
+        };
         this.sendMsg(message, 'setup');
       }  
     });  
@@ -110,16 +110,21 @@ class Client{
 
   sendChat (data) {//send a message to the server
     let archive = join(data,"")
-    var message = {
-        channel : "chat",
-        message: {
-            archive: archive,
-            //line2: "extra info"
-        }
-    }
-    this.pubnub.publish(message, function(status, response) {
-        console.log("CLIENT",status, response);
-    })
+    let message= {
+      archive: archive,
+    };
+    this.sendMsg(message, 'chat');
+
+    // var message = {
+    //     channel : "chat",
+    //     message: {
+    //         archive: archive,
+    //         //line2: "extra info"
+    //     }
+    // }
+    // this.pubnub.publish(message, function(status, response) {
+    //     console.log("CLIENT",status, response);
+    // })
   }
 
   sendTile (tile) {//send a tile's  location in the list,x,y,r,c
@@ -141,30 +146,24 @@ class Client{
   }
 
   pickTile() {
-    var data = {
-      channel : "movement",
-      message: {
-        type : "pick"
-      }
-    }
-    try {
-      const result = this.pubnub.publish(data);
-      console.log('result', result);
-  } catch(error) {
-      console.log('error', error);
-    }
+    let message = {
+      type: "pick"
+    };
+    this.sendMsg(message, 'movement');
   }
 }
 
 /////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
 
 class Server  {
-  constructor(){
+
+  constructor() {
     this.pubnub = new PubNub({
       publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
       subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
       uuid: "server"
-    })
+    });
+    
     this.pubnub.addListener({
       message: function(msg) {
         console.log("SERVER","listening");
