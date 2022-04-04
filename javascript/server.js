@@ -10,7 +10,11 @@
 
 /////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
 class Client{
-  constructor(){
+  constructor(player){
+    this.player = player;
+    this.setuplist = [];
+    this.isMaster = false;
+    this.isOnList = false;
     this.pubnub = new PubNub({
       publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
       subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
@@ -20,16 +24,75 @@ class Client{
     console.log("CLIENT", "created", UUID);
 
     this.pubnub.addListener({
-      message: function(msg) {
+      message: (msg) => {
         console.log("CLIENT", "listening");
-        console.log("CLIENT",msg.message.index);
-        document.getElementById("demo").innerHTML = msg.message.line1;
+        if (msg.channel == 'setup') {
+          if (msg.message.text == 'join') {  
+            if (this.player.isMaster) {
+              // add player to list and send update message 
+            }
+          } else if (msg.message.text == 'update') {
+            // update the list for showing on screen
+          } else if (msg.message.text == 'confirm') {
+            if (msg.message.uuid == UUID) {
+              this.isOnList = true;
+            }
+          }
+        }
       }
     })
 
     this.pubnub.subscribe({
       channels: ['chat','orders', 'setup']
     });  
+
+    this.onConnection();
+  }
+
+  sendMsg(message, channel) {
+    const msg = {
+      channel: channel,
+      message: message
+    } 
+    try {
+      const result = this.pubnub.publish(msg);
+      console.log('sending on channel', channel);
+      console.log('result', result);
+  } catch(error) {
+      console.log('error', error);
+    }
+  }
+
+  onConnection(){
+    let message = {
+      text: 'join'
+    } 
+    this.sendMsg(message, 'setup');
+    let sleep = ms => {  
+      return new Promise(resolve => setTimeout(resolve, ms));  
+    };  
+    sleep(500).then(() => {  
+      if (!this.isOnList) {
+        // we are master, update list and send message
+        this.isMaster = true;
+        this.setuplist.push('human ' + UUID)
+        message = {
+          text: 'update',
+          list: this.setuplist
+        } 
+        this.sendMsg(message, 'update');
+      }  
+    });  
+  }
+
+  drawSetUpList() {
+    textSize(32);
+    textAlign("center");
+    text("setting up a game...", width/2, 30);
+    textAlign("left");
+    for (let i = 0; i < this.setuplist.length; i++) {
+      text(this.setuplist[i], 10, 40*(i+3));
+    }
   }
 
   sendChat (data) {//send a message to the server

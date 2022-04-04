@@ -5,8 +5,8 @@ class Player{
       this.rack = new RackGrid(2,10,this.tile);
       this.table = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
-      this.client = new Client();
       this.status = "setup"; // "setup" or "playing"
+      this.client = new Client();
     }
 
     createTiles(){
@@ -79,7 +79,7 @@ class HumanPlayer extends Player{
   // Drawing routines:
 
   draw(){
-    background(100);
+    background(150);
     if (this.status == "setup") {
       this.drawSetUp();
     } else {
@@ -93,9 +93,7 @@ class HumanPlayer extends Player{
   }
 
   drawSetUp() {
-    textSize(32);
-    textAlign("center");
-    text("setting up a game...", width/2, 30);
+    this.client.drawSetUpList();
   }
 
   textStatus(){
