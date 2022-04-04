@@ -25,14 +25,25 @@ class Client{
 
     this.pubnub.addListener({
       message: (msg) => {
-        console.log("CLIENT", "listening");
+        console.log("CLIENT", "listening from channel", msg.channel, 'text', msg.message.text);
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
             if (this.player.isMaster) {
+              message = {
+                text: 'confirm',
+                uuid: msg.message.uuid
+              } 
+              this.sendMsg(message, 'setup');
+              this.setuplist.push(msg.message.type + ' ' + msg.message.uuid)
+              message = {
+                text: 'update',
+                list: this.setuplist
+              } 
+              this.sendMsg(message, 'setup');
               // add player to list and send update message 
             }
           } else if (msg.message.text == 'update') {
-            // update the list for showing on screen
+            this.setuplist = msg.message.list;
           } else if (msg.message.text == 'confirm') {
             if (msg.message.uuid == UUID) {
               this.isOnList = true;
@@ -65,7 +76,9 @@ class Client{
 
   onConnection(){
     let message = {
-      text: 'join'
+      text: 'join',
+      uuid: UUID,
+      type: 'player'
     } 
     this.sendMsg(message, 'setup');
     let sleep = ms => {  
@@ -75,12 +88,12 @@ class Client{
       if (!this.isOnList) {
         // we are master, update list and send message
         this.isMaster = true;
-        this.setuplist.push('human ' + UUID)
+        this.setuplist.push('player' + ' ' + UUID)
         message = {
           text: 'update',
           list: this.setuplist
         } 
-        this.sendMsg(message, 'update');
+        this.sendMsg(message, 'setup');
       }  
     });  
   }
