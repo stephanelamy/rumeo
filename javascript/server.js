@@ -62,7 +62,7 @@ class Client{
     };
     try {
       const result = this.pubnub.publish(msg);
-      console.log('sending on channel', channel);
+      console.log('sending on channel', channel, message);
       console.log('result', result);
   } catch(error) {
       console.log('error', error);
@@ -118,17 +118,6 @@ class Client{
       archive: archive,
     };
     this.sendMsg(message, 'chat');
-
-    // var message = {
-    //     channel : "chat",
-    //     message: {
-    //         archive: archive,
-    //         //line2: "extra info"
-    //     }
-    // }
-    // this.pubnub.publish(message, function(status, response) {
-    //     console.log("CLIENT",status, response);
-    // })
   }
 
   sendTile (tile) {//send a tile's  location in the list,x,y,r,c 
