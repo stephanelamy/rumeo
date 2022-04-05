@@ -25,7 +25,7 @@ class Client{
 
     this.pubnub.addListener({
       message: (msg) => {
-        console.log("CLIENT", "listening from channel", msg.channel, 'message', msg.message);
+        console.log("CLIENT", "listening from channel", msg.channel, msg.message);
         
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
