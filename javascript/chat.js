@@ -1,32 +1,36 @@
 class Chat{
   constructor(){
-    this.input,this.output;
+    this.input;
+    this.output;
     this.data = [];
     this.envoi = "";
     this.archive = [];
     
     this.mousewheel;
-    this.textThickness = 30;//modifie le taille du text
-    this.ecart = 4;// ecart verticale entre les text
-    this.Xchat = width/2, this.Ychat = 0;//les coordonne haut gauche du chat
-    this.gameXchat = width/2, this.gameYchat = height/2;//la hauteur/largeur du chat
-    this.ourName = UUID;//nom du joueur
+    this.textThickness = 30; //modifie la taille du texte
+    this.ecart = 4; // ecart vertical entre les textes
+    this.Xchat = width/2, this.Ychat = 0; //les coordonnees haut gauche du chat
+    this.gameXchat = width/2, this.gameYchat = height/2; //la hauteur/largeur du chat
+    this.ourName = UUID; //nom du joueur
     
-    this.boutonsizechat = width/20;//hauteur/largeur du bouton
-    this.Xboutonchat = this.gameXchat - width/40 - this.boutonsizechat, this.Yboutonchat = width/40;//les coordonne haut gauche du bouton pour minimiser  //j'utilise width et non height pour la beauter
+    this.boutonsizechat = width/20; //hauteur/largeur du bouton
+    this.Xboutonchat = this.gameXchat - width/40 - this.boutonsizechat, this.Yboutonchat = width/40;
+    //les coordonne haut gauche du bouton pour minimiser  //j'utilise width et non height pour la beaute
     this.checkboutonchat = false;;
   }
 
   draw(){
     if(this.checkboutonchat){
-      this.drawArchive();//affiche tout les vieux message
-      this.bar();//affiche ce qu'on ecrit
+      this.drawArchive(); //affiche tout les vieux messages
+      this.bar(); //affiche ce qu'on ecrit
     } 
-    this.drawBouton();//affiche le bouton
+    this.drawBouton(); //affiche le bouton
   }
 
   drawBouton(){
-    circle(this.Xboutonchat+this.boutonsizechat/2+this.Xchat,this.Yboutonchat+this.boutonsizechat/2+this.Ychat,this.boutonsizechat);
+    circle( this.Xboutonchat+this.boutonsizechat/2+this.Xchat,
+            this.Yboutonchat+this.boutonsizechat/2+this.Ychat,
+            this.boutonsizechat);
   }
 
   scroll(event) {//bouge le chat
@@ -65,15 +69,17 @@ class Chat{
     textAlign(LEFT, BOTTOM);
     for (let i = 0; i< this.archive.length; i++) {
       textSize(this.textThickness);
-      text(this.archive[i], this.Xchat+(this.ecart*2), this.Ychat+this.gameYchat-25+-(this.archive.length*this.textThickness+this.ecart)+(i*this.textThickness+this.ecart));
+      text(this.archive[i], this.Xchat+(this.ecart*2), 
+        this.Ychat+this.gameYchat-25+-(this.archive.length*this.textThickness+this.ecart)+(i*this.textThickness+this.ecart));
     }
     pop();
   }
     
   bouton(){
-    if(abs((this.Xchat+this.Xboutonchat+this.boutonsizechat/2)-mouseX)< this.boutonsizechat/2 && abs((this.Ychat+this.Yboutonchat+this.boutonsizechat/2)-mouseY)<this.boutonsizechat/2){//pour un bouton rond
+    if( abs((this.Xchat+this.Xboutonchat+this.boutonsizechat/2)-mouseX)< this.boutonsizechat/2 && 
+        abs((this.Ychat+this.Yboutonchat+this.boutonsizechat/2)-mouseY)<this.boutonsizechat/2){//pour un bouton rond
     //if(Xboutonchat < mouseX && Xboutonchat + boutonWidthchat > mouseX && Yboutonchat < mouseY && Yboutonchat + boutonHeightchat > mouseY ){//pour un bouton carre
-      this.checkboutonchat = !(this.checkboutonchat);
+        this.checkboutonchat = !(this.checkboutonchat);
     }
   }
     
@@ -82,7 +88,10 @@ class Chat{
       if (this.data.length>0) this.data.splice(this.data.length-1,1);
     }else{
       //there is an issue where CODED does not work so for now doing it the hard way    original code:  if (key != CODED && checkboutonchat){
-      if (keyCode != BACKSPACE && keyCode != DELETE && keyCode !=  ENTER && keyCode !=  RETURN && keyCode !=  TAB && keyCode !=  ESCAPE && keyCode !=  SHIFT && keyCode !=  CONTROL && keyCode !=  OPTION && keyCode !=  ALT && keyCode !=  UP_ARROW && keyCode !=  DOWN_ARROW && keyCode !=  LEFT_ARROW && keyCode !=  RIGHT_ARROW && this.checkboutonchat){
+      if (keyCode != BACKSPACE && keyCode != DELETE && keyCode !=  ENTER && keyCode !=  RETURN && 
+          keyCode !=  TAB && keyCode !=  ESCAPE && keyCode !=  SHIFT && keyCode !=  CONTROL && 
+          keyCode !=  OPTION && keyCode !=  ALT && keyCode !=  UP_ARROW && keyCode !=  DOWN_ARROW && 
+          keyCode !=  LEFT_ARROW && keyCode !=  RIGHT_ARROW && this.checkboutonchat){
         let charKey = key;
         this.data.push(charKey);
       }
