@@ -29,25 +29,15 @@ class Client{
         
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
-            if (this.player.isMaster) {
-              message = {
-                text: 'confirm',
-                uuid: msg.message.uuid
-              };
-              this.sendMsg(message, 'setup');
-              this.setuplist.push(msg.message.type + ' ' + msg.message.uuid)
-              message = {
-                text: 'update',
-                list: this.setuplist
-              };
-              this.sendMsg(message, 'setup');
-              // add player to list and send update message 
-            }
+            this.setuplist.push(msg.message.type + ' ' + msg.message.uuid)
+            message = {
+              text: 'update',
+              list: this.setuplist
+            };
+            this.sendMsg(message, 'setup');
           } else if (msg.message.text == 'update') {
-            this.setuplist = msg.message.list;
-          } else if (msg.message.text == 'confirm') {
-            if (msg.message.uuid == UUID) {
-              this.isOnList = true;
+            if (msg.message.list.length > this.setuplist) {
+              this.setuplist = msg.message.list;
             }
           }
         }
@@ -80,6 +70,15 @@ class Client{
   }
 
   onConnection(){
+    let message = {
+      text: 'join',
+      uuid: UUID,
+      type: 'player'
+    };
+    this.sendMsg(message, 'setup');
+  }
+
+  onConnectionOLD(){
     let message = {
       text: 'join',
       uuid: UUID,

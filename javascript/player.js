@@ -5,7 +5,7 @@ class Player{
       this.rack = new RackGrid(2,10,this.tile);
       this.table = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
-      this.status = "playing"; // "setup" or "playing"
+      this.status = "setup"; // "setup" or "playing"
       this.client = new Client(this);
     }
 
