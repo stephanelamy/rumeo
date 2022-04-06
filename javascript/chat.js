@@ -59,10 +59,10 @@ class Chat{
     pop();
   }
     
-  drawArchive() {//affiche tout les vieux message 
+  drawArchive() {//affiche tous les vieux messages 
     push();
     fill(200, 200, 200);
-    rect(this.Xchat+2, this.Ychat+2, this.gameXchat-4, this.gameYchat-4);//backgrond
+    rect(this.Xchat+2, this.Ychat+2, this.gameXchat-4, this.gameYchat-4);//background
     pop();
     push();
     translate(0, this.mousewheel);

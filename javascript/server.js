@@ -30,7 +30,7 @@ class Client{
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
             this.setuplist.push(msg.message.type + ' ' + msg.message.uuid)
-            message = {
+            const message = {
               text: 'update',
               list: this.setuplist
             };
