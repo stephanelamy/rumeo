@@ -13,8 +13,8 @@ class Client{
   constructor(type){
     this.type = type; // 'player' or 'bot'
     this.setuplist = new Set();
-    this.isMaster = false;
     this.pubnub = new PubNub({
+      keepAlive: true,
       publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
       subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
       uuid: UUID // this constant must be defined in file uuid.js: const UUID = 'name';
@@ -27,17 +27,37 @@ class Client{
         console.log("listening from channel", msg.channel, msg.message);
         
         if (msg.channel == 'setup') {
+          
           if (msg.message.text == 'join') {  
             const message = {
               text: 'update',
               type: this.type,
-              uuid: UUID
+              uuid: UUID,
+              master: false
             };
             this.sendMsg(message, 'setup');
-          } else if (msg.message.text == 'update') {
-            this.setuplist.add(msg.message.type + ' ' + msg.message.uuid);
+          } 
+          
+          if (msg.message.text == 'update') {
+            console.log('check', msg.message.master);
+            if (msg.message.master){// this player becomes master
+              console.log('changing master');
+              for (const item of this.setuplist) {
+                console.log(item);
+                if (item.uuid == msg.message.uuid && item.type == 'player') {
+                  item.master = ! item.master;
+                }
+              }
+            } else {
+              let player = {
+                type: msg.message.type,
+                uuid: msg.message.uuid,
+                master: false
+              } 
+              this.setuplist.add(player);
             }
           }
+        }
 
         if(msg.channel == 'chat') {
           this.player.chat.addArchive(msg.message.archive);
@@ -74,37 +94,37 @@ class Client{
     this.sendMsg(message, 'setup');
   }
 
-  onConnectionOLD(){
-    let message = {
-      text: 'join',
+  addBot(){
+    const message = {
+      text: 'update',
+      type: 'bot',
       uuid: UUID,
-      type: 'player'
+      master: false
     };
     this.sendMsg(message, 'setup');
-    let sleep = ms => {  
-      return new Promise(resolve => setTimeout(resolve, ms));  
-    };  
-    sleep(500).then(() => {  
-      if (!this.isOnList) {
-        // we are master, update list and send message
-        this.isMaster = true;
-        this.setuplist.push('player' + ' ' + UUID)
-        message = {
-          text: 'update',
-          list: this.setuplist
-        };
-        this.sendMsg(message, 'setup');
-      }  
-    });  
+  }
+
+  toggleMaster() {
+    const message = {
+      text: 'update',
+      type: 'player',
+      uuid: UUID,
+      master: true
+    };
+    this.sendMsg(message, 'setup');
   }
 
   drawSetUpList() {
     textSize(32);
     textAlign("center");
-    text("setting up a game... Master: " + this.isMaster, width/2, 30);
+    text("setting up a game...", width/2, 30);
     textAlign("left");
     let i = 0;
-    for (const line of this.setuplist) {
+    for (const player of this.setuplist) {
+      let line = player.type + ' ' + player.uuid;
+      if (player.master) {
+        line += ' (master)';
+      }
       text(line, 10, 40*(i+3));
       i++;
     }

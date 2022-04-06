@@ -55,7 +55,7 @@ class HumanPlayer extends Player{
   
   keyPressed(){
     if  (this.status == 'setup') {
-      this.setup(); 
+      this.setupKey(); 
     }
     if (this.status == 'playing') {
       this.chat.clavier();
@@ -70,9 +70,15 @@ class HumanPlayer extends Player{
   
   // Setting up :
 
-  setup() {   
+  setupKey() {   
     if (keyCode == ENTER){
       this.status = 'playing';
+    }
+    if (key == 'b'){
+      this.client.addBot();
+    }
+    if (key == 'm'){
+      this.client.toggleMaster();
     }
   }
 
