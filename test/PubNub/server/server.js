@@ -8,7 +8,14 @@ pubnub.addListener({
   message: (msg) => {
       console.log('message', msg.message);
       console.log('channel', msg.channel);
-      document.getElementById("demo").innerHTML = msg.message;
+      let text = msg.message;
+      console.log(msg.list);
+      // let list = new Set(JSON.parse(msg.list));
+      // console.log(list);
+      // for (item of msg.list) {
+      //   test += item;
+      // }
+      document.getElementById("demo").innerHTML = text;
   }
 })
 

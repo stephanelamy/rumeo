@@ -10,18 +10,17 @@
 
 /////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
 class Client{
-  constructor(player){
-    this.player = player;
+  constructor(type){
+    this.type = type; // 'player' or 'bot'
     this.setuplist = new Set();
     this.isMaster = false;
-    this.isOnList = false;
     this.pubnub = new PubNub({
       publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
       subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
       uuid: UUID // this constant must be defined in file uuid.js: const UUID = 'name';
     })  
 
-    console.log("CLIENT", "created", UUID);
+    console.log("CLIENT", "created", this.type, UUID);
 
     this.pubnub.addListener({
       message: (msg) => {
@@ -29,21 +28,16 @@ class Client{
         
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
-            this.setuplist.add(msg.message.type + ' ' + msg.message.uuid);
-            console.log(this.setuplist);
             const message = {
               text: 'update',
-              list: JSON.stringify(this.setuplist),
-              size: this.setuplist.size
+              type: this.type,
+              uuid: UUID
             };
             this.sendMsg(message, 'setup');
           } else if (msg.message.text == 'update') {
-            console.log(msg.message.list.size);
-            if (msg.message.size > this.setuplist.size) {
-              this.setuplist = JSON.parse(msg.message.list);
+            this.setuplist.add(msg.message.type + ' ' + msg.message.uuid);
             }
           }
-        }
 
         if(msg.channel == 'chat') {
           this.player.chat.addArchive(msg.message.archive);
@@ -59,6 +53,7 @@ class Client{
   }
 
   sendMsg(message, channel) {
+    console.log('Preparing sending message:', message, 'on channel:', channel);
     const msg = {
       channel: channel,
       message: message,
@@ -76,8 +71,6 @@ class Client{
   onConnection(){
     let message = {
       text: 'join',
-      uuid: UUID,
-      type: 'player'
     };
     this.sendMsg(message, 'setup');
   }

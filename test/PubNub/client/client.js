@@ -5,15 +5,20 @@ pubnub = new PubNub({
     })
 
 let n = 0;
+let list = new Set();
+list.add('zero');
 
 function publishMessage() {
         n++;
-        var message = {
+        console.log(list);
+        console.log(JSON.stringify(...list.values()));
+        var msg = {
             channel : "test",
-            message: "click " + n.toString()
+            message: "click " + n.toString(),
+            list: JSON.stringify(...list.values()) 
         }
         try {
-            const result = pubnub.publish(message);
+            const result = pubnub.publish(msg);
             console.log('result', result);
         } catch(error) {
             console.log('error', error);
