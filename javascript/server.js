@@ -29,15 +29,18 @@ class Client{
         
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
-            this.setuplist.add(msg.message.type + ' ' + msg.message.uuid)
+            this.setuplist.add(msg.message.type + ' ' + msg.message.uuid);
+            console.log(this.setuplist);
             const message = {
               text: 'update',
-              list: this.setuplist
+              list: JSON.stringify(this.setuplist),
+              size: this.setuplist.size
             };
             this.sendMsg(message, 'setup');
           } else if (msg.message.text == 'update') {
-            if (msg.message.list.length > this.setuplist.length) {
-              this.setuplist = msg.message.list;
+            console.log(msg.message.list.size);
+            if (msg.message.size > this.setuplist.size) {
+              this.setuplist = JSON.parse(msg.message.list);
             }
           }
         }
@@ -108,8 +111,10 @@ class Client{
     textAlign("center");
     text("setting up a game... Master: " + this.isMaster, width/2, 30);
     textAlign("left");
-    for (let i = 0; i < this.setuplist.length; i++) {
-      text(this.setuplist[i], 10, 40*(i+3));
+    let i = 0;
+    for (const line of this.setuplist) {
+      text(line, 10, 40*(i+3));
+      i++;
     }
   }
 
