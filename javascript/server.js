@@ -12,7 +12,7 @@
 class Client{
   constructor(player){
     this.player = player;
-    this.setuplist = [];
+    this.setuplist = new Set();
     this.isMaster = false;
     this.isOnList = false;
     this.pubnub = new PubNub({
@@ -29,14 +29,14 @@ class Client{
         
         if (msg.channel == 'setup') {
           if (msg.message.text == 'join') {  
-            this.setuplist.push(msg.message.type + ' ' + msg.message.uuid)
+            this.setuplist.add(msg.message.type + ' ' + msg.message.uuid)
             const message = {
               text: 'update',
               list: this.setuplist
             };
             this.sendMsg(message, 'setup');
           } else if (msg.message.text == 'update') {
-            if (msg.message.list.length > this.setuplist) {
+            if (msg.message.list.length > this.setuplist.length) {
               this.setuplist = msg.message.list;
             }
           }
@@ -58,10 +58,11 @@ class Client{
   sendMsg(message, channel) {
     const msg = {
       channel: channel,
-      message: message
+      message: message,
+      sendByPost: true // seems to be best practice according to PubNub doc
     };
     try {
-      const result = this.pubnub.publish(msg);
+      const result = this.pubnub.publish(msg); // in the doc there is an 'await' here
       console.log('sending on channel', channel, message);
       console.log('result', result);
   } catch(error) {
