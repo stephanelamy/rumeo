@@ -12,12 +12,12 @@
 class Client{
   constructor(type){
     this.type = type; // 'player' or 'bot'
-    this.setuplist = new Set();
+    this.setuplist = [];
     this.pubnub = new PubNub({
       keepAlive: true,
       publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
       subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-      uuid: UUID // this constant must be defined in file uuid.js: const UUID = 'name';
+      uuid: UUID // this constant is defined in file uuid.js: const UUID = 'name';
     })  
 
     console.log("CLIENT", "created", this.type, UUID);
@@ -54,7 +54,16 @@ class Client{
                 uuid: msg.message.uuid,
                 master: false
               } 
-              this.setuplist.add(player);
+              let alreadyThere = false;
+              for (const item of this.setuplist) {
+                if (item.type == player.type && item.uuid == player.uuid) {
+                  alreadyThere = true;
+                }
+              }
+              console.log(alreadyThere);
+              if (! alreadyThere) {
+                this.setuplist.push(player);
+              } 
             }
           }
         }
