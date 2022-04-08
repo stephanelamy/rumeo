@@ -4,7 +4,6 @@ let game;
 function setup() {//fonction speciale qui s'active une fois au debut
   createCanvas(windowWidth, windowHeight);
   me = new HumanPlayer();
-  game = new Game([me]);
 }
 
 function draw() {//fonction speciale qui s'active 60 fois par seconde (ou moins si le programme est trop lourd)

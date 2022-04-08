@@ -72,11 +72,15 @@ class HumanPlayer extends Player{
 
   setupKey() {   
     if (keyCode == ENTER){
-      this.status = 'playing';
+      if (this.client.nbMaster() == 1) {
+        this.client.startGame();
+      }
     }
+      
     if (key == 'b'){
       this.client.addBot();
     }
+    
     if (key == 'm'){
       this.client.toggleMaster();
     }

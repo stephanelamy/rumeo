@@ -7,6 +7,21 @@
 -tiles
 */
 
+function sendMsg(pubnub, message, channel) {
+  const msg = {
+    channel: channel,
+    message: message,
+    sendByPost: true // seems to be best practice according to PubNub doc
+  };
+  try {
+    const result = pubnub.publish(msg); // in the doc there is an 'await' here
+    console.log('sending on channel', channel, message);
+    console.log('result', result);
+  } catch(error) {
+      console.log('error', error);
+    }
+}
+
 
 /////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
 class Client{
@@ -35,7 +50,7 @@ class Client{
               uuid: UUID,
               master: false
             };
-            this.sendMsg(message, 'setup');
+            sendMsg(this.pubnub, message, 'setup');
           } 
           
           if (msg.message.text == 'update') {
@@ -66,22 +81,29 @@ class Client{
               } 
             }
           }
+
+          if (msg.message.text == 'start') {
+            if (this.client.isMaster()) {
+              game = new Game(this.client.setuplist);
+            }
+          }
         }
 
         if(msg.channel == 'chat') {
           this.player.chat.addArchive(msg.message.archive);
         }
       }
-    })
+    });
 
+    const mychannel = this.type + ' ' + UUID;
     this.pubnub.subscribe({
-      channels: ['chat', 'orders', 'setup']
+      channels: ['chat', 'setup', mychannel]
     });  
 
     this.onConnection();
   }
 
-  sendMsg(message, channel) {
+  sendMsgOLD(message, channel) {
     const msg = {
       channel: channel,
       message: message,
@@ -100,7 +122,7 @@ class Client{
     let message = {
       text: 'join',
     };
-    this.sendMsg(message, 'setup');
+    sendMsg(this.pubnub, message, 'setup');
   }
 
   addBot(){
@@ -110,7 +132,7 @@ class Client{
       uuid: UUID,
       master: false
     };
-    this.sendMsg(message, 'setup');
+    sendMsg(this.pubnub, message, 'setup');
   }
 
   toggleMaster() {
@@ -120,7 +142,33 @@ class Client{
       uuid: UUID,
       master: true
     };
-    this.sendMsg(message, 'setup');
+    sendMsg(this.pubnub, message, 'setup');
+  }
+
+  nbMaster() {
+    let count = 0;
+    for (const item of this.setuplist) {
+      if (item.master) {
+        count ++;
+      }
+    }
+    return count;
+  }
+
+  isMaster() {
+    for (const item of this.setuplist) {
+      if (item.master && item.uuid == UUID) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  startGame() {
+    const message = {
+      text: 'start',
+    };
+    sendMsg(this.pubnub, message, 'setup');
   }
 
   drawSetUpList() {
@@ -144,7 +192,7 @@ class Client{
     let message= {
       archive: archive,
     };
-    this.sendMsg(message, 'chat');
+    sendMsg(this.pubnub, message, 'chat');
   }
 
   sendTile (tile) {//send a tile's  location in the list,x,y,r,c 
@@ -170,7 +218,7 @@ class Client{
     let message = {
       type: "pick"
     };
-    this.sendMsg(message, 'movement');
+    sendMsg(this.pubnub, message, 'movement');
   }
 }
 

@@ -4,9 +4,9 @@ class Game{
       for (let i=0; i<104; i++){ // serait mieux d'éviter ce 104 en dur
         this.deck.add(i);
       }
-      this.player = playerArray;
+      this.players = playerArray;
       this.pickStartingTiles();
-      // this.server = new Server();
+      this.server = new Server();
   }
 
   pickOneTile(player){
@@ -18,12 +18,25 @@ class Game{
     let chosenNo;
     for (const no of this.deck){
         if (i == index){
-            chosenNo = no;
+          chosenNo = no;
         }
         i++;
     }
     this.deck.delete(chosenNo);
-    player.rack.addTile(chosenNo);
+    const message = {
+      text: 'deck',
+      no: 'hidden',
+    };
+    for (const item of this.players){
+      if (item.uuid == player.uuid) {
+        message.no = chosenNo;
+      } else {
+        message.no = 'hidden';
+      }
+      const channel = item.player + ' ' + item.uuid;
+      sendMsg(this.server.pubnub, message, channel);
+    }
+    // player.rack.addTile(chosenNo); // old way
     }
 
   pickStartingTiles(){
