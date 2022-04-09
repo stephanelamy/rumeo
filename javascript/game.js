@@ -1,12 +1,13 @@
 class Game{
   constructor(playerArray){
-      this.deck = new Set();
-      for (let i=0; i<104; i++){ // serait mieux d'éviter ce 104 en dur
-        this.deck.add(i);
-      }
-      this.players = playerArray;
-      this.pickStartingTiles();
-      this.server = new Server();
+    console.log('creating game and server'); // not passing here ?
+    this.deck = new Set();
+    for (let i=0; i<104; i++){ // serait mieux d'éviter ce 104 en dur
+      this.deck.add(i);
+    }
+    this.players = playerArray;
+    this.pickStartingTiles();
+    this.server = new Server();
   }
 
   pickOneTile(player){
@@ -34,7 +35,7 @@ class Game{
         message.no = 'hidden';
       }
       const channel = item.player + ' ' + item.uuid;
-      sendMsg(this.server.pubnub, message, channel);
+      this.server.sendMsgMsg(message, channel);
     }
     // player.rack.addTile(chosenNo); // old way
     }

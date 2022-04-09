@@ -13,41 +13,60 @@ class AbstractPubNub{
   constructor(){
     this.pubnub = new PubNub({
       keepAlive: true,
+      logVerbosity: false, 
       publishKey: "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
       subscribeKey: "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
       uuid: 'abstract' // uuid has to be setup by the children class 
     })  
   }
 
-  sendMsg(message, channel) {
+  async _sendMsg(message, channel) {
     const msg = {
       channel: channel,
       message: message,
       sendByPost: true // seems to be best practice according to PubNub doc
     };
     try {
-      const result = this.pubnub.publish(msg); // in the doc there is an 'await' here
+      const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and senMsg is async function
       const senderUUID = this.pubnub.getUUID();
       console.log(senderUUID, 'sending on channel', channel, message);
       console.log('result', result);
+      return 1; // message was sent 
     } catch(error) {
         console.log('error', error);
       }
+  }
+
+  sendMsg(message, channel) {
+    this._sendMsg(message, channel).then(
+      function(value) { console.log('message sent'); },
+      function(error) { console.log('error in sending'); }
+    );
   }
 }
 
 //////////////////////////////////////////////////////////////// client ////////////////////////////////////////////////////////////////
 
 class Client extends AbstractPubNub{
-  constructor(type){
+  constructor(player, type){
     super();
+    this.player = player;
     this.type = type; // 'player' or 'bot'
     this.setuplist = []; // list of players or bots ready to start a game
     this.pubnub.setUUID(UUID); // this constant is defined in file uuid.js: const UUID = 'name';
 
-    console.log("CLIENT", "created", this.type, UUID);
+    const mychannel = this.type + ' ' + UUID;
+    this.pubnub.subscribe({
+      channels: ['chat', 'setup', mychannel]
+    }); 
 
     this.pubnub.addListener({
+      status: (statusEvent) => {
+        if (statusEvent.category === "PNConnectedCategory") {
+            console.log('connected',  this.type, UUID);
+        }
+      },
+
       message: (msg) => {
         console.log("listening from channel", msg.channel, msg.message);
         
@@ -83,7 +102,7 @@ class Client extends AbstractPubNub{
                   alreadyThere = true;
                 }
               }
-              console.log(alreadyThere);
+              console.log('already there:', alreadyThere);
               if (! alreadyThere) {
                 this.setuplist.push(player);
               } 
@@ -91,7 +110,9 @@ class Client extends AbstractPubNub{
           }
 
           if (msg.message.text == 'start') {
-            if (this.client.isMaster()) {
+            console.log('starting game');
+            this.player.status = 'playing';
+            if (this.isMaster()) {
               game = new Game(this.client.setuplist);
             }
           }
@@ -100,30 +121,14 @@ class Client extends AbstractPubNub{
         if(msg.channel == 'chat') {
           this.player.chat.addArchive(msg.message.archive);
         }
+
+        if(msg.channel == mychannel) {
+          console.log('listening on my channel');
+        }
       }
     });
 
-    const mychannel = this.type + ' ' + UUID;
-    this.pubnub.subscribe({
-      channels: ['chat', 'setup', mychannel]
-    });  
-
     this.onConnection();
-  }
-
-  sendMsgOLD(message, channel) {
-    const msg = {
-      channel: channel,
-      message: message,
-      sendByPost: true // seems to be best practice according to PubNub doc
-    };
-    try {
-      const result = this.pubnub.publish(msg); // in the doc there is an 'await' here
-      console.log('sending on channel', channel, message);
-      console.log('result', result);
-  } catch(error) {
-      console.log('error', error);
-    }
   }
 
   onConnection(){

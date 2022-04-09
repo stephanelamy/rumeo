@@ -6,7 +6,7 @@ class Player{
       this.table = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
       this.status = "setup"; // "setup" or "playing"
-      this.client = new Client('player'); // should have a version for 'bot'
+      this.client = new Client(this, 'player'); // should have a version for 'bot'
     }
 
     createTiles(){
