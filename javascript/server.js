@@ -7,33 +7,43 @@
 -tiles
 */
 
-function sendMsg(pubnub, message, channel) {
-  const msg = {
-    channel: channel,
-    message: message,
-    sendByPost: true // seems to be best practice according to PubNub doc
-  };
-  try {
-    const result = pubnub.publish(msg); // in the doc there is an 'await' here
-    console.log('sending on channel', channel, message);
-    console.log('result', result);
-  } catch(error) {
-      console.log('error', error);
-    }
-}
+/// abstract class with sending function for both client and server ///
 
-
-/////////////////////////////////////////////////////////////////client/////////////////////////////////////////////////////////////////
-class Client{
-  constructor(type){
-    this.type = type; // 'player' or 'bot'
-    this.setuplist = [];
+class AbstractPubNub{
+  constructor(){
     this.pubnub = new PubNub({
       keepAlive: true,
-      publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
-      subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-      uuid: UUID // this constant is defined in file uuid.js: const UUID = 'name';
+      publishKey: "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
+      subscribeKey: "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
+      uuid: 'abstract' // uuid has to be setup by the children class 
     })  
+  }
+
+  sendMsg(message, channel) {
+    const msg = {
+      channel: channel,
+      message: message,
+      sendByPost: true // seems to be best practice according to PubNub doc
+    };
+    try {
+      const result = this.pubnub.publish(msg); // in the doc there is an 'await' here
+      const senderUUID = this.pubnub.getUUID();
+      console.log(senderUUID, 'sending on channel', channel, message);
+      console.log('result', result);
+    } catch(error) {
+        console.log('error', error);
+      }
+  }
+}
+
+//////////////////////////////////////////////////////////////// client ////////////////////////////////////////////////////////////////
+
+class Client extends AbstractPubNub{
+  constructor(type){
+    super();
+    this.type = type; // 'player' or 'bot'
+    this.setuplist = []; // list of players or bots ready to start a game
+    this.pubnub.setUUID(UUID); // this constant is defined in file uuid.js: const UUID = 'name';
 
     console.log("CLIENT", "created", this.type, UUID);
 
@@ -50,15 +60,13 @@ class Client{
               uuid: UUID,
               master: false
             };
-            sendMsg(this.pubnub, message, 'setup');
+            this.sendMsg(message, 'setup');
           } 
           
           if (msg.message.text == 'update') {
-            console.log('check', msg.message.master);
             if (msg.message.master){// this player becomes master
               console.log('changing master');
               for (const item of this.setuplist) {
-                console.log(item);
                 if (item.uuid == msg.message.uuid && item.type == 'player') {
                   item.master = ! item.master;
                 }
@@ -122,7 +130,8 @@ class Client{
     let message = {
       text: 'join',
     };
-    sendMsg(this.pubnub, message, 'setup');
+    console.log(this.pubnub);
+    this.sendMsg(message, 'setup');
   }
 
   addBot(){
@@ -132,7 +141,7 @@ class Client{
       uuid: UUID,
       master: false
     };
-    sendMsg(this.pubnub, message, 'setup');
+    this.sendMsg(message, 'setup');
   }
 
   toggleMaster() {
@@ -142,7 +151,7 @@ class Client{
       uuid: UUID,
       master: true
     };
-    sendMsg(this.pubnub, message, 'setup');
+    this.sendMsg(message, 'setup');
   }
 
   nbMaster() {
@@ -168,7 +177,7 @@ class Client{
     const message = {
       text: 'start',
     };
-    sendMsg(this.pubnub, message, 'setup');
+    this.sendMsg(message, 'setup');
   }
 
   drawSetUpList() {
@@ -192,7 +201,7 @@ class Client{
     let message= {
       archive: archive,
     };
-    sendMsg(this.pubnub, message, 'chat');
+    this.sendMsg(message, 'chat');
   }
 
   sendTile (tile) {//send a tile's  location in the list,x,y,r,c 
@@ -218,20 +227,17 @@ class Client{
     let message = {
       type: "pick"
     };
-    sendMsg(this.pubnub, message, 'movement');
+    this.sendMsg(message, 'movement');
   }
 }
 
 /////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
 
-class Server  {
+class Server extends AbstractPubNub {
 
   constructor() {
-    this.pubnub = new PubNub({
-      publishKey : "pub-c-69240897-b86a-4723-ac74-a1801f32b05d",
-      subscribeKey : "sub-c-09c6bc74-b28b-11ec-9e6b-d29fac035801",
-      uuid: "server"
-    });
+    super();
+    this.pubnub.setUUID('server');
     
     this.pubnub.addListener({
       message: function(msg) {
