@@ -1,5 +1,4 @@
 let me;
-let game;
 
 function setup() {//fonction speciale qui s'active une fois au debut
   createCanvas(windowWidth, windowHeight);

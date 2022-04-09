@@ -1,13 +1,13 @@
 class Game{
   constructor(playerArray){
-    console.log('creating game and server'); // not passing here ?
+    console.log('creating game and server');
+    this.server = new Server();
     this.deck = new Set();
     for (let i=0; i<104; i++){ // serait mieux d'éviter ce 104 en dur
       this.deck.add(i);
     }
     this.players = playerArray;
     this.pickStartingTiles();
-    this.server = new Server();
   }
 
   pickOneTile(player){
@@ -35,15 +35,15 @@ class Game{
         message.no = 'hidden';
       }
       const channel = item.player + ' ' + item.uuid;
-      this.server.sendMsgMsg(message, channel);
+      this.server.sendMsg(message, channel);
     }
     // player.rack.addTile(chosenNo); // old way
     }
 
   pickStartingTiles(){
-    for (let i = 0; i < this.player.length; i++){
+    for (let i = 0; i < this.players.length; i++){
       for (let j = 0; j < 14; j++){
-        this.pickOneTile(this.player[i]);
+        this.pickOneTile(this.players[i]);
       }
     }
   }

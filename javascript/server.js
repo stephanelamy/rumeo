@@ -110,10 +110,10 @@ class Client extends AbstractPubNub{
           }
 
           if (msg.message.text == 'start') {
-            console.log('starting game');
             this.player.status = 'playing';
             if (this.isMaster()) {
-              game = new Game(this.client.setuplist);
+              console.log('starting game');
+              this.player.game = new Game(this.setuplist);
             }
           }
         }

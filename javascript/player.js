@@ -7,6 +7,7 @@ class Player{
       this.chat  = new Chat();
       this.status = "setup"; // "setup" or "playing"
       this.client = new Client(this, 'player'); // should have a version for 'bot'
+      this.game = 0; // will be used only by master player
     }
 
     createTiles(){
