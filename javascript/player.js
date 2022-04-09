@@ -154,7 +154,6 @@ class HumanPlayer extends Player{
   // Clicked mouse routines:
   
   mouseWasPressed(){
-    console.log('here');
     //check if we select a tile
     for(let i=0; i < this.tile.length; i++){
       if(overlap(...me.tile[i].rectangle(), mouseX, mouseY)){

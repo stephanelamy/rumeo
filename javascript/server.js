@@ -27,11 +27,9 @@ class AbstractPubNub{
       sendByPost: true // seems to be best practice according to PubNub doc
     };
     try {
+      console.log(this.pubnub.getUUID(), 'sending on channel', channel, message);
       const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and senMsg is async function
-      const senderUUID = this.pubnub.getUUID();
-      console.log(senderUUID, 'sending on channel', channel, message);
-      console.log('result', result);
-      return 1; // message was sent 
+      return result; // message was sent 
     } catch(error) {
         console.log('error', error);
       }
@@ -39,8 +37,8 @@ class AbstractPubNub{
 
   sendMsg(message, channel) {
     this._sendMsg(message, channel).then(
-      function(value) { console.log('message sent'); },
-      function(error) { console.log('error in sending'); }
+      function(value) { console.log('message sent', value); },
+      function(error) { console.log('error in sending', error); }
     );
   }
 }
@@ -123,7 +121,11 @@ class Client extends AbstractPubNub{
         }
 
         if(msg.channel == mychannel) {
-          console.log('listening on my channel');
+          if (msg.message.text == 'deck') {
+            for (const no of msg.message.no) {
+              this.player.rack.addTile(no);
+            }
+          }
         }
       }
     });
@@ -239,27 +241,18 @@ class Client extends AbstractPubNub{
 /////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
 
 class Server extends AbstractPubNub {
-
   constructor() {
     super();
     this.pubnub.setUUID('server');
-    
+    this.pubnub.subscribe({ channels: ['movement'] });  
     this.pubnub.addListener({
-      message: function(msg) {
-        console.log("SERVER","listening");
-        // if(msg.channel == 'chat'){
-        //   console.log("SERVER",msg.message.archive);
-        //   me.chat.addArchive(msg.message.archive);
-        // }
+      message: (msg) => {
+        console.log('server listening', msg);
         if(msg.channel == 'movement'){
-          console.log("SERVER",msg.message);
+          console.log(msg.message);
         }
-       // document.getElementById("demo").innerHTML = msg.message.line1;
       }
-    })
-    this.pubnub.subscribe({
-      channels: ['movement']
-    });  
+    });
   }
 }
 

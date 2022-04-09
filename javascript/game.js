@@ -29,18 +29,18 @@ class Game{
       no: 'hidden',
     };
     for (const item of this.players){
-      if (item.uuid == player.uuid) {
+      if (item.uuid == player.uuid && item.type == player.type) {
         message.no = chosenNo;
       } else {
         message.no = 'hidden';
       }
-      const channel = item.player + ' ' + item.uuid;
+      const channel = item.type + ' ' + item.uuid;
       this.server.sendMsg(message, channel);
     }
     // player.rack.addTile(chosenNo); // old way
     }
 
-  pickStartingTiles(){
+  pickStartingTilesOLD(){
     for (let i = 0; i < this.players.length; i++){
       for (let j = 0; j < 14; j++){
         this.pickOneTile(this.players[i]);
@@ -48,6 +48,32 @@ class Game{
     }
   }
 
+  pickStartingTiles(){
+    let chosenNo;
+    let listNo;
+    for (let i = 0; i < this.players.length; i++){
+      listNo = [];
+      for (let j = 0; j < 14; j++){
+        let index = randomInteger(1, this.deck.size); 
+        let i = 1;
+        for (const no of this.deck){
+            if (i == index){
+              chosenNo = no;
+            }
+            i++;
+        }
+        listNo.push(chosenNo);
+        this.deck.delete(chosenNo);
+      }
+      console.log('list', listNo);
+      const message = {
+        text: 'deck',
+        no: listNo
+      };
+      const channel = this.players[i].type + ' ' + this.players[i].uuid;
+      this.server.sendMsg(message, channel);
+    }
+  }
 }
   
 
