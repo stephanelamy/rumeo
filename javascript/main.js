@@ -1,5 +1,5 @@
 let ALWAYSMASTER = true; // true for developpement purpose
-let AUTOSTART = true; // true for developpement purpose
+let AUTOSTART = false; // true for developpement purpose
 
 let me;
 

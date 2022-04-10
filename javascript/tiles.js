@@ -42,6 +42,10 @@ class Tile{
     this.x = me.deckX()+(me.rack.findCoor(this.r,this.c)[0]-me.deckX())/this.animationStep*this.animationCurrentStep;
     this.y = me.deckY('deck')+(me.rack.findCoor(this.r,this.c)[1]-me.deckY('deck'))/this.animationStep*this.animationCurrentStep;
     image(this.image, this.x, this.y, this.size, this.size*3/2);
+
+    if (this.animationCurrentStep >= this.animationStep){
+      this.animation = false;
+    }
   }
 
   center() {
