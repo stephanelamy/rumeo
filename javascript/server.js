@@ -61,6 +61,7 @@ class Client extends AbstractPubNub{
       status: (statusEvent) => {
         if (statusEvent.category === "PNConnectedCategory") {
             console.log('connected',  this.type, UUID);
+            this.onConnection();
         }
       },
 
@@ -133,8 +134,6 @@ class Client extends AbstractPubNub{
         }
       }
     });
-
-    this.onConnection();
   }
 
   onConnection(){
@@ -250,6 +249,13 @@ class Server extends AbstractPubNub {
     this.pubnub.subscribe({ channels: ['server'] });  
 
     this.pubnub.addListener({
+      status: (statusEvent) => {
+        if (statusEvent.category === "PNConnectedCategory") {
+            console.log('server connected');
+            this.game.pickStartingTiles();
+        }
+      },
+
       message: (msg) => {
         console.log('server listening', msg.message);
         if (msg.message.text == 'pick') {
