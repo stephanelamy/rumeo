@@ -214,7 +214,7 @@ class Client extends AbstractPubNub{
     this.sendMsg(message, 'chat');
   }
 
-  sendTile (tile, old_row=-1, old_col=-1) {//send a tile's  location in the list,x,y,r,c 
+  sendTile (tile, old_row=-1, old_col=-1) {//send a tile's  location in the list,r,c 
     // not clear we need that
     var message = {
         channel : "server",

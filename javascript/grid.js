@@ -108,6 +108,7 @@ class Grid{
     }
     let [r,c] = this.findEmptySpot();
     this.putTile(n,r,c);
+    this.deckAnimation(n,r,c);
   }
 
   // add n columns to the grid
@@ -149,9 +150,11 @@ class Grid{
         const t = this.place[row][col];//identity of the tile in question
   
         //draw all tiles on the rack, skiping moving ones
-        if(t != 'empty'){  
+        if(t != 'empty'){
           const tile = this.tile[t];//tile in question
-          if(!tile.moving){
+          if(!tile.moving && !tile.animation){
+            tile.draw();
+          }else if (tile.animation){
             tile.draw();
           }
         }
@@ -214,6 +217,12 @@ class Grid{
         this.putTile(t,emptyR,emptyC);
       }
     }
+  }
+
+  deckAnimation(n,r,c){//tells the tile that it must do a animation from the deck to where it should go
+    console.log(me.deckY('deck'));
+    this.tile[n].animation(me.deckX(),me.deckY('deck'),r,c);
+
   }
 }
 

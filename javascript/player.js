@@ -224,4 +224,6 @@ class BotPlayer extends Player{
       // put tile index on table
     }
   }
+
+  
 }

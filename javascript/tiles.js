@@ -11,6 +11,9 @@ class Tile{
     this.image = loadImage(this.fileName()); // original image
     this.moving = false;
     this.no = 'none'; // index in game.tile[], for sorting purpose
+    this.animation = false;
+    this.animationStep = 10;
+    this.animationCurrentStep = 0;
   }
 
   static computeSize(nbColumns) {
@@ -54,7 +57,17 @@ class Tile{
     textAlign(CENTER, CENTER);
     text(number,numberX,numberY); 
     pop();
-    }
+  }
+
+  animation(startX,startY,endr,endc){
+    console.log("animtion in tile");
+    // this.animation = true;
+    // this.animationCurrentStep = 0;
+    // this.x = startX;
+    // this.y = startY;
+    // this.r = endr;
+    // this.c = endc;
+  }
 }
 
 
