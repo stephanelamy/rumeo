@@ -1,78 +1,54 @@
 class Game{
-  constructor(playerArray){
+  constructor(channelList){
     console.log('creating game and server');
-    this.server = new Server();
+    this.server = new Server(this);
     this.deck = new Set();
     for (let i=0; i<104; i++){ // serait mieux d'éviter ce 104 en dur
       this.deck.add(i);
     }
-    this.players = playerArray;
+    this.channelList = channelList;
     this.pickStartingTiles();
   }
 
-  pickOneTile(player){
-    if (this.deck.size == 0){
-      return 'empty deck';
-    }
-    const index = randomInteger(1, this.deck.size); 
-    let i = 1;
+  chooseNo() {
     let chosenNo;
+    let index = randomInteger(1, this.deck.size); 
+    let i = 1;
     for (const no of this.deck){
-        if (i == index){
-          chosenNo = no;
-        }
-        i++;
+      if (i == index){
+        chosenNo = no;
+      }
+      i++;
     }
     this.deck.delete(chosenNo);
-    const message = {
-      text: 'deck',
-      no: 'hidden',
-    };
-    for (const item of this.players){
-      if (item.uuid == player.uuid && item.type == player.type) {
-        message.no = chosenNo;
-      } else {
-        message.no = 'hidden';
-      }
-      const channel = item.type + ' ' + item.uuid;
-      this.server.sendMsg(message, channel);
-    }
-    // player.rack.addTile(chosenNo); // old way
-    }
-
-  pickStartingTilesOLD(){
-    for (let i = 0; i < this.players.length; i++){
-      for (let j = 0; j < 14; j++){
-        this.pickOneTile(this.players[i]);
-      }
-    }
+    return chosenNo;
   }
 
   pickStartingTiles(){
     let chosenNo;
     let listNo;
-    for (let i = 0; i < this.players.length; i++){
+    for (const channel of this.channelList) {
       listNo = [];
       for (let j = 0; j < 14; j++){
-        let index = randomInteger(1, this.deck.size); 
-        let i = 1;
-        for (const no of this.deck){
-            if (i == index){
-              chosenNo = no;
-            }
-            i++;
-        }
+        chosenNo = this.chooseNo();
         listNo.push(chosenNo);
-        this.deck.delete(chosenNo);
       }
       console.log('list', listNo);
       const message = {
         text: 'deck',
         no: listNo
       };
-      const channel = this.players[i].type + ' ' + this.players[i].uuid;
       this.server.sendMsg(message, channel);
     }
+  }
+
+  pickOneTile(channelplayer){
+    const chosenNo = this.chooseNo(); 
+    const message = {
+      text: 'deck',
+      no: [chosenNo]
+    };
+    this.server.sendMsg(message, channelplayer);
   }
 }
   

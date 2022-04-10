@@ -1,3 +1,4 @@
+let ALWAYSMASTER = true; // true for developpement purpose
 let me;
 
 function setup() {//fonction speciale qui s'active une fois au debut

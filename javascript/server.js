@@ -1,3 +1,5 @@
+// OLD WAY:
+
 /*to start server in the chat write;
 -server
 -client
@@ -52,11 +54,8 @@ class Client extends AbstractPubNub{
     this.type = type; // 'player' or 'bot'
     this.setuplist = []; // list of players or bots ready to start a game
     this.pubnub.setUUID(UUID); // this constant is defined in file uuid.js: const UUID = 'name';
-
-    const mychannel = this.type + ' ' + UUID;
-    this.pubnub.subscribe({
-      channels: ['chat', 'setup', mychannel]
-    }); 
+    this.mychannel = this.type + '_' + UUID;
+    this.pubnub.subscribe({ channels: ['chat', 'setup', this.mychannel] }); 
 
     this.pubnub.addListener({
       status: (statusEvent) => {
@@ -94,6 +93,7 @@ class Client extends AbstractPubNub{
                 uuid: msg.message.uuid,
                 master: false
               } 
+              if (ALWAYSMASTER && player.type == 'player') { player.master = true; }
               let alreadyThere = false;
               for (const item of this.setuplist) {
                 if (item.type == player.type && item.uuid == player.uuid) {
@@ -111,7 +111,11 @@ class Client extends AbstractPubNub{
             this.player.status = 'playing';
             if (this.isMaster()) {
               console.log('starting game');
-              this.player.game = new Game(this.setuplist);
+              const channelList = [];
+              for (const item of this.setuplist) {
+                channelList.push(item.type + '_' + item.uuid);
+              }
+              this.player.game = new Game(channelList);
             }
           }
         }
@@ -120,7 +124,7 @@ class Client extends AbstractPubNub{
           this.player.chat.addArchive(msg.message.archive);
         }
 
-        if(msg.channel == mychannel) {
+        if(msg.channel == this.mychannel) {
           if (msg.message.text == 'deck') {
             for (const no of msg.message.no) {
               this.player.rack.addTile(no);
@@ -137,7 +141,6 @@ class Client extends AbstractPubNub{
     let message = {
       text: 'join',
     };
-    console.log(this.pubnub);
     this.sendMsg(message, 'setup');
   }
 
@@ -211,45 +214,50 @@ class Client extends AbstractPubNub{
     this.sendMsg(message, 'chat');
   }
 
-  sendTile (tile) {//send a tile's  location in the list,x,y,r,c 
+  sendTile (tile, old_row=-1, old_col=-1) {//send a tile's  location in the list,x,y,r,c 
     // not clear we need that
     var message = {
-        channel : "movement",
+        channel : "server",
         message: {
-            index: tile.no,
-            x: tile.x,
-            y: tile.y,
-            row: tile.row,
-            col: tile.col,
-            color: tile.color,
-            number: tile.number
+          text: 'table',
+          no: tile.no,
+          row: tile.row,
+          col: tile.col,
+          old_row: old_row,
+          old_col: old_col,
+          channelplayer: this.mychannel
         }
     }
-    this.pubnub.publish(message, function(status, response) {
-        console.log("CLIENT",status, response);
-    })
+    this.sendMsg(message, 'server');
   }
 
   pickTile() {
     let message = {
-      type: "pick"
+      text: "pick",
+      channelplayer: this.mychannel
     };
-    this.sendMsg(message, 'movement');
+    this.sendMsg(message, 'server');
   }
 }
 
 /////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
 
 class Server extends AbstractPubNub {
-  constructor() {
+  constructor(game) {
     super();
+    this.game = game;
     this.pubnub.setUUID('server');
-    this.pubnub.subscribe({ channels: ['movement'] });  
+    this.pubnub.subscribe({ channels: ['server'] });  
+
     this.pubnub.addListener({
       message: (msg) => {
-        console.log('server listening', msg);
-        if(msg.channel == 'movement'){
-          console.log(msg.message);
+        console.log('server listening', msg.message);
+        if (msg.message.text == 'pick') {
+          this.game.pickOneTile(msg.message.channelplayer); 
+        }
+        
+        if (msg.message.text == 'table') {
+
         }
       }
     });

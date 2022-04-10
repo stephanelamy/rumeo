@@ -5,8 +5,8 @@ class Player{
       this.rack = new RackGrid(2,10,this.tile);
       this.table = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
-      this.status = "setup"; // "setup" or "playing"
-      this.client = new Client(this, 'player'); // should have a version for 'bot'
+      this.status = "setup"; // game state, "setup" or "playing" 
+      this.activePlayer = true; // should be true or false according which turn it is
       this.game = 0; // will be used only by master player
     }
 
@@ -18,9 +18,9 @@ class Player{
             }
           }
         }
-        // Each tile knows its own index
-        for (let index = 0; index < this.tile.length; index++){
-          this.tile[index].no = index;
+        // Each tile knows its own numero
+        for (let no = 0; no < this.tile.length; no++){
+          this.tile[no].no = no;
         }
       }
 }
@@ -29,15 +29,13 @@ class Player{
 class HumanPlayer extends Player{
   constructor() {
       super();
+      this.client = new Client(this, 'player');
       this.image = {
         deck : loadImage("png/tile_deck.png"),
         d777 : loadImage("png/tile_777.png"),
         d678 : loadImage("png/tile_678.png")
       };
-      // this.deckImage = loadImage("png/tile_deck.png");
-      // this.image777 = loadImage("png/tile_777.png");
-      // this.image678 = loadImage("png/tile_678.png");
-      this.moving = []; // list of moving tiles
+      this.moving = []; // list of moving tiles (mouse or animation ?)
   }
 
   // Event routines:
@@ -167,7 +165,6 @@ class HumanPlayer extends Player{
     //check if we press on the deck
     if(this.checkDeck('deck')) {
       this.client.pickTile();
-      // return "pick_tile";
     }
 
     //check if we press on sort777
@@ -195,14 +192,17 @@ class HumanPlayer extends Player{
     for(let i = 0;  i < this.moving.length; i++){ 
       let n = this.moving[i];
       if(overlap(...this.rack.rectangle(),...this.tile[n].center())){
+        // internal move in our rack, server doesn't need to know
         this.rack.swap(n);
-      }else if(overlap(...this.table.rectangle(),...this.tile[n].center())){
+      }else if(this.activePlayer && overlap(...this.table.rectangle(),...this.tile[n].center())){
+        // move from our rack or table to table, need to tell server
         this.table.swap(n);
+        this.client.sendTile(this.tile[n]);
       }else{
+        // put back the tile where it was, nothing to tell 
         this.tile[n].grid.putTile(n,this.tile[n].row,this.tile[n].col);
       }
       this.tile[n].moving = false;
-      this.client.sendTile(this.tile[n]);
     }
     this.moving = [];
   }
@@ -212,11 +212,12 @@ class HumanPlayer extends Player{
 class BotPlayer extends Player{
   constructor() {
     super();
+    this.client = new Client(this, 'bot');
   }
 
   move() {
     if (this.rack.isEmpty()) {
-      // pick tile in deck
+      this.client.pickTile();
     } else {
       this.rack.sort(compareTiles777());
       index = this.rack.place[0][0];
