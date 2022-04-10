@@ -1,13 +1,14 @@
 class Game{
   constructor(channelList){
     console.log('creating game and server');
-    this.server = new Server(this);
     this.deck = new Set();
     for (let i=0; i<104; i++){ // serait mieux d'éviter ce 104 en dur
       this.deck.add(i);
     }
     this.channelList = channelList;
-    this.pickStartingTiles();
+    this.activePlayer = 0;
+    this.bot = []; // will be used to host bots
+    this.server = new Server(this);
   }
 
   chooseNo() {
@@ -24,7 +25,21 @@ class Game{
     return chosenNo;
   }
 
-  pickStartingTiles(){
+  pickStartingTiles(channelplayer){
+    let chosenNo;
+    let listNo = [];
+    for (let j = 0; j < 14; j++){
+      chosenNo = this.chooseNo();
+      listNo.push(chosenNo);
+    }
+    const message = {
+      text: 'deck',
+      no: listNo
+    };
+    this.server.sendMsg(message, channelplayer);
+  }
+
+  pickStartingTilesOLD(){
     let chosenNo;
     let listNo;
     for (const channel of this.channelList) {

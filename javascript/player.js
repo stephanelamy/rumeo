@@ -94,6 +94,7 @@ class HumanPlayer extends Player{
     } else {
     this.textStatus();
     this.drawDeck();
+    this.drawOthers();
     this.table.draw();
     this.rack.draw();
     this.checkMoving();
@@ -139,6 +140,18 @@ class HumanPlayer extends Player{
       d678 : 1    
     }; 
     return height - coeff[name] * this.deckHeight() * 1.1;
+  }
+
+  drawOthers() {
+    let i = 1;
+    for (const channel of this.game.channelList) {
+      if (channel != this.client.mychannel) {
+        textSize(32);
+        textAlign('left');
+        text(channel, 5, height - 30*i);
+        i++;
+      }
+    }
   }
 
   checkMoving(){//update and draw moving tiles
@@ -210,9 +223,10 @@ class HumanPlayer extends Player{
 
 
 class BotPlayer extends Player{
-  constructor() {
+  constructor(name, game) { // name has the form 'bot_1', 'bot_2'...
     super();
-    this.client = new Client(this, 'bot');
+    this.game = game;
+    this.client = new Client(this, name);
   }
 
   move() {

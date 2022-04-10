@@ -51,7 +51,7 @@ class Client extends AbstractPubNub{
   constructor(player, type){
     super();
     this.player = player;
-    this.type = type; // 'player' or 'bot'
+    this.type = type; // 'player' or 'bot_n'
     this.setuplist = []; // list of players or bots ready to start a game
     this.pubnub.setUUID(UUID); // this constant is defined in file uuid.js: const UUID = 'name';
     this.mychannel = this.type + '_' + UUID;
@@ -61,7 +61,11 @@ class Client extends AbstractPubNub{
       status: (statusEvent) => {
         if (statusEvent.category === "PNConnectedCategory") {
             console.log('connected',  this.type, UUID);
-            this.onConnection();
+            if (this.type == 'player') {
+              this.onConnection();
+            } else {
+              this.player.game.pickStartingTiles(this.mychannel);
+            }
         }
       },
 
@@ -114,9 +118,19 @@ class Client extends AbstractPubNub{
               console.log('starting game');
               const channelList = [];
               for (const item of this.setuplist) {
-                channelList.push(item.type + '_' + item.uuid);
+                if (item.type == 'player') {
+                  channelList.push(item.type + '_' + item.uuid);
+                } else {
+                  channelList.push(item.type + '_' + item.uuid + '_' + UUID);
+                }
+              
               }
               this.player.game = new Game(channelList);
+              for (const item of this.setuplist) {
+                if (item.type != 'player') {
+                  this.player.game.bot.push(new BotPlayer('bot_' + item.uuid, this.player.game));
+                }
+              }
             }
           }
         }
@@ -147,10 +161,20 @@ class Client extends AbstractPubNub{
     const message = {
       text: 'update',
       type: 'bot',
-      uuid: UUID,
+      uuid: (this.botNumber() + 1).toString(),
       master: false
     };
     this.sendMsg(message, 'setup');
+  }
+
+  botNumber(){
+    let count = 0;
+    for (const item of this.setuplist){
+      if (item.type == 'bot') {
+        count++;
+      }
+    }
+    return count;
   }
 
   toggleMaster() {
@@ -252,7 +276,12 @@ class Server extends AbstractPubNub {
       status: (statusEvent) => {
         if (statusEvent.category === "PNConnectedCategory") {
             console.log('server connected');
-            this.game.pickStartingTiles();
+            console.log('channel list:', this.game.channelList);
+            for (const channel of this.game.channelList) {
+              if (channel.slice(0,3) != 'bot') {
+                this.game.pickStartingTiles(channel);
+              }
+            }
         }
       },
 
