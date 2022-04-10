@@ -12,7 +12,7 @@ class Tile{
     this.moving = false;
     this.no = 'none'; // index in game.tile[], for sorting purpose
     this.animation = false;
-    this.animationStep = 10;
+    this.animationStep = 60;
     this.animationCurrentStep = 0;
   }
 
@@ -34,12 +34,11 @@ class Tile{
   }
 
   drawAnimation() {
-    if(millis()%20>0 &&this.animationCurrentStep < this.animationStep){
+    const millisecond =  millis();
+    if(millisecond%100>1 &&this.animationCurrentStep < this.animationStep){
       this.animationCurrentStep++;
-      console.log(millis(),millis()%20>0,this.animationCurrentStep);
+      //console.log(millisecond,millisecond%20>10,this.animationCurrentStep);
     }
-
-
     this.x = me.deckX()+(me.rack.findCoor(this.r,this.c)[0]-me.deckX())/this.animationStep*this.animationCurrentStep;
     this.y = me.deckY('deck')+(me.rack.findCoor(this.r,this.c)[1]-me.deckY('deck'))/this.animationStep*this.animationCurrentStep;
     image(this.image, this.x, this.y, this.size, this.size*3/2);
@@ -74,6 +73,7 @@ class Tile{
   startAnimation(startX,startY,endr,endc){
      this.animation = true;
      this.animationCurrentStep = 0;
+     //this.animationRack = endRack;
      this.x = startX;
      this.y = startY;
      this.r = endr;
