@@ -1,9 +1,12 @@
 let ALWAYSMASTER = true; // true for developpement purpose
+let AUTOSTART = true; // true for developpement purpose
+
 let me;
 
 function setup() {//fonction speciale qui s'active une fois au debut
   createCanvas(windowWidth, windowHeight);
   me = new HumanPlayer();
+  if (AUTOSTART) { autostart(); }
 }
 
 function draw() {//fonction speciale qui s'active 60 fois par seconde (ou moins si le programme est trop lourd)
@@ -30,3 +33,10 @@ function mouseWheel(event) {
   me.mouseWheel(event);
 }
 
+function autostart() {
+  me.status = 'playing';
+  const channelList = [];
+  channelList.push('player_' + UUID);
+  channelList.push('bot_' + UUID);
+  me.game = new Game(channelList);
+}
