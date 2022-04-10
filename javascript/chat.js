@@ -5,6 +5,7 @@ class Chat{
     this.data = [];
     this.envoi = "";
     this.archive = [];
+    this.newMessage = 0;
     
     this.mousewheel;
     this.textThickness = 30; //modifie la taille du texte
@@ -20,17 +21,21 @@ class Chat{
   }
 
   draw(){
+    push();
+    this.drawBouton(); //affiche le bouton
     if(this.checkboutonchat){
       this.drawArchive(); //affiche tout les vieux messages
       this.bar(); //affiche ce qu'on ecrit
+      this.newMessage = 0;
     } 
-    this.drawBouton(); //affiche le bouton
+    pop();
   }
 
   drawBouton(){
     circle( this.Xboutonchat+this.boutonsizechat/2+this.Xchat,
             this.Yboutonchat+this.boutonsizechat/2+this.Ychat,
             this.boutonsizechat);
+    text(this.newMessage,this.Xboutonchat+this.Xchat+this.boutonsizechat/2,this.Yboutonchat+this.Ychat+this.boutonsizechat*3/4);
   }
 
   scroll(event) {//bouge le chat
@@ -110,7 +115,10 @@ class Chat{
   }
 
   addArchive(sent){
-    if (sent.length>0) this.archive.push(this.ourName +": "+ sent);
+    if (sent.length>0){
+      this.archive.push(this.ourName +": "+ sent);
+      this.newMessage ++;
+    }
   }
 }
 
