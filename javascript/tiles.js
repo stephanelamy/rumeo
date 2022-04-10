@@ -33,6 +33,18 @@ class Tile{
     image(this.image, this.x, this.y, this.size, this.size*3/2);
   }
 
+  drawAnimation() {
+    if(millis()%20>0 &&this.animationCurrentStep < this.animationStep){
+      this.animationCurrentStep++;
+      console.log(millis(),millis()%20>0,this.animationCurrentStep);
+    }
+
+
+    this.x = me.deckX()+(me.rack.findCoor(this.r,this.c)[0]-me.deckX())/this.animationStep*this.animationCurrentStep;
+    this.y = me.deckY('deck')+(me.rack.findCoor(this.r,this.c)[1]-me.deckY('deck'))/this.animationStep*this.animationCurrentStep;
+    image(this.image, this.x, this.y, this.size, this.size*3/2);
+  }
+
   center() {
     return [this.x + this.size/2, this.y + this.size*3/4];
   }
@@ -59,14 +71,13 @@ class Tile{
     pop();
   }
 
-  animation(startX,startY,endr,endc){
-    console.log("animtion in tile");
-    // this.animation = true;
-    // this.animationCurrentStep = 0;
-    // this.x = startX;
-    // this.y = startY;
-    // this.r = endr;
-    // this.c = endc;
+  startAnimation(startX,startY,endr,endc){
+     this.animation = true;
+     this.animationCurrentStep = 0;
+     this.x = startX;
+     this.y = startY;
+     this.r = endr;
+     this.c = endc;
   }
 }
 

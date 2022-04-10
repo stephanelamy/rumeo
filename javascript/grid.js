@@ -155,7 +155,7 @@ class Grid{
           if(!tile.moving && !tile.animation){
             tile.draw();
           }else if (tile.animation){
-            tile.draw();
+            tile.drawAnimation();
           }
         }
       }
@@ -220,9 +220,7 @@ class Grid{
   }
 
   deckAnimation(n,r,c){//tells the tile that it must do a animation from the deck to where it should go
-    console.log(me.deckY('deck'));
-    this.tile[n].animation(me.deckX(),me.deckY('deck'),r,c);
-
+    this.tile[n].startAnimation(me.deckX(),me.deckY('deck'),r,c);
   }
 }
 
