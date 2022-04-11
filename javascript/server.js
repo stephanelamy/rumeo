@@ -30,7 +30,7 @@ class AbstractPubNub{
     };
     try {
       console.log(this.pubnub.getUUID(), 'sending on channel', channel, message);
-      const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and senMsg is async function
+      const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and sendMsg is async function
       return result; // message was sent 
     } catch(error) {
         console.log('error', error);
@@ -45,7 +45,7 @@ class AbstractPubNub{
   }
 }
 
-//////////////////////////////////////////////////////////////// client ////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// client ///////////////////////////////////////////////
 
 class Client extends AbstractPubNub{
   constructor(player, type){
@@ -85,11 +85,11 @@ class Client extends AbstractPubNub{
           } 
           
           if (msg.message.text == 'update') {
-            if (msg.message.master){// this player becomes master
+            if (msg.message.master){// toggle master for this player
               console.log('changing master');
               for (const item of this.setuplist) {
-                if (item.uuid == msg.message.uuid && item.type == 'player') {
-                  item.master = ! item.master;
+                if (item.uuid == msg.message.uuid && item.type == 'player'){ 
+                  item.master = ! item.master; 
                 }
               }
             } else {
@@ -101,14 +101,10 @@ class Client extends AbstractPubNub{
               if (ALWAYSMASTER && player.type == 'player') { player.master = true; }
               let alreadyThere = false;
               for (const item of this.setuplist) {
-                if (item.type == player.type && item.uuid == player.uuid) {
-                  alreadyThere = true;
+                alreadyThere = alreadyThere || (item.type == player.type && item.uuid == player.uuid);
                 }
-              }
               console.log('already there:', alreadyThere);
-              if (! alreadyThere) {
-                this.setuplist.push(player);
-              } 
+              if (! alreadyThere) { this.setuplist.push(player); } 
             }
           }
 
@@ -123,7 +119,6 @@ class Client extends AbstractPubNub{
                 } else {
                   channelList.push(item.type + '_' + item.uuid + '_' + UUID);
                 }
-              
               }
               this.player.game = new Game(channelList);
               for (const item of this.setuplist) {
@@ -190,9 +185,7 @@ class Client extends AbstractPubNub{
   nbMaster() {
     let count = 0;
     for (const item of this.setuplist) {
-      if (item.master) {
-        count ++;
-      }
+      if (item.master) { count ++; }
     }
     return count;
   }
@@ -263,7 +256,7 @@ class Client extends AbstractPubNub{
   }
 }
 
-/////////////////////////////////////////////////////////////////server/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////server////////////////////////////////////////////////
 
 class Server extends AbstractPubNub {
   constructor(game) {

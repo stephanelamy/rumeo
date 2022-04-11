@@ -33,7 +33,8 @@ class HumanPlayer extends Player{
       this.image = {
         deck : loadImage("png/tile_deck.png"),
         d777 : loadImage("png/tile_777.png"),
-        d678 : loadImage("png/tile_678.png")
+        d678 : loadImage("png/tile_678.png"),
+        other: loadImage("png/tile_J_1.png")
       };
       this.moving = []; // list of moving tiles (mouse or animation ?)
   }
@@ -146,9 +147,14 @@ class HumanPlayer extends Player{
     let i = 1;
     for (const channel of this.game.channelList) {
       if (channel != this.client.mychannel) {
-        textSize(32);
+        image( this.image['other'], 
+               this.deckWidth()*0.2, 
+               height - i*this.deckHeight() * 1.1, 
+               this.deckWidth(), 
+               this.deckHeight());
+        textSize(14);
         textAlign('left');
-        text(channel, 5, height - 30*i);
+        text(channel, this.deckWidth()*0.2, height+5-this.deckHeight()*i*1.1);
         i++;
       }
     }
