@@ -6,9 +6,10 @@ class Game{
       this.deck.add(i);
     }
     this.channelList = channelList;
-    this.activePlayer = 0;
+    this.activePlayer = -1;
     this.bot = []; // will be used to host bots
     this.server = new Server(this);
+    this.server.nextMove();
   }
 
   chooseNo() {
@@ -37,24 +38,6 @@ class Game{
       no: listNo
     };
     this.server.sendMsg(message, channelplayer);
-  }
-
-  pickStartingTilesOLD(){
-    let chosenNo;
-    let listNo;
-    for (const channel of this.channelList) {
-      listNo = [];
-      for (let j = 0; j < 14; j++){
-        chosenNo = this.chooseNo();
-        listNo.push(chosenNo);
-      }
-      console.log('list', listNo);
-      const message = {
-        text: 'deck',
-        no: listNo
-      };
-      this.server.sendMsg(message, channel);
-    }
   }
 
   pickOneTile(channelplayer){

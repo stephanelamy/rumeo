@@ -140,6 +140,10 @@ class Client extends AbstractPubNub{
               this.player.rack.addTile(no);
             }
           }
+
+          if (msg.message.text == 'move') {
+            this.player.move();
+          }
         }
       }
     });
@@ -248,6 +252,7 @@ class Client extends AbstractPubNub{
   }
 
   pickTile() {
+    this.player.activePlayer = false;
     let message = {
       text: "pick",
       channelplayer: this.mychannel
@@ -289,6 +294,19 @@ class Server extends AbstractPubNub {
         }
       }
     });
+  }
+
+  nextMove() {
+    this.game.activePlayer++;
+    if (this.game.activePlayer >= this.game.channelList.length) {
+      this.game.activePlayer = 0;
+    } 
+    let channel = this.game.channelList[this.game.activePlayer];
+    let message = {
+      text: "move",
+      channelplayer: channel
+    };
+    this.sendMsg(message, channel);
   }
 }
 

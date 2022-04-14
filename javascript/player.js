@@ -6,7 +6,7 @@ class Player{
       this.table = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
       this.status = "setup"; // game state, "setup" or "playing" 
-      this.activePlayer = true; // should be true or false according which turn it is
+      this.activePlayer = false; // should be true when it's our turn to play
       this.game = 0; // will be used only by master player
     }
 
@@ -39,6 +39,9 @@ class HumanPlayer extends Player{
       this.moving = []; // list of moving tiles (mouse or animation ?)
   }
 
+  move() {
+    this.activePlayer = true;
+  }
   // Event routines:
 
   mousePressed(){ 
@@ -109,7 +112,7 @@ class HumanPlayer extends Player{
 
   textStatus(){
     let [isCompletable, isValid] = this.table.parse();
-    let message = 'Completable: ' + isCompletable + '  Valid: ' + isValid;
+    let message = 'Completable: ' + isCompletable + '  Valid: ' + isValid + ' active:' + this.activePlayer;
     textSize(32);
     textAlign("center");
     text(message, width/2, 30);
