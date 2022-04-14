@@ -239,13 +239,15 @@ class BotPlayer extends Player{
   }
 
   move() {
-    if (this.rack.isEmpty()) {
-      this.client.pickTile();
-    } else {
-      this.rack.sort(compareTiles777());
-      index = this.rack.place[0][0];
-      // put tile index on table
-    }
+    this.client.pickTile();
+
+    // if (this.rack.isEmpty()) {
+    //   this.client.pickTile();
+    // } else {
+    //   this.rack.sort(compareTiles777());
+    //   index = this.rack.place[0][0];
+    //   // put tile index on table
+    // }
   }
 
   
