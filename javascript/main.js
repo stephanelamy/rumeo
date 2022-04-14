@@ -37,6 +37,7 @@ function autostart() {
   me.status = 'playing';
   const channelList = [];
   channelList.push('player_' + UUID);
-  channelList.push('bot_' + UUID);
+  channelList.push('bot_1' + UUID);
+  channelList.push('bot_2' + UUID);
   me.game = new Game(channelList);
 }

@@ -287,6 +287,7 @@ class Server extends AbstractPubNub {
         console.log('server listening', msg.message);
         if (msg.message.text == 'pick') {
           this.game.pickOneTile(msg.message.channelplayer); 
+          this.nextMove();
         }
         
         if (msg.message.text == 'table') {
