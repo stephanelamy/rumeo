@@ -4,17 +4,18 @@ convertoptions="-scale 50% -quality 90 -density 100x100 -units pixelspercentimet
 
 echo "converting with options $convertoptions..."
 
-convert $convertoptions all_tiles.pdf[0] png/tile_777.png
-convert $convertoptions all_tiles.pdf[1] png/tile_678.png
-convert $convertoptions all_tiles.pdf[2] png/tile_deck.png
-convert $convertoptions all_tiles.pdf[3] png/tile_J_1.png
-convert $convertoptions all_tiles.pdf[4] png/tile_J_2.png
+convert $convertoptions all_tiles.pdf[0] png/tile_empty.png
+convert $convertoptions all_tiles.pdf[1] png/tile_777.png
+convert $convertoptions all_tiles.pdf[2] png/tile_678.png
+convert $convertoptions all_tiles.pdf[3] png/tile_deck.png
+convert $convertoptions all_tiles.pdf[4] png/tile_J_1.png
+convert $convertoptions all_tiles.pdf[5] png/tile_J_2.png
 
 for ((number=1; number<=13; number++))
 do
   for ((color=1; color<=4; color++))
   do
-    let index=($number-1)*4+$color+4
+    let index=($number-1)*4+$color+5
     filenamepdf="all_tiles.pdf[$index]"
     sep="_"
     filenamepng="png/tile_$number$sep$color.png"
