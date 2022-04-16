@@ -29,7 +29,7 @@ class AbstractPubNub{
       sendByPost: true // seems to be best practice according to PubNub doc
     };
     try {
-      console.log(this.pubnub.getUUID(), 'sending on channel', channel, message);
+      console.log('sending on channel', channel, message);
       const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and sendMsg is async function
       return result; // message was sent 
     } catch(error) {
@@ -39,7 +39,7 @@ class AbstractPubNub{
 
   sendMsg(message, channel) {
     this._sendMsg(message, channel).then(
-      function(value) { console.log('message sent', value); },
+      function(value) { }, // console.log('message sent', value);
       function(error) { console.log('error in sending', error); }
     );
   }
@@ -141,7 +141,7 @@ class Client extends AbstractPubNub{
             }
           }
 
-          if (msg.message.text == 'move') {
+          if (msg.message.text == 'yourturn') {
             this.player.move();
           }
         }
@@ -235,7 +235,7 @@ class Client extends AbstractPubNub{
   }
 
   sendTile (tile, old_row=-1, old_col=-1) {//send a tile's  location in the list,r,c 
-    // not clear we need that
+    // not clear we need all that
     var message = {
         channel : "server",
         message: {
@@ -251,10 +251,18 @@ class Client extends AbstractPubNub{
     this.sendMsg(message, 'server');
   }
 
+  transmitMove() {
+    const message = {
+      text: 'table',
+      move: '', // description of the moves
+      channelplayer: this.mychannel
+    };
+    this.sendMsg(message, 'server');
+  }
+
   pickTile() {
-    this.player.activePlayer = false;
     let message = {
-      text: "pick",
+      text: 'pick',
       channelplayer: this.mychannel
     };
     this.sendMsg(message, 'server');
@@ -291,7 +299,7 @@ class Server extends AbstractPubNub {
         }
         
         if (msg.message.text == 'table') {
-
+          this.nextMove();
         }
       }
     });
@@ -304,7 +312,7 @@ class Server extends AbstractPubNub {
     } 
     let channel = this.game.channelList[this.game.activePlayer];
     let message = {
-      text: "move",
+      text: "yourturn",
       channelplayer: channel
     };
     this.sendMsg(message, channel);

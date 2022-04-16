@@ -16,6 +16,10 @@
 \node[white] {\scalebox{\scale}{\textbf{+}}};
 \end{tikzfadingfrompicture}
 
+\begin{tikzfadingfrompicture}[name=fadingOK]
+\node[white] {\scalebox{\scale}{\textbf{\checkmark}}};
+\end{tikzfadingfrompicture}
+
 \begin{tikzfadingfrompicture}[name=fading777]
 \node[white] {\scalebox{2.5}{\textbf{777}}};
 \end{tikzfadingfrompicture}
@@ -40,7 +44,7 @@
 
 \newcommand{\tile}[2]{
     \begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
-    \filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+    \filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
     \fill[path fading=fading#1, ball color=#2, shading angle=195] (1,2.1) circle[radius=1];
     \fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
     \end{tikzpicture} 
@@ -54,27 +58,49 @@
 \colorlet{myblack}{black}
 \definecolor{extra}{HTML}{FFA500}
 
+\usepackage{tikzlings}
+
 \begin{document}
 
+
 \begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
-\filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
-% \node at (1,2.1) {\scalebox{3}{\textbf{\textls[-80]{\textcolor{myblack}{7}\textcolor{extra}{7}\textcolor{myred}{7}}}}  };
-% \fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
+\filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\marmot[scale=1,xshift=28, yshift=12]
+\end{tikzpicture}
+
+\begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+\filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\pig[scale=1,xshift=28, yshift=12]
+\end{tikzpicture}
+
+\begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+\filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\panda[scale=1,xshift=28, yshift=12]
+\end{tikzpicture}
+
+\begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+\filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\moles[scale=1,xshift=28, yshift=12]
+\end{tikzpicture}
+
+\begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
+\filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
 \end{tikzpicture} 
 
 \begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
-\filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
 \node at (1,2.1) {\scalebox{3}{\textbf{\textls[-80]{\textcolor{myblack}{7}\textcolor{extra}{7}\textcolor{myred}{7}}}}  };
 \fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
 \end{tikzpicture} 
 
 \begin{tikzpicture}[show background rectangle, inner frame sep=0mm]
-\filldraw [rounded corners=4pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
+\filldraw [rounded corners=8pt, fill=olive!17, draw=olive!33, line width=6pt] (0,0) rectangle (2,3);
 \node at (1,2.1) {\scalebox{3}{\textbf{\textls[-80]{\textcolor{blue}{678}}}}  };
 \fill[path fading=fadingC, ball color=olive!15, shading angle=300] (1,.75) circle[radius=0.8];
 \end{tikzpicture} 
 
 \tile{D}{myblack}
+\tile{OK}{green}
 
 \tile{J}{extra}
 \tile{J}{myred}

@@ -7,6 +7,7 @@ class Player{
       this.chat  = new Chat();
       this.status = "setup"; // game state, "setup" or "playing" 
       this.activePlayer = false; // should be true when it's our turn to play
+      this.hasMoved = false; // true after one tile was put on table in a turn
       this.game = 0; // will be used only by master player
     }
 
@@ -31,16 +32,22 @@ class HumanPlayer extends Player{
       super();
       this.client = new Client(this, 'player');
       this.image = {
-        deck : loadImage("png/tile_deck.png"),
-        d777 : loadImage("png/tile_777.png"),
-        d678 : loadImage("png/tile_678.png"),
-        other: loadImage("png/tile_J_1.png")
+        deck :   loadImage("png/tile_deck.png"),
+        d777 :   loadImage("png/tile_777.png"),
+        d678 :   loadImage("png/tile_678.png"),
+        player1: loadImage("png/tile_player1.png"),
+        player2: loadImage("png/tile_player2.png"),
+        player3: loadImage("png/tile_player3.png"),
+        player4: loadImage("png/tile_player4.png"),
+        empty:   loadImage("png/tile_empty.png"),
+        ok :     loadImage("png/tile_OK.png")
       };
       this.moving = []; // list of moving tiles (mouse or animation ?)
   }
 
   move() {
     this.activePlayer = true;
+    this.hasMoved = false;
   }
   // Event routines:
 
@@ -119,27 +126,39 @@ class HumanPlayer extends Player{
   }
 
   deckWidth(){
-    return Tile.computeSize(10);
+    return width * 0.08;
+    // return Tile.computeSize(10);
   }
 
   deckHeight(){
     return this.deckWidth() * 1.5;
   }
 
+  hasFinished(){
+    let [isCompletable, isValid] = this.table.parse();
+    return (isValid && this.hasMoved);
+  }
 
   drawDeck(){
-    for (const name of ['deck', 'd777', 'd678']) {
+    let deckname;
+    if (this.hasFinished()) {
+      deckname = 'ok';
+    } else {
+      deckname = 'deck';
+    }
+    for (const name of [deckname, 'd777', 'd678']) {
       image(this.image[name], this.deckX(), this.deckY(name), this.deckWidth(), this.deckHeight());
     }
   }
 
   deckX(){
-    return width - this.deckWidth()*1.2;
+    return width - this.deckWidth()*1.1;
   }
 
   deckY(name){
     const coeff = {
       deck : 3,
+      ok : 3,
       d777 : 2,
       d678 : 1    
     }; 
@@ -149,17 +168,15 @@ class HumanPlayer extends Player{
   drawOthers() {
     let i = 1;
     for (const channel of this.game.channelList) {
-      if (channel != this.client.mychannel) {
-        image( this.image['other'], 
-               this.deckWidth()*0.2, 
-               height - i*this.deckHeight() * 1.1, 
-               this.deckWidth(), 
-               this.deckHeight());
-        textSize(14);
-        textAlign('left');
-        text(channel, this.deckWidth()*0.2, height+5-this.deckHeight()*i*1.1);
-        i++;
-      }
+      image( this.image['player'+i.toString()], 
+              this.deckWidth()*0.1, 
+              height - i*this.deckHeight() * 1.1, 
+              this.deckWidth(), 
+              this.deckHeight());
+      textSize(14);
+      textAlign('left');
+      text(channel, this.deckWidth()*0.1, height+5-this.deckHeight()*i*1.1);
+      i++;
     }
   }
 
@@ -176,7 +193,7 @@ class HumanPlayer extends Player{
   mouseWasPressed(){
     //check if we select a tile
     for(let i=0; i < this.tile.length; i++){
-      if(overlap(...me.tile[i].rectangle(), mouseX, mouseY)){
+      if (overlap(...me.tile[i].rectangle(), mouseX, mouseY)){
         me.tile[i].moving = true;
         me.moving.push(i);
       }
@@ -185,17 +202,22 @@ class HumanPlayer extends Player{
     this.chat.bouton(); //check if we close or open chat
 
     //check if we press on the deck
-    if(this.checkDeck('deck')) {
-      this.client.pickTile();
+    if (this.checkDeck('deck')) {
+      if (this.hasFinished()) {
+        this.activePlayer = false;
+        this.client.transmitMove();
+      } else {
+        this.client.pickTile();
+      }
     }
 
     //check if we press on sort777
-    if(this.checkDeck('d777')) {
+    if (this.checkDeck('d777')) {
       this.rack.sort(compareTiles777);
     }
 
     //check if we press on sort678
-    if(this.checkDeck('d678')) {
+    if (this.checkDeck('d678')) {
         this.rack.sort(compareTiles678);
     }
   }
@@ -213,11 +235,12 @@ class HumanPlayer extends Player{
   drop(){ //drop and/or swap n with wherever it is
     for(let i = 0;  i < this.moving.length; i++){ 
       let n = this.moving[i];
-      if(overlap(...this.rack.rectangle(),...this.tile[n].center())){
+      if (this.tile[n].grid == this.rack && overlap(...this.rack.rectangle(),...this.tile[n].center())){
         // internal move in our rack, server doesn't need to know
         this.rack.swap(n);
-      }else if(this.activePlayer && overlap(...this.table.rectangle(),...this.tile[n].center())){
+      }else if (this.activePlayer && overlap(...this.table.rectangle(),...this.tile[n].center())){
         // move from our rack or table to table, need to tell server
+        this.hasMoved = true;
         this.table.swap(n);
         this.client.sendTile(this.tile[n]);
       }else{
