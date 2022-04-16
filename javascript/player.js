@@ -174,7 +174,8 @@ class HumanPlayer extends Player{
         rect(this.deckWidth()*0.1, 
           height - i*this.deckHeight() * 1.1, 
           this.deckWidth(), 
-          this.deckHeight());
+          this.deckHeight(),
+          10);
         noStroke();
       }
       image( this.image['player'+i.toString()], 

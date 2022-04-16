@@ -1,6 +1,6 @@
 #!/bin/bash
 
-convertoptions="-quality 90 -density 100x100 -units pixelspercentimeter -crop 99%x99%+1+1 -transparent white -fuzz 2%" 
+convertoptions="-quality 90 -density 120x120 -units pixelspercentimeter -crop 99%x99%+1+1 -transparent white -fuzz 2%" 
 
 echo "converting with options $convertoptions..."
 
