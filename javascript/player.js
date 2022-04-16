@@ -105,7 +105,7 @@ class HumanPlayer extends Player{
     } else {
     this.textStatus();
     this.drawDeck();
-    this.drawOthers();
+    this.drawPlayers();
     this.table.draw();
     this.rack.draw();
     this.checkMoving();
@@ -165,9 +165,18 @@ class HumanPlayer extends Player{
     return height - coeff[name] * this.deckHeight() * 1.1;
   }
 
-  drawOthers() {
+  drawPlayers() {
     let i = 1;
     for (const channel of this.game.channelList) {
+      if (this.game.isActive(channel)) {
+        strokeWeight(5); 
+        stroke('red');
+        rect(this.deckWidth()*0.1, 
+          height - i*this.deckHeight() * 1.1, 
+          this.deckWidth(), 
+          this.deckHeight());
+        noStroke();
+      }
       image( this.image['player'+i.toString()], 
               this.deckWidth()*0.1, 
               height - i*this.deckHeight() * 1.1, 

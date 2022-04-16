@@ -12,6 +12,10 @@ class Game{
     this.server.nextMove();
   }
 
+  isActive(channelplayer) {
+    return this.channelList[this.activePlayer] == channelplayer;
+  }
+
   chooseNo() {
     let chosenNo;
     let index = randomInteger(1, this.deck.size); 
