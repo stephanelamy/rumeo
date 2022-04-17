@@ -29,7 +29,7 @@ class AbstractPubNub{
       sendByPost: true // seems to be best practice according to PubNub doc
     };
     try {
-      console.log('sending on channel', channel, message);
+      if (PUBNUBVERBOSE) { console.log('sending on channel', channel, message); }
       const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and sendMsg is async function
       return result; // message was sent 
     } catch(error) {
@@ -61,7 +61,7 @@ class Client extends AbstractPubNub{
     this.pubnub.addListener({
       status: (statusEvent) => {
         if (statusEvent.category === "PNConnectedCategory") {
-            console.log('connected',  this.type, UUID);
+            console.log(this.type, UUID, 'connected');
             if (this.type == 'player') {
               this.onConnection();
             } else {
@@ -71,7 +71,7 @@ class Client extends AbstractPubNub{
       },
 
       message: (msg) => {
-        console.log("listening from channel", msg.channel, msg.message);
+        if (PUBNUBVERBOSE) { console.log("listening from channel", msg.channel, msg.message);}
         
         //////////////////// SET UP ////////
 
@@ -106,7 +106,6 @@ class Client extends AbstractPubNub{
               for (const item of this.setuplist) {
                 alreadyThere = alreadyThere || (item.type == player.type && item.uuid == player.uuid);
                 }
-              console.log('already there:', alreadyThere);
               if (! alreadyThere) { this.setuplist.push(player); } 
             }
           }
@@ -114,7 +113,6 @@ class Client extends AbstractPubNub{
           if (msg.message.text == 'start') {
             this.player.status = 'playing';
             if (this.isMaster()) {
-              console.log('starting game');
               const channelList = [];
               for (const item of this.setuplist) {
                 if (item.type == 'player') {
@@ -316,7 +314,7 @@ class Server extends AbstractPubNub {
       },
 
       message: (msg) => {
-        console.log('server listening', msg.message);
+        if (PUBNUBVERBOSE) { console.log('server listening', msg.message); }
         if (msg.message.text == 'pick') {
           this.game.pickOneTile(msg.message.channelplayer); 
           this.nextMove();
