@@ -73,6 +73,8 @@ class Client extends AbstractPubNub{
       message: (msg) => {
         console.log("listening from channel", msg.channel, msg.message);
         
+        //////////////////// SET UP ////////
+
         if (msg.channel == 'setup') {
           
           if (msg.message.text == 'join') {  
@@ -131,27 +133,33 @@ class Client extends AbstractPubNub{
           }
         }
 
+        ///////// CHAT ////////////////
+
         if(msg.channel == 'chat') {
           this.player.chat.addArchive(msg.message.archive);
         }
+
+        //////// INFO ///////////////////
 
         if (msg.channel == 'info') {
           if (msg.message.text == 'deck') {
             this.gameInfo[msg.message.channelplayer] ++;
             this.gameInfo.deck --;
-            console.log(this.gameInfo);
           }
+          console.log('info', this.mychannel, this.gameInfo);
         }
+
+        ///////// MY CHANNEL ////////////
 
         if(msg.channel == this.mychannel) {
           if (msg.message.text == 'deck') {
             for (const no of msg.message.no) {
               this.player.rack.addTile(no);
             }
-            if (msg.message.no.length > 1) {
+            if (msg.message.no.length > 1) { // first 14 tiles, init gameInfo
               this.gameInfo.channelList = msg.message.channelList;
               for (const channelplayer of this.gameInfo.channelList) {
-                this.gameInfo.channelplayer = 14;
+                this.gameInfo[channelplayer] = 14;
               }
               this.gameInfo.deck = this.player.tile.length - 14*this.gameInfo.channelList.length;
             }
