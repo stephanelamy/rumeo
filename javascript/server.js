@@ -51,11 +51,12 @@ class Client extends AbstractPubNub{
   constructor(player, type){
     super();
     this.player = player;
+    this.gameInfo = { channelList:0, deck:0 };
     this.type = type; // 'player' or 'bot_n'
     this.setuplist = []; // list of players or bots ready to start a game
     this.pubnub.setUUID(UUID); // this constant is defined in file uuid.js: const UUID = 'name';
     this.mychannel = this.type + '_' + UUID;
-    this.pubnub.subscribe({ channels: ['chat', 'setup', this.mychannel] }); 
+    this.pubnub.subscribe({ channels: ['chat', 'setup', 'info', this.mychannel] }); 
 
     this.pubnub.addListener({
       status: (statusEvent) => {
@@ -134,10 +135,25 @@ class Client extends AbstractPubNub{
           this.player.chat.addArchive(msg.message.archive);
         }
 
+        if (msg.channel == 'info') {
+          if (msg.message.text == 'deck') {
+            this.gameInfo[msg.message.channelplayer] ++;
+            this.gameInfo.deck --;
+            console.log(this.gameInfo);
+          }
+        }
+
         if(msg.channel == this.mychannel) {
           if (msg.message.text == 'deck') {
             for (const no of msg.message.no) {
               this.player.rack.addTile(no);
+            }
+            if (msg.message.no.length > 1) {
+              this.gameInfo.channelList = msg.message.channelList;
+              for (const channelplayer of this.gameInfo.channelList) {
+                this.gameInfo.channelplayer = 14;
+              }
+              this.gameInfo.deck = this.player.tile.length - 14*this.gameInfo.channelList.length;
             }
           }
 
