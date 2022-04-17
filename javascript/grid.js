@@ -220,7 +220,8 @@ class Grid{
   }
 
   deckAnimation(n,r,c){//tells the tile that it must do a animation from the deck to where it should go
-    this.tile[n].startAnimation(me.deckX(),me.deckY('deck'),r,c);
+    let [x,y]=this.findCoor(r,c);
+    this.tile[n].startAnimation(me.deckX(),me.deckY('deck'),x,y);
   }
 }
 
@@ -258,6 +259,7 @@ class RackGrid extends Grid{
         }
       }
     }
+
     auxArray.sort(sortFunction);
     this.reset();
     for(let row=0; row<this.rows; row++){

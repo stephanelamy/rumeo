@@ -14,6 +14,10 @@ class Tile{
     this.animation = false; // moving via animation
     this.animationStep = 0;
     this.animationCurrentStep = 0;
+    this.animationStartX = 0;
+    this.animationStartY = 0;
+    this.animationEndX = 0;
+    this.animationEndY = 0;
   }
 
   static computeSize(nbColumns) {
@@ -39,8 +43,8 @@ class Tile{
       this.animationCurrentStep++;
       //console.log(millisecond,millisecond%20>10,this.animationCurrentStep);
     }
-    this.x = me.deckX()+(me.rack.findCoor(this.r,this.c)[0]-me.deckX())/this.animationStep*this.animationCurrentStep;
-    this.y = me.deckY('deck')+(me.rack.findCoor(this.r,this.c)[1]-me.deckY('deck'))/this.animationStep*this.animationCurrentStep;
+    this.x = this.animationStartX+(this.animationEndX-me.deckX())/this.animationStep*this.animationCurrentStep;
+    this.y = this.animationStartY+(this.animationEndY-me.deckY('deck'))/this.animationStep*this.animationCurrentStep;
     image(this.image, this.x, this.y, this.size, this.size*3/2);
 
     if (this.animationCurrentStep >= this.animationStep){
@@ -56,15 +60,15 @@ class Tile{
     return [this.x, this.y, this.size, this.size*3/2];
   }
 
-  startAnimation(startX,startY,endr,endc){
+  startAnimation(startX,startY,endX,endY){
      this.animation = true;
      this.animationStep = 60;
      this.animationCurrentStep = 0;
      //this.animationRack = endRack;
-     this.x = startX;
-     this.y = startY;
-     this.r = endr;
-     this.c = endc;
+     this.animationStartX = startX;
+     this.animationStartY = startY;
+     this.animationEndX = endX;
+     this.animationEndY = endY;
   }
 }
 

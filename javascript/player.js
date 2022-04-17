@@ -149,6 +149,10 @@ class HumanPlayer extends Player{
     for (const name of [deckname, 'd777', 'd678']) {
       image(this.image[name], this.deckX(), this.deckY(name), this.deckWidth(), this.deckHeight());
     }
+    if(deckname == 'deck' || deckname == 'ok'){
+      //size(200);
+      text(this.game.deck.size,this.deckX()+this.deckWidth()*17/20, this.deckY(deckname)+this.deckHeight()*19/20);
+    }
   }
 
   deckX(){
