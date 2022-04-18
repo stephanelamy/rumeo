@@ -257,7 +257,7 @@ class RackGrid extends Grid{
           const tile = auxArray.pop();
           this.putTile(tile.no,row,col);
           tile.giveAnimationEnd(...this.findCoor(row,col));          
-          tile.startAnimation();
+          tile.startAnimation(25);
         }
       }
     }

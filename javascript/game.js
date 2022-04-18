@@ -1,8 +1,8 @@
 class Game{
-  constructor(channelList){
+  constructor(channelList, numberTiles){
     console.log('creating game and server');
     this.deck = new Set();
-    for (let i=0; i<104; i++){ // serait mieux d'éviter ce 104 en dur
+    for (let i=0; i<numberTiles; i++){ 
       this.deck.add(i);
     }
     this.channelList = channelList;

@@ -19,6 +19,7 @@ class Player{
             }
           }
         }
+        // ADD JOKER HERE
         // Each tile knows its own numero
         for (let no = 0; no < this.tile.length; no++){
           this.tile[no].no = no;
@@ -171,38 +172,40 @@ class HumanPlayer extends Player{
     return height - coeff[name] * this.deckHeight() * 1.1;
   }
 
-  drawPlayers() {
+  async drawPlayers() {
     let i = 1;
-    for (const channel of this.game.channelList) {
-      let playerHeight = height-this.deckHeight()*i*1.1;
-      if (this.game.isActive(channel)) {
-        strokeWeight(5); 
-        stroke('red');
-        rect(this.deckWidth()*0.1, 
-          playerHeight, 
-          this.deckWidth(), 
-          this.deckHeight(),
-          10);
-        noStroke();
+    if (this.client.gameInfo.channelList != 0) {
+      for (const channel of this.client.gameInfo.channelList) {
+        let playerHeight = height-this.deckHeight()*i*1.1;
+        if ( channel == this.client.gameInfo.activePlayer ) {
+          strokeWeight(5); 
+          stroke('red');
+          rect(this.deckWidth()*0.1, 
+            playerHeight, 
+            this.deckWidth(), 
+            this.deckHeight(),
+            10);
+          noStroke();
+        }
+        image( this.image['player'+i.toString()], 
+                this.deckWidth()*0.1,
+                playerHeight, 
+                this.deckWidth(), 
+                this.deckHeight());
+        textSize(14);
+        textAlign('left');
+
+        text(channel, this.deckWidth()*0.1,playerHeight);//name of the player
+
+        textSize(0.3*this.deckWidth());
+        text(this.client.gameInfo[channel],
+            this.deckWidth()*0.1*17/20, 
+            playerHeight+this.deckHeight()*19/20);
+
+      //  text(this.client.gameInfo[channel], this.deckWidth()*0.1, height+5-this.deckHeight()*i*1.1);//number of tiles in his hand
+
+        i++;
       }
-      image( this.image['player'+i.toString()], 
-              this.deckWidth()*0.1,
-              playerHeight, 
-              this.deckWidth(), 
-              this.deckHeight());
-      textSize(14);
-      textAlign('left');
-
-      text(channel, this.deckWidth()*0.1,playerHeight);//name of the player
-
-      textSize(0.3*this.deckWidth());
-      text(this.client.gameInfo[channel],
-          this.deckWidth()*0.1*17/20, 
-          playerHeight+this.deckHeight()*19/20);
-
-    //  text(this.client.gameInfo[channel], this.deckWidth()*0.1, height+5-this.deckHeight()*i*1.1);//number of tiles in his hand
-
-      i++;
     }
   }
 

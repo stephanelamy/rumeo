@@ -51,7 +51,7 @@ class Client extends AbstractPubNub{
   constructor(player, type){
     super();
     this.player = player;
-    this.gameInfo = { channelList:0, deck:0 };
+    this.gameInfo = { channelList:0, deck:0, activePlayer: 'none' };
     this.type = type; // 'player' or 'bot_n'
     this.setuplist = []; // list of players or bots ready to start a game
     this.pubnub.setUUID(UUID); // this constant is defined in file uuid.js: const UUID = 'name';
@@ -121,7 +121,7 @@ class Client extends AbstractPubNub{
                   channelList.push(item.type + '_' + item.uuid + '_' + UUID);
                 }
               }
-              this.player.game = new Game(channelList);
+              this.player.game = new Game(channelList, this.player.tile.length);
               for (const item of this.setuplist) {
                 if (item.type != 'player') {
                   this.player.game.bot.push(new BotPlayer('bot_' + item.uuid, this.player.game));
@@ -140,6 +140,10 @@ class Client extends AbstractPubNub{
         //////// INFO ///////////////////
 
         if (msg.channel == 'info') {
+
+          if (msg.message.text == 'active') {
+            this.gameInfo.activePlayer = msg.message.channelplayer;
+          }
           
           if (msg.message.text == 'deck') {
             this.gameInfo[msg.message.channelplayer] ++;
@@ -168,6 +172,7 @@ class Client extends AbstractPubNub{
           if (msg.message.text == 'yourturn') {
             this.player.move();
           }
+
         }
       }
     });
@@ -336,13 +341,15 @@ class Server extends AbstractPubNub {
     } 
     let channel = this.game.channelList[this.game.activePlayer];
     let message = {
+      text: 'active',
+      channelplayer: channel
+    };
+    this.sendMsg(message, 'info');
+    message = {
       text: 'yourturn',
       channelplayer: channel
     };
-    // setTimeout(this.sendMsg, 1000, message, channel);
-    // console.log('next');
     this.sendMsg(message, channel);
-    // setTimeout( function(){ this.sendMsg(message, channel); }, 500);
   }
 }
 
