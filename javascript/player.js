@@ -42,7 +42,7 @@ class HumanPlayer extends Player{
         empty:   loadImage("png/tile_empty.png"),
         ok :     loadImage("png/tile_OK.png")
       };
-      this.moving = []; // list of moving tiles (mouse or animation ?)
+      this.moving = []; // list of moving tiles (under mouse)
   }
 
   move() {
@@ -119,7 +119,8 @@ class HumanPlayer extends Player{
 
   textStatus(){
     let [isCompletable, isValid] = this.table.parse();
-    let message = 'Completable: ' + isCompletable + '  Valid: ' + isValid + ' active:' + this.activePlayer;
+    let message = 'Completable: ' + isCompletable + 
+                  '  Valid: ' + isValid + ' active:' + this.activePlayer;
     textSize(32);
     textAlign("center");
     text(message, width/2, 30);
@@ -149,7 +150,11 @@ class HumanPlayer extends Player{
     for (const name of [deckname, 'd777', 'd678']) {
       image(this.image[name], this.deckX(), this.deckY(name), this.deckWidth(), this.deckHeight());
     }
-    text(this.client.gameInfo.deck,this.deckX()+this.deckWidth()*17/20, this.deckY(deckname)+this.deckHeight()*19/20);
+    textSize(0.3*this.deckWidth());
+    text( this.client.gameInfo.deck,
+          this.deckX()+this.deckWidth()*17/20, 
+          this.deckY(deckname)+this.
+          deckHeight()*19/20);
   }
 
   deckX(){

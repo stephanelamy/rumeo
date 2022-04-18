@@ -140,11 +140,12 @@ class Client extends AbstractPubNub{
         //////// INFO ///////////////////
 
         if (msg.channel == 'info') {
+          if (PUBNUBVERBOSE) { console.log('info', this.mychannel, this.gameInfo); }
+          
           if (msg.message.text == 'deck') {
             this.gameInfo[msg.message.channelplayer] ++;
             this.gameInfo.deck --;
           }
-          console.log('info', this.mychannel, this.gameInfo);
         }
 
         ///////// MY CHANNEL ////////////
