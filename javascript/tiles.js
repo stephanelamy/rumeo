@@ -1,7 +1,8 @@
 class Tile{
-  constructor(color,number) {
+  constructor(color,number, copie=1) {
     this.color = color;//1-4, ('J' pour joker)
     this.number = number;//1-13 ('J' pour joker)
+    this.copie = copie;
     this.x = 0;
     this.y = 0;
     this.row = 0; // 1-n

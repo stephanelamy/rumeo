@@ -15,7 +15,7 @@ class Player{
         for (let copie = 1; copie <= 2; copie++){
           for (let colour = 1; colour <= 4; colour++){
             for (let number = 1; number <= 13 ; number++){
-              this.tile.push(new Tile(colour, number));
+              this.tile.push(new Tile(colour, number, copie));
             }
           }
         }

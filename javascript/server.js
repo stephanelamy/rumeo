@@ -30,8 +30,8 @@ class AbstractPubNub{
     };
     try {
       if (PUBNUBVERBOSE) { console.log('sending on channel', channel, message); }
-      const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and sendMsg is async function
-      return result; // message was sent 
+      const result = await this.pubnub.publish(msg); 
+      // 'await' here as in the doc, and sendMsg is async function
     } catch(error) {
         console.log('error', error);
       }
@@ -140,11 +140,12 @@ class Client extends AbstractPubNub{
         //////// INFO ///////////////////
 
         if (msg.channel == 'info') {
-          if (PUBNUBVERBOSE) { console.log('info', this.mychannel, this.gameInfo); }
           
           if (msg.message.text == 'deck') {
             this.gameInfo[msg.message.channelplayer] ++;
             this.gameInfo.deck --;
+            // if (PUBNUBVERBOSE) { console.log('info', this.mychannel, this.gameInfo); }
+            if (true) { console.log('info', this.mychannel, this.gameInfo); }
           }
         }
 
@@ -335,10 +336,13 @@ class Server extends AbstractPubNub {
     } 
     let channel = this.game.channelList[this.game.activePlayer];
     let message = {
-      text: "yourturn",
+      text: 'yourturn',
       channelplayer: channel
     };
+    // setTimeout(this.sendMsg, 1000, message, channel);
+    // console.log('next');
     this.sendMsg(message, channel);
+    // setTimeout( function(){ this.sendMsg(message, channel); }, 500);
   }
 }
 

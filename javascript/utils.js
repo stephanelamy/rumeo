@@ -12,9 +12,9 @@ function overlap(rectX, rectY, rectW, rectH, targetX, targetY){
 }
 
 function compareTiles777(a, b) {
-  return 4*b.number + b.color - (4*a.number + a.color);
+  return 2*(4*b.number + b.color - (4*a.number + a.color)) + a.copie - b.copie;
 }
 
 function compareTiles678(a, b) {
-  return 13*b.color + b.number - (13*a.color + a.number);
+  return 2*(13*b.color + b.number - (13*a.color + a.number)) + b.copie - a.copie;
 }
