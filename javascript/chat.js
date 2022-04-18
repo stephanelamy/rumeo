@@ -102,7 +102,7 @@ class Chat{
       }
     }
     this.envoi = join(this.data,"");
-    if (keyCode == ENTER){
+    if (keyCode == ENTER && this.data.length>0){
       // if (this.envoi.length>0) this.archive.push(this.ourName +": "+ this.envoi);
       if(this.data[0] == "-"){//check for commands
         command(this.data);
@@ -111,6 +111,11 @@ class Chat{
       }
       this.data.splice(0, this.data.length)//clear the text
       this.envoi = "";
+    }else if (keyCode == ENTER){//close chat(if nothing writen)
+      this.checkboutonchat = false;
+    }
+    if(key == "/"){//open chat
+      this.checkboutonchat = true;
     }
   }
 
