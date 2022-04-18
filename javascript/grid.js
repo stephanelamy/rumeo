@@ -244,6 +244,7 @@ class RackGrid extends Grid{
         const n = this.place[row][col];
         if (n != 'empty'){
           auxArray.push(this.tile[n]);
+          this.tile[n].giveAnimationStart(...this.findCoor(row,col));
         }
       }
     }
@@ -255,6 +256,10 @@ class RackGrid extends Grid{
         if (auxArray.length > 0){
           const tile = auxArray.pop();
           this.putTile(tile.no,row,col);
+          tile.giveAnimationEnd(...this.findCoor(row,col));
+          console.log("starting",    this.animationStartX,this.animationStartY,this.animationEndX,this.animationEndY); 
+          
+          tile.startAnimation();
         }
       }
     }

@@ -43,8 +43,8 @@ class Tile{
       this.animationCurrentStep++;
       //console.log(millisecond,millisecond%20>10,this.animationCurrentStep);
     }
-    this.x = this.animationStartX+(this.animationEndX-me.deckX())/this.animationStep*this.animationCurrentStep;
-    this.y = this.animationStartY+(this.animationEndY-me.deckY('deck'))/this.animationStep*this.animationCurrentStep;
+    this.x = this.animationStartX+(this.animationEndX-this.animationStartX)/this.animationStep*this.animationCurrentStep;
+    this.y = this.animationStartY+(this.animationEndY-this.animationStartY)/this.animationStep*this.animationCurrentStep;
     image(this.image, this.x, this.y, this.size, this.size*3/2);
 
     if (this.animationCurrentStep >= this.animationStep){
@@ -60,16 +60,30 @@ class Tile{
     return [this.x, this.y, this.size, this.size*3/2];
   }
 
-  startAnimation(startX,startY,endX,endY){
-     this.animation = true;
-     this.animationStep = 60;
-     this.animationCurrentStep = 0;
-     //this.animationRack = endRack;
-     this.animationStartX = startX;
-     this.animationStartY = startY;
-     this.animationEndX = endX;
-     this.animationEndY = endY;
+  startAnimation(){//start or restart a animation
+    console.log("starting",    this.animationStartX,this.animationStartY,this.animationEndX,this.animationEndY); 
+    this.animation = true;
+    this.animationStep = 60;
+    this.animationCurrentStep = 0;
   }
+
+  startAnimationV(startX,startY,endX,endY){//same but if we already know start/end
+     startAnimation();
+     //this.animationRack = endRack;
+     this.giveAnimationStart(startX,startY);
+     this.giveAnimationEnd(endX,endY);
+  }
+
+  giveAnimationStart(startX,startY){
+    this.animationStartX = startX;
+    this.animationStartY = startY;
+ }
+
+  giveAnimationEnd(endX,endY){
+    this.animationEndX = endX;
+    this.animationEndY = endY;
+ }
+
 }
 
 
