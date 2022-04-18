@@ -30,8 +30,8 @@ class AbstractPubNub{
     };
     try {
       if (PUBNUBVERBOSE) { console.log('sending on channel', channel, message); }
-      const result = await this.pubnub.publish(msg); 
-      // 'await' here as in the doc, and _sendMsg is async function
+      const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and sendMsg is async function
+      return result; // message was sent 
     } catch(error) {
         console.log('error', error);
       }
