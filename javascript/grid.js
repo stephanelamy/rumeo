@@ -209,7 +209,7 @@ class Grid{
 
   deckAnimation(n,r,c){//tells the tile that it must do a animation from the deck to where it should go
     let [x,y]=this.findCoor(r,c);
-    this.tile[n].startAnimation(me.deckX(),me.deckY('deck'),x,y);
+    this.tile[n].startAnimationV(me.deckX(),me.deckY('deck'),x,y);
   }
 }
 

@@ -174,25 +174,33 @@ class HumanPlayer extends Player{
   drawPlayers() {
     let i = 1;
     for (const channel of this.game.channelList) {
+      let playerHeight = height-this.deckHeight()*i*1.1;
       if (this.game.isActive(channel)) {
         strokeWeight(5); 
         stroke('red');
         rect(this.deckWidth()*0.1, 
-          height - i*this.deckHeight() * 1.1, 
+          playerHeight, 
           this.deckWidth(), 
           this.deckHeight(),
           10);
         noStroke();
       }
       image( this.image['player'+i.toString()], 
-              this.deckWidth()*0.1, 
-              height - i*this.deckHeight() * 1.1, 
+              this.deckWidth()*0.1,
+              playerHeight, 
               this.deckWidth(), 
               this.deckHeight());
       textSize(14);
       textAlign('left');
-      text(channel, this.deckWidth()*0.1, height+5-this.deckHeight()*i*1.1);//name of the player
-      //text(channel, this.deckWidth()*0.1, height+5-this.deckHeight()*i*1.1);//number of tiles in his hand
+
+      text(channel, this.deckWidth()*0.1,playerHeight);//name of the player
+
+      textSize(0.3*this.deckWidth());
+      text(this.client.gameInfo[channel],
+          this.deckWidth()*0.1*17/20, 
+          playerHeight+this.deckHeight()*19/20);
+
+    //  text(this.client.gameInfo[channel], this.deckWidth()*0.1, height+5-this.deckHeight()*i*1.1);//number of tiles in his hand
 
       i++;
     }

@@ -61,17 +61,17 @@ class Tile{
   }
 
   startAnimation(){//start or restart a animation
-    console.log("starting",    this.animationStartX,this.animationStartY,this.animationEndX,this.animationEndY); 
+    console.log("data",    this.animation,this.animationStartX );
     this.animation = true;
     this.animationStep = 60;
     this.animationCurrentStep = 0;
   }
 
   startAnimationV(startX,startY,endX,endY){//same but if we already know start/end
-     startAnimation();
+    this.giveAnimationStart(startX,startY);
+    this.giveAnimationEnd(endX,endY);
+    this.startAnimation();
      //this.animationRack = endRack;
-     this.giveAnimationStart(startX,startY);
-     this.giveAnimationEnd(endX,endY);
   }
 
   giveAnimationStart(startX,startY){
