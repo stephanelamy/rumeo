@@ -67,7 +67,7 @@ class Tile{
     this.animationCurrentStep = 0;
   }
 
-  startAnimation(startX,startY,endX,endY){//same but if we already know start/end
+  startAnimationV(startX,startY,endX,endY){//same but if we already know start/end
      this.animation = true;
      this.animationStep = 60;
      this.animationCurrentStep = 0;

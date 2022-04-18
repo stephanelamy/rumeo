@@ -258,6 +258,7 @@ class RackGrid extends Grid{
           this.putTile(tile.no,row,col);
           tile.giveAnimationEnd(...this.findCoor(row,col));
           console.log("starting",    this.animationStartX,this.animationStartY,this.animationEndX,this.animationEndY); 
+          
           tile.startAnimation();
         }
       }
