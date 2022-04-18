@@ -61,7 +61,6 @@ class Tile{
   }
 
   startAnimation(){//start or restart a animation
-    console.log("data",    this.animation,this.animationStartX );
     this.animation = true;
     this.animationStep = 60;
     this.animationCurrentStep = 0;

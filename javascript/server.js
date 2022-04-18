@@ -65,7 +65,7 @@ class Client extends AbstractPubNub{
             if (this.type == 'player') {
               this.onConnection();
             } else {
-              this.player.game.pickStartingTilesV(this.mychannel);
+              this.player.game.pickStartingTiles(this.mychannel);
             }
         }
       },
