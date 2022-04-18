@@ -42,7 +42,7 @@ class HumanPlayer extends Player{
         empty:   loadImage("png/tile_empty.png"),
         ok :     loadImage("png/tile_OK.png")
       };
-      this.moving = []; // list of moving tiles (mouse or animation ?)
+      this.moving = []; // list of moving tiles (under mouse)
   }
 
   move() {
@@ -119,7 +119,8 @@ class HumanPlayer extends Player{
 
   textStatus(){
     let [isCompletable, isValid] = this.table.parse();
-    let message = 'Completable: ' + isCompletable + '  Valid: ' + isValid + ' active:' + this.activePlayer;
+    let message = 'Completable: ' + isCompletable + 
+                  '  Valid: ' + isValid + ' active:' + this.activePlayer;
     textSize(32);
     textAlign("center");
     text(message, width/2, 30);
@@ -149,10 +150,11 @@ class HumanPlayer extends Player{
     for (const name of [deckname, 'd777', 'd678']) {
       image(this.image[name], this.deckX(), this.deckY(name), this.deckWidth(), this.deckHeight());
     }
-    if(deckname == 'deck' || deckname == 'ok'){
-      //size(200);
-      text(this.game.deck.size,this.deckX()+this.deckWidth()*17/20, this.deckY(deckname)+this.deckHeight()*19/20);
-    }
+    textSize(0.3*this.deckWidth());
+    text( this.client.gameInfo.deck,
+          this.deckX()+this.deckWidth()*17/20, 
+          this.deckY(deckname)+this.
+          deckHeight()*19/20);
   }
 
   deckX(){
@@ -267,27 +269,4 @@ class HumanPlayer extends Player{
     }
     this.moving = [];
   }
-}
-
-
-class BotPlayer extends Player{
-  constructor(name, game) { // name has the form 'bot_1', 'bot_2'...
-    super();
-    this.game = game;
-    this.client = new Client(this, name);
-  }
-
-  move() {
-    this.client.pickTile();
-
-    // if (this.rack.isEmpty()) {
-    //   this.client.pickTile();
-    // } else {
-    //   this.rack.sort(compareTiles777());
-    //   index = this.rack.place[0][0];
-    //   // put tile index on table
-    // }
-  }
-
-  
 }

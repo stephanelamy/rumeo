@@ -29,7 +29,7 @@ class AbstractPubNub{
       sendByPost: true // seems to be best practice according to PubNub doc
     };
     try {
-      console.log('sending on channel', channel, message);
+      if (PUBNUBVERBOSE) { console.log('sending on channel', channel, message); }
       const result = await this.pubnub.publish(msg); // 'await' here as in the doc, and sendMsg is async function
       return result; // message was sent 
     } catch(error) {
@@ -51,16 +51,17 @@ class Client extends AbstractPubNub{
   constructor(player, type){
     super();
     this.player = player;
+    this.gameInfo = { channelList:0, deck:0 };
     this.type = type; // 'player' or 'bot_n'
     this.setuplist = []; // list of players or bots ready to start a game
     this.pubnub.setUUID(UUID); // this constant is defined in file uuid.js: const UUID = 'name';
     this.mychannel = this.type + '_' + UUID;
-    this.pubnub.subscribe({ channels: ['chat', 'setup', this.mychannel] }); 
+    this.pubnub.subscribe({ channels: ['chat', 'setup', 'info', this.mychannel] }); 
 
     this.pubnub.addListener({
       status: (statusEvent) => {
         if (statusEvent.category === "PNConnectedCategory") {
-            console.log('connected',  this.type, UUID);
+            console.log(this.type, UUID, 'connected');
             if (this.type == 'player') {
               this.onConnection();
             } else {
@@ -70,8 +71,10 @@ class Client extends AbstractPubNub{
       },
 
       message: (msg) => {
-        console.log("listening from channel", msg.channel, msg.message);
+        if (PUBNUBVERBOSE) { console.log("listening from channel", msg.channel, msg.message);}
         
+        //////////////////// SET UP ////////
+
         if (msg.channel == 'setup') {
           
           if (msg.message.text == 'join') {  
@@ -103,7 +106,6 @@ class Client extends AbstractPubNub{
               for (const item of this.setuplist) {
                 alreadyThere = alreadyThere || (item.type == player.type && item.uuid == player.uuid);
                 }
-              console.log('already there:', alreadyThere);
               if (! alreadyThere) { this.setuplist.push(player); } 
             }
           }
@@ -111,7 +113,6 @@ class Client extends AbstractPubNub{
           if (msg.message.text == 'start') {
             this.player.status = 'playing';
             if (this.isMaster()) {
-              console.log('starting game');
               const channelList = [];
               for (const item of this.setuplist) {
                 if (item.type == 'player') {
@@ -130,14 +131,36 @@ class Client extends AbstractPubNub{
           }
         }
 
+        ///////// CHAT ////////////////
+
         if(msg.channel == 'chat') {
           this.player.chat.addArchive(msg.message.archive);
         }
+
+        //////// INFO ///////////////////
+
+        if (msg.channel == 'info') {
+          if (PUBNUBVERBOSE) { console.log('info', this.mychannel, this.gameInfo); }
+          
+          if (msg.message.text == 'deck') {
+            this.gameInfo[msg.message.channelplayer] ++;
+            this.gameInfo.deck --;
+          }
+        }
+
+        ///////// MY CHANNEL ////////////
 
         if(msg.channel == this.mychannel) {
           if (msg.message.text == 'deck') {
             for (const no of msg.message.no) {
               this.player.rack.addTile(no);
+            }
+            if (msg.message.no.length > 1) { // first 14 tiles, init gameInfo
+              this.gameInfo.channelList = msg.message.channelList;
+              for (const channelplayer of this.gameInfo.channelList) {
+                this.gameInfo[channelplayer] = 14;
+              }
+              this.gameInfo.deck = this.player.tile.length - 14*this.gameInfo.channelList.length;
             }
           }
 
@@ -292,7 +315,7 @@ class Server extends AbstractPubNub {
       },
 
       message: (msg) => {
-        console.log('server listening', msg.message);
+        if (PUBNUBVERBOSE) { console.log('server listening', msg.message); }
         if (msg.message.text == 'pick') {
           this.game.pickOneTile(msg.message.channelplayer); 
           this.nextMove();

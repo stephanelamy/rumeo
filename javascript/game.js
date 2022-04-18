@@ -39,18 +39,24 @@ class Game{
     }
     const message = {
       text: 'deck',
-      no: listNo
+      no: listNo,
+      channelList: this.channelList
     };
     this.server.sendMsg(message, channelplayer);
   }
 
   pickOneTile(channelplayer){
     const chosenNo = this.chooseNo(); 
-    const message = {
+    let message = {
       text: 'deck',
       no: [chosenNo]
     };
     this.server.sendMsg(message, channelplayer);
+    message = {
+      text: 'deck',
+      channelplayer: channelplayer
+    };
+    this.server.sendMsg(message, 'info');
   }
 }
   

@@ -50,18 +50,6 @@ class Grid{
     return [x,y];
   }
 
-  //find if tile n is in this grid // bizarre ?
-  isThereTile(n){
-    for(let r = 0; r < this.rows; r++){
-      for(let c = 0; c < this.cols; c++){
-        if(this.place[r][c]  == n){
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   //find the first empty space
   findEmptySpot(){
     for(let r = 0; r < this.rows; r++){
@@ -152,10 +140,10 @@ class Grid{
         //draw all tiles on the rack, skiping moving ones
         if(t != 'empty'){
           const tile = this.tile[t];//tile in question
-          if(!tile.moving && !tile.animation){
-            tile.draw();
-          }else if (tile.animation){
+          if (tile.animation){
             tile.drawAnimation();
+          } else if (!tile.moving) {
+            tile.draw();
           }
         }
       }

@@ -1,5 +1,6 @@
 let ALWAYSMASTER = true; // true for developpement purpose
 let AUTOSTART = false; // true for developpement purpose
+let PUBNUBVERBOSE = true; // true for developpement purpose
 
 let me;
 
