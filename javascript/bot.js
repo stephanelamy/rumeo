@@ -6,6 +6,7 @@ class BotPlayer extends Player{
   }
 
   move() {
+    console.log('bot moving');
     this.client.pickTile();
 
     // if (this.rack.isEmpty()) {
