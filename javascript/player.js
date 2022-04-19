@@ -195,7 +195,7 @@ class HumanPlayer extends Player{
 
       text(channel, this.deckWidth()*0.1,playerHeight);//name of the player
 
-      textSize(0.3*this.deckWidth());
+      textSize(0.3*this.deckWidth());//number of cards the player has
       text(this.client.gameInfo[channel],
           this.deckWidth()*0.1*17/20, 
           playerHeight+this.deckHeight()*19/20);
