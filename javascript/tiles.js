@@ -48,10 +48,11 @@ class Tile{
     let t = this.animation.currentStep / this.animation.steps;
     // alternative way with time only:
     t = (millisecond - this.animation.startTime) / this.animation.duration;
+    t = min(t,1);
     this.x = this.animation.startX+(this.animation.endX-this.animation.startX)*t;
     this.y = this.animation.startY+(this.animation.endY-this.animation.startY)*t;
     image(this.image, this.x, this.y, this.size, this.size*3/2);
-    if (t > 1){
+    if (t == 1){
       this.animation.ongoing = false;
     }
   }
