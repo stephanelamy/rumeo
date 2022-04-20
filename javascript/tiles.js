@@ -12,13 +12,15 @@ class Tile{
     this.size = 0; //his width    height=width*1.5
     this.image = loadImage(this.fileName()); // original image
     this.moving = false; // moving with mouse
-    this.animation = false; // moving via animation
-    this.animationStep = 0;
-    this.animationCurrentStep = 0;
-    this.animationStartX = 0;
-    this.animationStartY = 0;
-    this.animationEndX = 0;
-    this.animationEndY = 0;
+    this.animation = {
+      ongoing: false,
+      steps: 0,
+      currentStep: 0,
+      startX: 0,
+      startY: 0,
+      endX: 0,
+      endY: 0
+    }
   }
 
   static computeSize(nbColumns) {
@@ -40,16 +42,16 @@ class Tile{
 
   drawAnimation() {
     const millisecond =  millis();
-    if(millisecond%100>1 && this.animationCurrentStep < this.animationStep) {
-      this.animationCurrentStep++;
+    if(millisecond%100>1 && this.animation.currentStep < this.animation.steps) {
+      this.animation.currentStep++;
     }
-    const t = this.animationCurrentStep / this.animationStep;
-    this.x = this.animationStartX+(this.animationEndX-this.animationStartX)*t;
-    this.y = this.animationStartY+(this.animationEndY-this.animationStartY)*t;
+    const t = this.animation.currentStep / this.animation.steps;
+    this.x = this.animation.startX+(this.animation.endX-this.animation.startX)*t;
+    this.y = this.animation.startY+(this.animation.endY-this.animation.startY)*t;
     image(this.image, this.x, this.y, this.size, this.size*3/2);
 
-    if (this.animationCurrentStep >= this.animationStep){
-      this.animation = false;
+    if (this.animation.currentStep >= this.animation.steps){
+      this.animation.ongoing = false;
     }
   }
 
@@ -61,26 +63,26 @@ class Tile{
     return [this.x, this.y, this.size, this.size*3/2];
   }
 
-  startAnimation(steps=50) { //start or restart a animation
-    this.animation = true;
-    this.animationStep = steps;
-    this.animationCurrentStep = 0;
+  startAnimation(steps) { //start or restart a animation
+    this.animation.ongoing = true;
+    this.animation.steps = steps;
+    this.animation.currentStep = 0;
   }
 
   startAnimationV(startX, startY, endX, endY) { //same but if we already know start/end
     this.giveAnimationStart(startX,startY);
     this.giveAnimationEnd(endX,endY);
-    this.startAnimation();
+    this.startAnimation(50);
   }
 
   giveAnimationStart(startX, startY) {
-    this.animationStartX = startX;
-    this.animationStartY = startY;
+    this.animation.startX = startX;
+    this.animation.startY = startY;
  }
 
   giveAnimationEnd(endX, endY) {
-    this.animationEndX = endX;
-    this.animationEndY = endY;
+    this.animation.endX = endX;
+    this.animation.endY = endY;
  }
 
 }
