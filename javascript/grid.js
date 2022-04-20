@@ -140,7 +140,7 @@ class Grid{
         //draw all tiles on the rack, skiping moving ones
         if(t != 'empty'){
           const tile = this.tile[t];//tile in question
-          if (tile.animation){
+          if (tile.animation.ongoing){
             tile.drawAnimation();
           } else if (!tile.moving) {
             tile.draw();
