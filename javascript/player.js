@@ -119,7 +119,7 @@ class HumanPlayer extends Player{
   }
 
   textStatus(){
-    let [isCompletable, isValid] = this.table.parse();
+    let [isCompletable, isValid] = this.table.status();
     let message = 'Completable: ' + isCompletable + 
                   '  Valid: ' + isValid + ' active:' + this.activePlayer;
     textSize(32);
