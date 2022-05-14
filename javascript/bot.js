@@ -7,6 +7,20 @@ class BotPlayer extends Player{
 
   move() {
     console.log('bot moving');
+    
+    // try to put some tiles by groups
+    internalRack = this.rack.asArray();
+    internalTable = [];
+      // look for a sequence
+    internalRack.sort(compareTiles678);
+
+
+    // try to increase some groups already on table
+
+    // for later: try some more involved recombination
+
+    // if everything fails: pick a tile
+
     this.client.pickTile();
 
     // if (this.rack.isEmpty()) {

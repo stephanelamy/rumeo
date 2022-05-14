@@ -2,7 +2,7 @@ class Grid{
   constructor(rows, cols, tileArray){
       this.rows = rows; // number of rows
       this.cols = cols; // number of columns
-      this.place = []; // used as this.place[row,column]
+      this.place = []; // used as this.place[row][column]
       for(let i = 0; i < this.rows; i++){
         let row = [];
         for(let j = 0; j < this.cols; j++){
@@ -18,6 +18,19 @@ class Grid{
                       "left":  0.1, 
                       "right":  0.1 };
       this.color = [0,0,0];
+  }
+
+  asArray(){
+    // return an array with the same content
+    result = [];
+    for (let row = 0; row < this.rows; row++){
+      for (let col = 0; col < this.cols; col++){
+        if (this.place[row][col] != 'empty'){
+          result.push(this.place[row][col]);
+        }
+      }
+    }
+    return result;
   }
 
   margin(name){
