@@ -8,7 +8,6 @@ class Tile{
     this.y = 0;
     this.row = 0; // row of the grid, if any
     this.col = 0; // idem for column
-    this.grid = 0; // OBSOLETE ??
     this.size = 0; //his width    height=width*1.5
     this.image = loadImage(this.fileName()); // original image
     this.moving = false; // moving with mouse

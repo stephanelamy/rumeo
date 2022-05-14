@@ -140,6 +140,7 @@ class HumanPlayer extends Player{
 
   hasFinished(){
     let [isCompletable, isValid] = this.table.parse();
+    //console.log(isValid,this.hasMoved,isValid && this.hasMoved);
     return (isValid && this.hasMoved);
   }
 
@@ -274,11 +275,11 @@ class HumanPlayer extends Player{
       let n = this.moving[i];
       if (this.tile[n].grid == this.rack && overlap(...this.rack.rectangle(),...this.tile[n].center())){
         // internal move in our rack, server doesn't need to know
-        this.rack.swap(n);
+        this.rack.moveTile(n);
       }else if (this.activePlayer && overlap(...this.table.rectangle(),...this.tile[n].center())){
         // move from our rack or table to table, need to tell server
         this.hasMoved = true;
-        this.table.swap(n);
+        this.table.moveTile(n);
         this.client.sendTile(this.tile[n]);
       }else{
         // put back the tile where it was, nothing to tell 

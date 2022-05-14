@@ -179,8 +179,7 @@ class Grid{
     return 'none';
   }
   
-  swap(n){//swap tile[n] with the tile it was droped on tile(t)(if posible)
-    // SHOULD change the name of this function, it does'n swap anymore...
+  moveTile(n){//swap tile[n] with the tile it was droped on tile(t)(if posible)
 
     let rn = this.tile[n].row; 
     let cn = this.tile[n].col; 
@@ -226,7 +225,6 @@ class Grid{
 
     for(let row=0; row<this.rows; row++){
       for(let col=0; col<this.cols; col++){
-        console.log("nom",row,col);
         push()
         fill(0,0,0,100)
         rect(...this.findCoor(row,col),this.size-1,this.size*3/2)
