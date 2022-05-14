@@ -18,6 +18,7 @@ class Grid{
                       "left":  0.1, 
                       "right":  0.1 };
       this.color = [0,0,0];
+      this.sizeCoeff = 1.0;
   }
 
   asArray(){
@@ -46,11 +47,11 @@ class Grid{
   }
 
   width(){
-    return this.cols*this.size +  this.margin('right') +  this.margin('left');
+    return (this.cols*this.size +  this.margin('right') +  this.margin('left'))*this.sizeCoeff;
   }
 
   height(){
-    return this.rows*(this.size*3/2+ this.margin('row')) -  this.margin('row') +  this.margin('top') +  this.margin('bottom');
+    return (this.rows*(this.size*3/2+ this.margin('row')) -  this.margin('row') +  this.margin('top') +  this.margin('bottom'))*this.sizeCoeff;
   }
 
   rectangle(){
@@ -58,8 +59,8 @@ class Grid{
   }
 
   findCoor(r,c){//to know coordinate of 'empty' tile
-    let x = this.cornerX() + c*this.size +  this.margin('left');
-    let y = this.cornerY() + r*(this.size*3/2+ this.margin('row')) + this.margin('top');
+    let x = this.cornerX() + this.sizeCoeff*( c*this.size +  this.margin('left') );
+    let y = this.cornerY() + this.sizeCoeff*( r*(this.size*3/2+ this.margin('row')) + this.margin('top') );
     return [x,y];
   }
 
@@ -92,7 +93,7 @@ class Grid{
 
   putTile(n, r, c){
     let tile = this.tile[n];
-    tile.setSize(this.cols);
+    tile.setSize(this.cols, this.sizeCoeff);
     tile.grid = this;
     this.tile[n].grid.place[r][c] = n;
     const [x, y] = this.findCoor(r,c);
@@ -276,4 +277,29 @@ class RackGrid extends Grid{
     }
   }
 
+}
+
+class BotGrid extends Grid{
+  constructor(rows,cols,tileArray){
+    super(rows,cols,tileArray);
+    this.color = [139,69,19];
+    this.marginCoeff = { "row":  -0.3, // vertical space between rows 
+                      "top":  0.0, 
+                      "bottom":  0.0, 
+                      "left":  0.0, 
+                      "right":  0.0 };
+    this.size = width*0.040;
+    console.log('size', this.size);
+    this.sizeCoeff = 0.5;
+    this.defaultCornerX = this.size; // used for display for developpment purpose
+    this.defaultCornerY = height-this.size*5.5;
+  } 
+
+  cornerX(){
+    return this.defaultCornerX;
+  }
+
+  cornerY(){
+    return this.defaultCornerY;
+  }
 }

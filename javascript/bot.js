@@ -1,12 +1,15 @@
 class BotPlayer extends Player{
   constructor(name, game) { // name has the form 'bot_1', 'bot_2'...
     super();
+    this.rack = new BotGrid(2,10,this.tile);
     this.game = game;
     this.client = new Client(this, name);
   }
 
   move() {
-    console.log('bot moving');
+    if (DEVMODE){
+      console.log('bot moving');
+    }
     
     // try to put some tiles by groups
     internalRack = this.rack.asArray();

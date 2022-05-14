@@ -8,7 +8,7 @@ class Tile{
     this.y = 0;
     this.row = 0; // row of the grid, if any
     this.col = 0; // idem for column
-    this.grid = this;
+    this.grid = 0; // OBSOLETE ??
     this.size = 0; //his width    height=width*1.5
     this.image = loadImage(this.fileName()); // original image
     this.moving = false; // moving with mouse
@@ -32,8 +32,8 @@ class Tile{
     return "png/tile_" + this.number + "_" + this.color + ".png";
   }
 
-  setSize(cols){
-    this.size = Tile.computeSize(cols);
+  setSize(cols, coeff=1){
+    this.size = Tile.computeSize(cols) * coeff;
   }
   
   draw() {
