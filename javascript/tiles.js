@@ -31,7 +31,7 @@ class Tile{
     return "png/tile_" + this.number + "_" + this.color + ".png";
   }
 
-  setSize(cols, coeff=1){
+  setSize(cols, coeff=1.0){
     this.size = Tile.computeSize(cols) * coeff;
   }
   

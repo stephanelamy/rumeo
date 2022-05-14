@@ -108,9 +108,9 @@ class HumanPlayer extends Player{
     } else {      
     this.textStatus();
     this.drawDeck();
-    this.drawPlayers();
     this.table.draw();
     this.rack.draw();
+    this.drawPlayers();
     this.checkMoving();
     this.chat.draw();
     }

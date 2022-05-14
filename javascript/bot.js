@@ -1,7 +1,7 @@
 class BotPlayer extends Player{
   constructor(name, game) { // name has the form 'bot_1', 'bot_2'...
     super();
-    this.rack = new BotGrid(2,10,this.tile);
+    this.rack = new BotGrid(3,7,this.tile);
     this.game = game;
     this.client = new Client(this, name);
   }

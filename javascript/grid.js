@@ -51,7 +51,7 @@ class Grid{
   }
 
   height(){
-    return (this.rows*(this.size*3/2+ this.margin('row')) -  this.margin('row') +  this.margin('top') +  this.margin('bottom'))*this.sizeCoeff;
+    return (this.rows*(this.size*1.5+ this.margin('row')) -  this.margin('row') +  this.margin('top') +  this.margin('bottom'))*this.sizeCoeff;
   }
 
   rectangle(){
@@ -60,7 +60,7 @@ class Grid{
 
   findCoor(r,c){//to know coordinate of 'empty' tile
     let x = this.cornerX() + this.sizeCoeff*( c*this.size +  this.margin('left') );
-    let y = this.cornerY() + this.sizeCoeff*( r*(this.size*3/2+ this.margin('row')) + this.margin('top') );
+    let y = this.cornerY() + this.sizeCoeff*( r*(this.size*1.5+ this.margin('row')) + this.margin('top') );
     return [x,y];
   }
 
@@ -143,6 +143,9 @@ class Grid{
     fill(...this.color);
     rect(...this.rectangle());
     pop();
+    if (me.placementHelper){ // mieux ici, non ?
+      this.placementAction();
+    }
   }
 
   draw(){     
@@ -161,9 +164,6 @@ class Grid{
           }
         }
       }
-    }
-    if (me.placementHelper){
-      this.placementAction();
     }
   }
 
@@ -194,7 +194,7 @@ class Grid{
       t = this.place[rt][ct];
     }
 
-    if (t == 'none'){//si on n'est pas au dessus d'un case 
+    if (t == 'none'){//si on n'est pas au dessus d'une case 
       this.tile[n].grid.putTile(n,rn,cn);
     }else if (t == 'empty'){//si on peut juste remplacer
       this.tile[n].grid.place[rn][cn] = 'empty';
@@ -291,16 +291,15 @@ class BotGrid extends Grid{
   constructor(rows,cols,tileArray){
     super(rows,cols,tileArray);
     this.color = [139,69,19];
-    this.marginCoeff = { "row":  -0.3, // vertical space between rows 
+    this.marginCoeff = { "row":  -0.4, // vertical space between rows 
                       "top":  0.0, 
                       "bottom":  0.0, 
                       "left":  0.0, 
                       "right":  0.0 };
-    this.size = width*0.040;
     console.log('size', this.size);
-    this.sizeCoeff = 0.5;
-    this.defaultCornerX = this.size; // used for display for developpment purpose
-    this.defaultCornerY = height-this.size*5.5;
+    this.sizeCoeff = 0.3;
+    this.defaultCornerX = 0; // used for display for developpment purpose
+    this.defaultCornerY = height-this.size*4.5;
   } 
 
   cornerX(){
