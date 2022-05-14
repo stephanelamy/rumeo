@@ -162,6 +162,9 @@ class Grid{
         }
       }
     }
+    if (me.placementHelper){
+      this.placementAction();
+    }
   }
 
   findSelectedTile(){ //find tile under mouse
@@ -176,14 +179,6 @@ class Grid{
     return 'none';
   }
   
-    //the swap plan
-
-    //1 see on what tile were overlaping(and where)
-    //2 if empty replace
-    //3 look if empty further out in the row(right or left) if so replace
-    //4 otherwise take the last tile on the row(right) and move it down one col 3
-    //5 lastly if no space on the board extend then replace
-    //
   swap(n){//swap tile[n] with the tile it was droped on tile(t)(if posible)
     // SHOULD change the name of this function, it does'n swap anymore...
 
@@ -225,6 +220,21 @@ class Grid{
     let [x,y]=this.findCoor(r,c);
     this.tile[n].startAnimationV(me.deckX(),me.deckY('deck'),x,y);
   }
+
+  placementAction(){//extra visual help for fast placing and moving(when a tile is selected)
+    //grid
+
+    for(let row=0; row<this.rows; row++){
+      for(let col=0; col<this.cols; col++){
+        console.log("nom",row,col);
+        push()
+        fill(0,0,0,100)
+        rect(...this.findCoor(row,col),this.size-1,this.size*3/2)
+        pop()
+      }
+    } 
+  }
+
 }
 
 class RackGrid extends Grid{

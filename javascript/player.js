@@ -9,6 +9,7 @@ class Player{
       this.activePlayer = false; // should be true when it's our turn to play
       this.hasMoved = false; // true after one tile was put on table in a turn
       this.game = 0; // will be used only by master player
+      this.placementHelper = false;//helps place tiles(when we have a tile selected)
     }
 
     createTiles(){
@@ -62,6 +63,7 @@ class HumanPlayer extends Player{
     if (this.status == 'playing') {
       this.drop();
     }
+    this.placementHelper = false;
   }
   
   keyPressed(){
@@ -103,7 +105,7 @@ class HumanPlayer extends Player{
     background(150);
     if (this.status == "setup") {
       this.drawSetUp();
-    } else {
+    } else {      
     this.textStatus();
     this.drawDeck();
     this.drawPlayers();
@@ -230,6 +232,7 @@ class HumanPlayer extends Player{
       if (overlap(...me.tile[i].rectangle(), mouseX, mouseY)){
         me.tile[i].moving = true;
         me.moving.push(i);
+        this.placementHelper = true;
       }
     }
 
