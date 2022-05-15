@@ -61,7 +61,9 @@ class Client extends AbstractPubNub{
     this.pubnub.addListener({
       status: (statusEvent) => {
         if (statusEvent.category === "PNConnectedCategory") {
-            console.log(this.type, UUID, 'connected');
+            if(PUBNUBVERBOSE) {
+              console.log(this.type, UUID, 'connected');
+            }
             if (this.type == 'player') {
               this.onConnection();
             } else {
@@ -148,8 +150,8 @@ class Client extends AbstractPubNub{
           if (msg.message.text == 'deck') {
             this.gameInfo[msg.message.channelplayer] ++;
             this.gameInfo.deck --;
-            // if (PUBNUBVERBOSE) { console.log('info', this.mychannel, this.gameInfo); }
-            if (true) { console.log('info', this.mychannel, this.gameInfo); }
+            if (PUBNUBVERBOSE) { console.log('info', this.mychannel, this.gameInfo); }
+            // if (true) { console.log('info', this.mychannel, this.gameInfo); }
           }
         }
 
@@ -310,8 +312,10 @@ class Server extends AbstractPubNub {
     this.pubnub.addListener({
       status: (statusEvent) => {
         if (statusEvent.category === "PNConnectedCategory") {
-            console.log('server connected');
-            console.log('channel list:', this.game.channelList);
+            if (PUBNUBVERBOSE){
+              console.log('server connected');
+              console.log('channel list:', this.game.channelList);
+            }
             for (const channel of this.game.channelList) {
               if (channel.slice(0,3) != 'bot') {
                 this.game.pickStartingTiles(channel);

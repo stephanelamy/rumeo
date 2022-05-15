@@ -12,10 +12,12 @@ class BotPlayer extends Player{
     }
     
     // try to put some tiles by groups
-    internalRack = this.rack.asArray();
-    internalTable = [];
+    this.rack.sort(compareTiles678);
+    const internalRack = this.rack.asArray();
+    console.log('internalRack', internalRack);
+    const internalTable = [];
       // look for a sequence
-    internalRack.sort(compareTiles678);
+    
 
 
     // try to increase some groups already on table

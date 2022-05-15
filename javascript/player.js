@@ -228,26 +228,7 @@ class HumanPlayer extends Player{
   // Clicked mouse routines:
   
   mouseWasPressed(){
-    //check if we select a tile
-    for(let i=0; i < this.tile.length; i++){
-      if (overlap(...me.tile[i].rectangle(), mouseX, mouseY)){
-        me.tile[i].moving = true;
-        me.moving.push(i);
-        this.placementHelper = true;
-      }
-    }
-
     this.chat.bouton(); //check if we close or open chat
-
-    //check if we press on the deck
-    if (this.checkDeck('deck')) {
-      if (this.hasFinished()) {
-        this.activePlayer = false;
-        this.client.transmitMove();
-      } else {
-        this.client.pickTile();
-      }
-    }
 
     //check if we press on sort777
     if (this.checkDeck('d777')) {
@@ -257,6 +238,29 @@ class HumanPlayer extends Player{
     //check if we press on sort678
     if (this.checkDeck('d678')) {
         this.rack.sort(compareTiles678);
+    }
+
+    //check if we select a tile
+    for(let i=0; i < this.tile.length; i++){
+      if (overlap(...me.tile[i].rectangle(), mouseX, mouseY)){
+        me.tile[i].moving = true;
+        me.moving.push(i);
+        this.placementHelper = true;
+      }
+    }
+    
+    if (this.activePlayer){
+      // actions only available when player is active 
+
+      //check if we press on the deck
+      if (this.checkDeck('deck')) {
+        this.activePlayer = false;
+        if (this.hasFinished()) {
+          this.client.transmitMove();
+        } else {
+          this.client.pickTile();
+        }
+      }
     }
   }
 

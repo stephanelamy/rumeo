@@ -23,7 +23,7 @@ class Grid{
 
   asArray(){
     // return an array with the same content
-    result = [];
+    const result = [];
     for (let row = 0; row < this.rows; row++){
       for (let col = 0; col < this.cols; col++){
         if (this.place[row][col] != 'empty'){
@@ -227,28 +227,10 @@ class Grid{
       for(let col=0; col<this.cols; col++){
         push()
         fill(0,0,0,100)
-        rect(...this.findCoor(row,col),this.size-1,this.size*3/2)
+        rect(...this.findCoor(row,col),(this.size-1)*this.sizeCoeff,this.size*3/2*this.sizeCoeff)
         pop()
       }
     } 
-  }
-
-}
-
-class RackGrid extends Grid{
-  constructor(rows,cols,tileArray){
-    super(rows,cols,tileArray);
-    this.color = [139,69,19];
-    this.marginCoeff.row = -0.3;
-  } 
-
-  cornerX(){
-    return width/2 - this.cols*this.size/2 -  this.margin('right') -  this.margin('left');
-  }
-
-  cornerY(){
-    return height - this.rows*(this.size*3/2+ this.margin('row')) +  this.margin('row') 
-      -  this.margin('top') -  this.margin('bottom');
   }
 
   reset(){
@@ -287,6 +269,24 @@ class RackGrid extends Grid{
 
 }
 
+class RackGrid extends Grid{
+  constructor(rows,cols,tileArray){
+    super(rows,cols,tileArray);
+    this.color = [139,69,19];
+    this.marginCoeff.row = -0.3;
+  } 
+
+  cornerX(){
+    return width/2 - this.cols*this.size/2 -  this.margin('right') -  this.margin('left');
+  }
+
+  cornerY(){
+    return height - this.rows*(this.size*3/2+ this.margin('row')) +  this.margin('row') 
+      -  this.margin('top') -  this.margin('bottom');
+  }
+
+}
+
 class BotGrid extends Grid{
   constructor(rows,cols,tileArray){
     super(rows,cols,tileArray);
@@ -296,7 +296,6 @@ class BotGrid extends Grid{
                       "bottom":  0.0, 
                       "left":  0.0, 
                       "right":  0.0 };
-    console.log('size', this.size);
     this.sizeCoeff = 0.3;
     this.defaultCornerX = 0; // used for display for developpment purpose
     this.defaultCornerY = height-this.size*4.5;
