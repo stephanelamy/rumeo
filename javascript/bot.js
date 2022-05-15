@@ -4,6 +4,7 @@ class BotPlayer extends Player{
     this.rack = new BotGrid(3,7,this.tile);
     this.game = game;
     this.client = new Client(this, name);
+    this.filter = new Filter(this.tile);
   }
 
   move() {
@@ -15,9 +16,26 @@ class BotPlayer extends Player{
     this.rack.sort(compareTiles678);
     const internalRack = this.rack.asArray();
     console.log('internalRack', internalRack);
-    const internalTable = [];
+    let group = [];
+    const listOrder = [];
       // look for a sequence
-    
+    let oldNo = 'none';
+    for (const no of internalRack){
+      if (oldNo == 'none' || this.tile[oldNo].colour != this.tile[no].colour || this.tile[oldNo].number != this.tile[no].number){
+        group.push(no);
+        if (!this.filter.isPreCombination(group)){
+          group = [no];
+        } else {
+          if (this.filter.isCombination(group)){
+            listOrder.push([group]);
+            console.log('new order:', groupString(group, this.tile));
+            group = [];
+          }
+        }
+      }
+      console.log('current group:', groupString(group, this.tile));
+      oldNo = no;
+    }
 
 
     // try to increase some groups already on table
@@ -26,7 +44,13 @@ class BotPlayer extends Player{
 
     // if everything fails: pick a tile
 
-    this.client.pickTile();
+    if (listOrder.length > 0){
+      for (const order of listOrder){
+        this.client.transmitMove(order);
+      }
+    } else{
+      this.client.pickTile();
+    }
 
     // if (this.rack.isEmpty()) {
     //   this.client.pickTile();

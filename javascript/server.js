@@ -282,10 +282,10 @@ class Client extends AbstractPubNub{
     this.sendMsg(message, 'server');
   }
 
-  transmitMove() {
+  transmitMove(moveOrder=[]) {
     const message = {
       text: 'table',
-      move: '', // description of the moves
+      move: '', // description of the moves from array moveOrder
       channelplayer: this.mychannel
     };
     this.sendMsg(message, 'server');
@@ -332,6 +332,7 @@ class Server extends AbstractPubNub {
         }
         
         if (msg.message.text == 'table') {
+          // to do, new tiles on table
           this.nextMove();
         }
       }
