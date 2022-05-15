@@ -13,30 +13,52 @@ class BotPlayer extends Player{
     }
     
     // try to put some tiles by groups
-    this.rack.sort(compareTiles678);
-    const internalRack = this.rack.asArray();
-    console.log('internalRack', internalRack);
-    let group = [];
+    let internalRack = this.rack.asArray();
     const listOrder = [];
-      // look for a sequence
+    let listGroup = [];
+    let group = [];
     let oldNo = 'none';
-    for (const no of internalRack){
-      if (oldNo == 'none' || this.tile[oldNo].colour != this.tile[no].colour || this.tile[oldNo].number != this.tile[no].number){
-        group.push(no);
-        if (!this.filter.isPreCombination(group)){
-          group = [no];
-        } else {
-          if (this.filter.isCombination(group)){
-            listOrder.push([group]);
-            console.log('new order:', groupString(group, this.tile));
-            group = [];
-          }
-        }
+    let auxArray = [];
+    for (const functionSort of [compareTiles678, compareTiles777]){
+      auxArray = [];
+      for(const no of internalRack){
+        auxArray.push(this.tile[no]);
       }
-      console.log('current group:', groupString(group, this.tile));
-      oldNo = no;
+      auxArray.sort(functionSort);
+      internalRack = [];
+      for(const tile of auxArray){
+        internalRack.push(tile.no);
+      }
+      console.log('internalRack', groupString(internalRack, this.tile));
+      listGroup = [];
+      group = [];
+      oldNo = 'none';
+      for (const no of internalRack){
+        if (oldNo == 'none' || this.tile[oldNo].color != this.tile[no].color || this.tile[oldNo].number != this.tile[no].number){
+          group.push(no);
+          if (!this.filter.isPreCombination(group)){
+            group = [no];
+          } else {
+            if (this.filter.isCombination(group)){
+              listGroup.push(group);
+              console.log('new group:', groupString(group, this.tile));
+              group = [];
+            }
+          }
+          // console.log(groupString([no], this.tile), 'current group:', groupString(group, this.tile));
+        }
+        oldNo = no;
+      }
+      let auxSet = new Set(internalRack);
+      for (const group of listGroup){
+        console.log('deleting', groupString(group, this.tile));
+        for (const no of group){
+          auxSet.delete(no);
+        }
+        listOrder.push([group]);
+      }
+      internalRack = [...auxSet];
     }
-
 
     // try to increase some groups already on table
 
@@ -45,6 +67,9 @@ class BotPlayer extends Player{
     // if everything fails: pick a tile
 
     if (listOrder.length > 0){
+      console.log('at least one order')
+      console.log('new internalRack', groupString(internalRack, this.tile));
+      this.rack.initFromArray(internalRack, false, true);
       for (const order of listOrder){
         this.client.transmitMove(order);
       }

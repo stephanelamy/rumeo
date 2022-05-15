@@ -241,6 +241,28 @@ class Grid{
     }
   }
 
+  initFromArray(array, withAnimation=false, fromNo=false){
+    this.reset();
+    for(let row=0; row<this.rows; row++){
+      for(let col=0; col<this.cols; col++){
+        if (array.length > 0){
+          const tile = array.pop();
+          let no;
+          if (fromNo){
+            no = tile;
+          } else {
+            no = tile.no;
+          }
+          this.putTile(no,row,col);
+          if (withAnimation){
+            tile.giveAnimationEnd(...this.findCoor(row,col));          
+            tile.startAnimation(25);
+          }
+        }
+      }
+    }
+  }
+
   sort(sortFunction){
     let auxArray = [];
     for(let row=0; row<this.rows; row++){
@@ -252,19 +274,19 @@ class Grid{
         }
       }
     }
-
     auxArray.sort(sortFunction);
-    this.reset();
-    for(let row=0; row<this.rows; row++){
-      for(let col=0; col<this.cols; col++){
-        if (auxArray.length > 0){
-          const tile = auxArray.pop();
-          this.putTile(tile.no,row,col);
-          tile.giveAnimationEnd(...this.findCoor(row,col));          
-          tile.startAnimation(25);
-        }
-      }
-    }
+    this.initFromArray(auxArray, true);
+    // this.reset();
+    // for(let row=0; row<this.rows; row++){
+    //   for(let col=0; col<this.cols; col++){
+    //     if (auxArray.length > 0){
+    //       const tile = auxArray.pop();
+    //       this.putTile(tile.no,row,col);
+    //       tile.giveAnimationEnd(...this.findCoor(row,col));          
+    //       tile.startAnimation(25);
+    //     }
+    //   }
+    // }
   }
 
 }
