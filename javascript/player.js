@@ -4,6 +4,7 @@ class Player{
       this.createTiles(); // locally create all tiles and load images JOKERS A AJOUTER PLUS TARD
       this.rack = new RackGrid(2,10,this.tile);
       this.table = new TableGrid(4,16,this.tile);
+      this.oldTable = new TableGrid(4,16,this.tile);
       this.chat  = new Chat();
       this.status = "setup"; // game state, "setup" or "playing" 
       this.activePlayer = false; // should be true when it's our turn to play
@@ -139,8 +140,7 @@ class HumanPlayer extends Player{
   }
 
   hasFinished(){
-    let [isCompletable, isValid] = this.table.parse();
-    //console.log(isValid,this.hasMoved,isValid && this.hasMoved);
+    let [isCompletable, isValid] = this.table.status();
     return (isValid && this.hasMoved);
   }
 
@@ -222,6 +222,24 @@ class HumanPlayer extends Player{
       this.tile[index].x = mouseX; 
       this.tile[index].y = mouseY;
       this.tile[index].draw();
+    }
+  }
+
+  addMoves(group){
+    let tobeplaced = group;
+    for(let row = 0;row<this.oldTable.rows;row++){
+      for(let col = 0;col<this.oldTable.cols;col++){
+        for(let tile = 0;tile<group[0].length;tile++){
+          if(this.oldTable.place[row][col] == group[0][tile]){
+            group.pull(tile);//already placed
+          }
+        }
+      }
+    } 
+    console.log("tobeplaced",0<tobeplaced[0].length);
+    for(let tile = 0;tile<tobeplaced[0].length;tile++){
+      console.log("tile",tile,tobeplaced[0][tile]);  
+      this.table.addTile(tobeplaced[0][tile]);
     }
   }
 
