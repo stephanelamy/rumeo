@@ -39,7 +39,7 @@ class Chat{
   }
 
   scroll(event) {//bouge le chat
-    console.log(event);
+    //console.log(event);
     if(event.deltaY > 0){//if wheel is moving up
       this.mousewheel += 10;
     }else if(event.deltaY < 0){
